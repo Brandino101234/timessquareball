@@ -1,8 +1,8 @@
 ---
 import BallMark from './BallMark.astro';
-import { mainNav, isGroup } from '../data/navigation';
+import { mainNav, isGroup, currentPath } from '../data/navigation';
 
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const path = currentPath(Astro.url);
 const isCurrent = (href: string) => path === href;
 const inSection = (href: string) => path === href || path.startsWith(href + '/');
 ---

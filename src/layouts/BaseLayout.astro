@@ -4,6 +4,7 @@ import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site';
+import { currentPath } from '../data/navigation';
 import defaultShareImage from '../assets/facts/constellation-ball-17.jpg';
 import type { ImageMetadata } from 'astro';
 
@@ -29,9 +30,12 @@ const {
   noindex = false,
 } = Astro.props;
 
-const isHome = Astro.url.pathname === '/';
+const isHome = currentPath(Astro.url) === '/';
+// Preview builds (e.g. GitHub Pages) set NOINDEX=true so search engines skip them.
+const hideFromSearch = noindex || process.env.NOINDEX === 'true';
 const fullTitle = isHome ? `${site.name} | Official Times Square New Year’s Eve Ball` : `${title} | ${site.name}`;
-const canonical = new URL(Astro.url.pathname, Astro.site ?? site.domain).href;
+// Addresses without a trailing slash, matching the site's links and vercel.json.
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.domain).href.replace(/(?<=[^/])\/$/, '');
 const share = await getImage({ src: image, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 const shareUrl = new URL(share.src, Astro.site ?? site.domain).href;
 
@@ -61,7 +65,7 @@ const jsonLd = [
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex" />}
+    {hideFromSearch && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content="#0e1440" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />

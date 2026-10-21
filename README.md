@@ -243,6 +243,15 @@ The site is hosted on Vercel and publishes automatically from GitHub.
 
 `vercel.json` sends the old timessquareball.net addresses to their new pages. For example, `/nye-webcast` goes to `/webcast`, `/photographs` to `/press/photos`, and old PDF links under `/wp-content/uploads/…` to `/press/releases/…`. They take effect if the old domain is pointed at this Vercel project, so old links and search results keep working.
 
+### Preview on GitHub Pages (temporary)
+
+Until Vercel is set up, every push to `main` also publishes a preview to https://brandino101234.github.io/timessquareball/, using `.github/workflows/pages.yml`. That build:
+
+- puts the site in the `/timessquareball/` subfolder (`SITE_BASE`). Links are written as `/ball-facts` everywhere, and `src/integrations/base-links.ts` adds the folder name when the site is built;
+- tells search engines not to index it (`NOINDEX=true`), so the temporary copy doesn’t compete with the real launch.
+
+GitHub Pages ignores `vercel.json`, so old-site redirects only work on Vercel. Once the site is live on Vercel, delete the workflow and turn off Pages under **Settings → Pages**.
+
 ### Checking a change before it goes live
 
 ```bash

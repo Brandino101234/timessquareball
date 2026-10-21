@@ -37,3 +37,13 @@ export const footerLinks: NavLink[] = [
 ];
 
 export const isGroup = (item: NavLink | NavGroup): item is NavGroup => 'children' in item;
+
+/**
+ * The current page's path without the site's base folder or a trailing slash,
+ * so it can be compared with the hrefs above ("/press/photos").
+ */
+export function currentPath(url: URL): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const path = base && url.pathname.startsWith(base) ? url.pathname.slice(base.length) : url.pathname;
+  return path.replace(/\/$/, '') || '/';
+}
