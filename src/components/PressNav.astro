@@ -1,9 +1,9 @@
 ---
 /** Links between the press pages, shown under each press page title. */
-import { mainNav, isGroup, currentPath } from '../data/navigation';
+import { pressLinks, currentPath } from '../data/navigation';
 
 const path = currentPath(Astro.url);
-const links = mainNav.find(isGroup)?.children ?? [];
+const links = pressLinks;
 const isCurrent = (href: string) => (href === '/press' ? path === '/press' : path === href || path.startsWith(href + '/'));
 ---
 

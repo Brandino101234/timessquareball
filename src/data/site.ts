@@ -6,6 +6,8 @@ export const site = {
   /** Full origin of the production site, no trailing slash. Also set in astro.config.mjs. */
   domain: 'https://www.example.com',
   owner: 'Countdown Entertainment, LLC',
+  /** Name in the footer copyright line. */
+  copyrightHolder: 'One Times Square',
   description:
     'The official home of the Times Square New Year’s Eve Ball: live countdown to midnight, Ball cams, the NYE webcast, Ball history and facts, and press materials.',
   /** Time zone the countdown uses. Midnight here is the Ball Drop. */

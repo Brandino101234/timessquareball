@@ -1,3 +1,5 @@
+import { cams } from '../config/cams';
+
 /** Main navigation. Order here is the order in the header and mobile menu. */
 export interface NavLink {
   label: string;
@@ -14,8 +16,12 @@ export const mainNav: (NavLink | NavGroup)[] = [
   { label: 'NYE history', href: '/nye-history' },
   { label: 'Ball history', href: '/ball-history' },
   { label: 'Ball facts', href: '/ball-facts' },
-  { label: 'Ball Cam 1', href: '/ball-cam-1' },
-  { label: 'Ball Cam 2', href: '/ball-cam-2' },
+  {
+    // One entry per cam in src/config/cams.ts
+    label: 'Ball cams',
+    href: `/${cams[0].slug}`,
+    children: cams.map((cam) => ({ label: cam.title, href: `/${cam.slug}` })),
+  },
   { label: 'Webcast', href: '/webcast' },
   {
     label: 'Press',
@@ -37,6 +43,9 @@ export const footerLinks: NavLink[] = [
 ];
 
 export const isGroup = (item: NavLink | NavGroup): item is NavGroup => 'children' in item;
+
+/** The Press submenu, also shown as tabs on every press page. */
+export const pressLinks = mainNav.filter(isGroup).find((g) => g.href === '/press')?.children ?? [];
 
 /**
  * The current page's path without the site's base folder or a trailing slash,

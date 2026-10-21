@@ -21,6 +21,8 @@ export const ball = {
   mastHeightFeet: 139,
   factSheet: '/press/releases/TS2026_Ball__Numeral_Fact_Sheet.pdf',
   factSheetSize: '43 KB',
+  /** Year the fact sheet above covers (shown on its download button). */
+  factSheetYear: 2026,
   summary:
     'The Constellation Ball, the ninth iteration of the Times Square New Year’s Eve Ball since its debut in 1907, was unveiled and made its inaugural ascent up the 139-foot mast atop One Times Square on Monday, November 24, 2025.',
 } as const;
@@ -45,18 +47,27 @@ export const features = [
   },
 ] as const;
 
-/** "Enhanced Visitor Experiences" */
+/**
+ * Ticketed experiences at One Times Square, shown with links on the Ball Facts page.
+ * Names and links are from onetimessquare.com (October 2026); check them each season.
+ */
 export const visitorExperiences = {
-  intro:
-    'For the first time, the public can access The Ball now through exclusive preview experiences before the full ticketed experiences (below) open in 2026:',
+  intro: 'One Times Square offers ticketed experiences that bring you up close to the Ball and the building.',
   items: [
     {
-      title: 'The Ball Access Experience',
-      text: 'Includes a guided tour with a NYC expert, access to a 360-degree wraparound viewing deck, and a photo moment with the Constellation Ball.',
+      title: 'New Year’s Eve Ball Experience',
+      text: 'Up-close access to the Ball for photos and the official Ball Show, plus admission to the Skywalk Viewing Deck.',
+      url: 'https://onetimessquare.com/nye-ball',
     },
     {
-      title: 'Premium Ball Experience',
-      text: 'Includes all of the above, plus the opportunity to leave a custom light message in Morse code for New Year’s Eve and take home a commemorative Waterford Crystal.',
+      title: 'Skywalk Viewing Deck',
+      text: 'A 360-degree wraparound viewing deck overlooking Times Square.',
+      url: 'https://onetimessquare.com/skywalk-viewing-deck',
+    },
+    {
+      title: 'One Times Square Candy Experience',
+      text: 'A New York City–themed indoor candy adventure through sugar-spun versions of city landmarks, ending at The Candy Shop.',
+      url: 'https://onetimessquare.com/candy-experience',
     },
   ],
 } as const;
@@ -89,14 +100,18 @@ export const crystalNotes = [
 ] as const;
 
 export const numerals = {
-  year: '2026',
+  year: '2027',
   heightFeet: 7,
+  /**
+   * LED light pucks in each numeral. Leave `count` out until it is published;
+   * the page shows "Count coming soon". (The 2026 "6" had 135.)
+   */
   pucks: [
     { digit: '2', count: 145 },
     { digit: '0', count: 164 },
     { digit: '2', count: 145 },
-    { digit: '6', count: 135 },
-  ],
+    { digit: '7' },
+  ] as { digit: string; count?: number }[],
   notes: [
     {
       title: 'New color',

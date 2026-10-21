@@ -20,7 +20,9 @@ Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.c
 These are open items. Each one is explained in more detail further down.
 
 - [ ] **Domain.** Set the real domain in `src/data/site.ts` (`domain`). Links in search results and social previews use it.
-- [ ] **Ball cam streams.** Replace the placeholder URLs in `src/config/cams.ts`. The streams the old site used are listed in a comment at the top of that file.
+- [ ] **Ball cam streams.** Replace the placeholder URLs for all five cams in `src/config/cams.ts`, and the descriptions for cams 3–5. The streams the old site used are listed in a comment at the top of that file.
+- [ ] **Wegovy logo.** Add it to `src/assets/sponsors/` and `src/data/sponsors.ts`. Until then the sponsor band shows the name.
+- [ ] **2027 numerals.** Add the light-puck count for the “7” in `src/data/ball-facts.ts` when it’s published, and replace the 2026 fact sheet.
 - [ ] **Webcast.** Add this year’s embed URL to `src/config/webcast.ts` once the provider is confirmed.
 - [ ] **Privacy Policy and Terms need a legal review.** They are copied word for word from the old site (effective December 13, 2010). They still describe retired mobile apps and a “Photo Display Service”, name the old domain, and mention cookies and ads this site doesn’t use.
 - [ ] **FAQ is a draft.** It was written from facts already on the site. Please review `src/content/pages/faq.md`.
@@ -93,8 +95,10 @@ A paragraph is just text. Leave a blank line between paragraphs.
 | To change…                                        | Edit                                                  |
 | ------------------------------------------------- | ----------------------------------------------------- |
 | Sponsors (home page)                              | `src/data/sponsors.ts` and logos in `src/assets/sponsors/` |
-| Ball cam stream URLs, titles, still images        | `src/config/cams.ts`                                  |
+| Ball cams (5): stream URLs, titles, still images  | `src/config/cams.ts`                                  |
 | Webcast embed, start time, “What you’ll see” list | `src/config/webcast.ts`                               |
+| One Times Square experiences and their links      | `src/data/ball-facts.ts` (`visitorExperiences`)       |
+| Footer copyright name                             | `src/data/site.ts` (`copyrightHolder`)                |
 | Ball facts, crystal counts, numeral puck counts   | `src/data/ball-facts.ts`                              |
 | NYE History text and photos                       | `src/content/pages/nye-history.md`                    |
 | Ball History intro and “About time-balls”         | `src/content/pages/ball-history.md`                   |
@@ -121,7 +125,9 @@ The countdown needs no yearly update. It always counts to the next midnight on J
    { name: 'New Sponsor', logo: newSponsor, url: 'https://example.com', role: 'Official partner' },
    ```
 
-3. Remove last year’s entries and update `sponsorYear`. The order in the file is the order on the page. `role` is optional.
+3. Remove last year’s entries and update `sponsorYear` (the heading reads “Welcome to our 2027 sponsors”). The order in the file is the order on the page. `role` is optional.
+
+A sponsor can be listed before its logo arrives: leave out `logo` and its name is shown instead (Wegovy is set up this way now). The sponsor credited under the Ball cams is chosen by `camSponsor` at the bottom of the file.
 
 ### Ball cams
 
@@ -318,8 +324,8 @@ The “Constellation” direction: the Ball as a star map. It is quiet, premium 
 | Numeral gold   | `#e2b04a` | Countdown, primary buttons, the current year     |
 | Confetti rose  | `#f27bb0` | Celebration only (“Happy New Year”, “Live” dots) |
 
-- **Type:** *Bodoni Moda* for headings and numbers (its hairline strokes echo cut crystal), *Hanken Grotesk* for body text and interface. Both are part of the site, so no font service is used.
-- **Signature elements:** the animated Constellation Ball on the home page (its circles use the real three crystal sizes in their real proportions), the gold countdown, the crystals drawn at true scale and the numerals drawn in light pucks on Ball Facts.
+- **Type:** *Poppins* for body text, page titles, buttons and the countdown. *Bodoni Moda* for section headings (h2) and the logo wordmark. *Hanken Grotesk* for the main menu. All three are part of the site, so no font service is used. They are set as `--font-sans` / `--font-display`, `--font-serif` and `--font-nav` in `src/styles/global.css`.
+- **Signature elements:** the animated Constellation Ball on its mast on the home page (its circles use the real three crystal sizes in their real proportions), the gold countdown, the crystals drawn at true scale and the numerals drawn in light pucks on Ball Facts.
 - All tokens are defined once in `src/styles/global.css` and used through Tailwind classes such as `bg-night`, `text-gold` and `font-display`.
 
 ---

@@ -6,6 +6,7 @@ import ConstellationBall from '../components/ConstellationBall.astro';
 import CamTile from '../components/CamTile.astro';
 import SponsorStrip from '../components/SponsorStrip.astro';
 import { cams } from '../config/cams';
+import { camSponsor } from '../data/sponsors';
 import { ball } from '../data/ball-facts';
 import { site } from '../data/site';
 import { webcast } from '../config/webcast';
@@ -53,8 +54,8 @@ const eventLd = {
   <!-- Hero: the Ball and the countdown -->
   <section class="relative isolate overflow-hidden">
     <div class="mx-auto flex max-w-[90rem] flex-col items-center px-4 pt-6 pb-16 text-center sm:px-6 lg:pt-8 lg:pb-24">
-      <ConstellationBall class="w-[min(88vw,52svh,34rem)]" />
-      <div class="-mt-[clamp(3rem,9svh,6rem)]">
+      <ConstellationBall class="w-[min(82vw,42svh,32rem)]" />
+      <div>
         <Countdown />
       </div>
       <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row">
@@ -66,19 +67,22 @@ const eventLd = {
 
   <!-- Watch it live -->
   <section aria-labelledby="watch-heading" class="border-t border-night-600/60 bg-night-900">
-    <div class="mx-auto grid max-w-[90rem] gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 lg:px-10 lg:py-28">
-      <div class="max-w-xl">
-        <h2 id="watch-heading" class="text-[clamp(2.25rem,5vw,3.554rem)]">Watch from anywhere</h2>
-        <p class="mt-6 text-crystal-muted">
-          The commercial-free webcast starts at {webcast.startsAt} on December 31 with the lighting and raising of
-          the Ball, then follows the hourly countdowns, live performances and the Ball Drop at midnight.
-        </p>
-        <p class="mt-4 text-crystal-muted">
-          The Ball cams are live all year. Get a behind-the-scenes look at what it takes to put on this dazzling show.
-        </p>
-        <a href="/webcast" class="link mt-8 inline-block font-medium">About the NYE webcast</a>
+    <div class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+      <div class="grid gap-6 lg:grid-cols-12 lg:gap-10">
+        <h2 id="watch-heading" class="text-[clamp(2.25rem,5vw,3.554rem)] lg:col-span-5">Watch from anywhere</h2>
+        <div class="max-w-xl lg:col-span-6 lg:col-start-7">
+          <p class="text-crystal-muted">
+            The commercial-free webcast starts at {webcast.startsAt} on December 31 with the lighting and raising of
+            the Ball, then follows the hourly countdowns, live performances and the Ball Drop at midnight.
+          </p>
+          <p class="mt-4 text-crystal-muted">
+            The Ball cams are live all year. Get a behind-the-scenes look at what it takes to put on this dazzling
+            show.
+          </p>
+          <a href="/webcast" class="link mt-6 inline-block font-medium">About the NYE webcast</a>
+        </div>
       </div>
-      <ul class="grid gap-6 sm:grid-cols-2">
+      <ul class="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {
           cams.map((cam) => (
             <li>
@@ -87,6 +91,16 @@ const eventLd = {
           ))
         }
       </ul>
+      {
+        camSponsor && (
+          <p class="mt-6 text-sm text-crystal-muted">
+            The official Ball cams are brought to you by{' '}
+            <a href={camSponsor.url} rel="sponsored noopener" class="link">
+              {camSponsor.name}
+            </a>
+          </p>
+        )
+      }
     </div>
   </section>
 

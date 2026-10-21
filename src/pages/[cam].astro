@@ -1,12 +1,15 @@
 ---
 /**
- * Ball cam pages: /ball-cam-1 and /ball-cam-2, one per entry in src/config/cams.ts.
+ * Ball cam pages (/ball-cam-1, /ball-cam-2, …), one per entry in src/config/cams.ts.
  */
+import { Image } from 'astro:assets';
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LiveCam from '../components/LiveCam.astro';
 import { cams, type Cam } from '../config/cams';
 import { webcast } from '../config/webcast';
+import { camSponsor } from '../data/sponsors';
+import ballBackground from '../assets/facts/constellation-ball-17.jpg';
 
 export const getStaticPaths = (() =>
   cams.map((cam) => ({ params: { cam: cam.slug }, props: { cam } }))) satisfies GetStaticPaths;
@@ -21,6 +24,20 @@ const streamOrigin = new URL(cam.streamUrl).origin;
 <BaseLayout title={cam.title} description={`${cam.description} Watch the Times Square New Year’s Eve Ball live.`} image={cam.poster}>
   <link slot="head" rel="preconnect" href={streamOrigin} crossorigin />
 
+  <div class="relative isolate">
+  <!-- The Ball behind the player, as on the old site's cam pages -->
+  <div class="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+    <Image
+      src={ballBackground}
+      alt=""
+      width={1600}
+      widths={[800, 1600]}
+      sizes="100vw"
+      loading="eager"
+      class="size-full object-cover opacity-80"
+    />
+    <div class="absolute inset-0 bg-gradient-to-b from-night/55 via-night/35 to-night"></div>
+  </div>
   <div class="mx-auto max-w-[90rem] px-4 pt-4 pb-16 sm:px-6 lg:px-10 lg:pt-6">
     <div class="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 lg:mb-5">
       <div class="flex items-center gap-4">
@@ -31,16 +48,17 @@ const streamOrigin = new URL(cam.streamUrl).origin;
         </span>
       </div>
       <nav aria-label="Ball cams">
-        <ul class="flex gap-1 rounded-full border border-night-600 p-1">
+        <ul class="flex flex-wrap gap-1 rounded-full border border-night-600 bg-night/70 p-1 backdrop-blur">
           {
-            cams.map((c) => (
+            cams.map((c, i) => (
               <li>
                 <a
                   href={`/${c.slug}`}
                   aria-current={c.id === cam.id ? 'page' : undefined}
-                  class="block rounded-full px-4 py-2 text-[0.9375rem] font-medium text-crystal no-underline hover:bg-night-700 aria-[current=page]:bg-gold aria-[current=page]:text-night-950"
+                  aria-label={c.title}
+                  class="flex min-h-10 min-w-10 items-center justify-center rounded-full px-3.5 text-[0.9375rem] font-medium text-crystal no-underline hover:bg-night-700 aria-[current=page]:bg-gold aria-[current=page]:text-night-950 sm:px-4"
                 >
-                  {c.title}
+                  <span class="hidden sm:inline">Cam&nbsp;</span>{i + 1}
                 </a>
               </li>
             ))
@@ -54,6 +72,17 @@ const streamOrigin = new URL(cam.streamUrl).origin;
       <LiveCam cam={cam} />
     </div>
 
+    {
+      camSponsor && (
+        <p class="mt-4 text-center text-sm text-crystal-muted">
+          The official Ball cams are brought to you by{' '}
+          <a href={camSponsor.url} rel="sponsored noopener" class="link">
+            {camSponsor.name}
+          </a>
+        </p>
+      )
+    }
+
     <div class="mt-8 grid gap-6 lg:mt-12 lg:grid-cols-12 lg:gap-10">
       <p class="text-crystal-muted lg:col-span-6">{cam.description} The cams run all year, so you can check on the Ball any time.</p>
       <p class="text-crystal-muted lg:col-span-5 lg:col-start-8">
@@ -61,6 +90,7 @@ const streamOrigin = new URL(cam.streamUrl).origin;
         <a href="/webcast" class="link">Watch the NYE webcast</a>
       </p>
     </div>
+  </div>
   </div>
 </BaseLayout>
 

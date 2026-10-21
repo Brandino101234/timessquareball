@@ -13,7 +13,7 @@ const { cam } = Astro.props;
   class="group block overflow-hidden rounded-[1.5rem] border border-night-600 bg-night no-underline transition-colors hover:border-prism"
 >
   <div class="relative">
-    <Image src={cam.poster} alt="" width={1000} widths={[400, 700, 1000]} sizes="(min-width: 640px) 30vw, 100vw" class="aspect-video w-full object-cover" />
+    <Image src={cam.poster} alt="" width={1000} widths={[400, 700, 1000]} sizes="(min-width: 1024px) 18vw, (min-width: 640px) 48vw, 100vw" class="aspect-video w-full object-cover" />
     <span
       data-cam-status={cam.streamUrl}
       hidden
@@ -23,9 +23,9 @@ const { cam } = Astro.props;
       Live now
     </span>
   </div>
-  <div class="p-5">
-    <h3 class="font-display text-2xl text-crystal group-hover:text-gold">{cam.title}</h3>
-    <p class="mt-1 text-base text-crystal-muted">{cam.description}</p>
+  <div class="p-4">
+    <h3 class="font-display text-xl text-crystal group-hover:text-gold">{cam.title}</h3>
+    <p class="mt-1 text-sm text-crystal-muted">{cam.description}</p>
   </div>
 </a>
 

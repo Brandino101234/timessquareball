@@ -1,3 +1,8 @@
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+@import '@fontsource/poppins/800.css';
 @import '@fontsource-variable/bodoni-moda/opsz.css';
 @import '@fontsource-variable/hanken-grotesk';
 /* Scan everything under src/ for class names, regardless of where the dev server is started. */
@@ -21,8 +26,13 @@
   --color-gold-bright: #f0c86e;
   --color-rose: #f27bb0;
 
-  --font-display: 'Bodoni Moda Variable', 'Bodoni 72', 'Didot', Georgia, serif;
-  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  /* Poppins for nearly everything: body text, page titles, the countdown. */
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  /* Bodoni Moda for section headings (h2) and the logo wordmark. */
+  --font-serif: 'Bodoni Moda Variable', 'Bodoni 72', 'Didot', Georgia, serif;
+  /* Hanken Grotesk for the main menu. */
+  --font-nav: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
 
   /* Type scale: perfect fourth (1.333) from an 18px body. */
   --text-sm: 0.875rem;
@@ -56,10 +66,19 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-display);
     font-weight: 500;
     line-height: 1.1;
     text-wrap: balance;
+  }
+
+  h1,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-family: var(--font-serif);
     font-optical-sizing: auto;
   }
 

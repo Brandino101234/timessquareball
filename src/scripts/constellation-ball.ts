@@ -79,21 +79,32 @@ export function mountConstellationBall(canvas: HTMLCanvasElement, options: { int
     const t = (time - start) / 1000;
     const spin = reducedMotion.matches ? 0.6 : t * 0.08;
     const cx = width / 2;
-    const cy = height * 0.44;
-    const R = Math.min(width, height) * 0.36;
+    const cy = height * 0.45;
+    const R = Math.min(width, height) * 0.34;
     const unit = R / 20;
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, width, height);
 
-    // Mast below the Ball
-    // (fades out before the countdown digits that overlap the bottom of the canvas)
-    const mastEnd = cy + R * 1.3;
-    const mast = ctx.createLinearGradient(0, cy, 0, mastEnd);
-    mast.addColorStop(0, 'rgba(38, 49, 122, 0.9)');
-    mast.addColorStop(1, 'rgba(38, 49, 122, 0)');
-    ctx.fillStyle = mast;
-    ctx.fillRect(cx - R * 0.11, cy, R * 0.22, mastEnd - cy);
+    // The mast the Ball rides on, like the real one atop One Times Square:
+    // its tip shows above the Ball and the pole runs down to the bottom of the
+    // canvas, connecting the Ball to the countdown below it.
+    const mastTop = cy - R * 1.22;
+    const poleWidth = R * 0.2;
+    const pole = ctx.createLinearGradient(cx - poleWidth / 2, 0, cx + poleWidth / 2, 0);
+    pole.addColorStop(0, '#1d2670');
+    pole.addColorStop(0.45, '#5565b8');
+    pole.addColorStop(1, '#161d5a');
+    ctx.fillStyle = pole;
+    ctx.fillRect(cx - poleWidth / 2, cy, poleWidth, height - cy);
+    // Thinner tip above the Ball
+    ctx.fillRect(cx - poleWidth * 0.2, mastTop, poleWidth * 0.4, cy - mastTop);
+    // Soften only the very bottom so the pole meets the countdown gently
+    const fade = ctx.createLinearGradient(0, height * 0.9, 0, height);
+    fade.addColorStop(0, 'rgba(14, 20, 64, 0)');
+    fade.addColorStop(1, 'rgba(14, 20, 64, 0.85)');
+    ctx.fillStyle = fade;
+    ctx.fillRect(cx - poleWidth, height * 0.9, poleWidth * 2, height * 0.1);
 
     // Light the Ball throws into the night around it
     const halo = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * 1.2);

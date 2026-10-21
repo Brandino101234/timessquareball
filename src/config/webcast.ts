@@ -19,7 +19,7 @@ export const webcast = {
   /** What the webcast covers, in the order it happens. */
   highlights: [
     { time: '6:00 p.m.', text: 'The lighting and raising of the Ball atop One Times Square' },
-    { time: 'Every hour', text: 'Countdowns to the top of the hour, with confetti wishes read on stage' },
+    { time: 'Every hour', text: 'Countdowns to the top of the hour, with confetti and “Optum-ism” messages read on stage' },
     { time: 'All evening', text: 'Live musical performances from the stages in Times Square' },
     { time: '11:59 p.m.', text: 'The Ball descends 90 feet in sixty seconds during the final countdown' },
     { time: 'Midnight', text: 'The Ball Drop, and 3,000 pounds of confetti over Times Square' },

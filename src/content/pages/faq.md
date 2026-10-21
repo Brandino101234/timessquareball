@@ -17,7 +17,7 @@ Atop One Times Square, the building at the intersection of 42nd Street, Seventh 
 
 ## Can I watch the Ball Drop online?
 
-Yes. The live, commercial-free [NYE webcast](/webcast) starts at 6:00 p.m. ET on December 31 with the lighting and raising of the Ball, and runs through midnight. You can also watch the Ball live any time of year on [Ball Cam 1](/ball-cam-1) and [Ball Cam 2](/ball-cam-2).
+Yes. The live, commercial-free [NYE webcast](/webcast) starts at 6:00 p.m. ET on December 31 with the lighting and raising of the Ball, and runs through midnight. You can also watch the Ball live any time of year on the five [Ball cams](/ball-cam-1).
 
 ## How big is the Ball?
 
@@ -45,7 +45,7 @@ Each December, the Confetti Wishing Wall opens in Times Square, and wishes can a
 
 ## Can I visit the Ball up close?
 
-One Times Square offers ticketed experiences that take visitors to a 360-degree viewing deck and to the Ball itself. The Ball facts page has [details of both experiences](/ball-facts).
+Yes. One Times Square offers ticketed experiences, including the New Year’s Eve Ball Experience, the Skywalk Viewing Deck and the One Times Square Candy Experience. The Ball facts page [links to all of them](/ball-facts).
 
 ## Where can I find information about attending in person?
 
