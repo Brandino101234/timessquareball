@@ -1,0 +1,50 @@
+---
+/**
+ * Reusable live cam player. Pass a cam from src/config/cams.ts.
+ * See src/scripts/live-cam.ts for how loading, playback and offline states work.
+ */
+import { getImage } from 'astro:assets';
+import type { Cam } from '../config/cams';
+
+interface Props {
+  cam: Cam;
+}
+const { cam } = Astro.props;
+const poster = await getImage({ src: cam.poster, width: 1600, format: 'webp' });
+---
+
+<div id={`player-${cam.id}`} data-livecam data-src={cam.streamUrl} data-state="loading" class="relative overflow-hidden rounded-[1.25rem] bg-night-950 sm:rounded-[2rem]">
+  <video
+    class="aspect-video w-full bg-night-950 object-contain"
+    poster={poster.src}
+    muted
+    autoplay
+    playsinline
+    preload="auto"
+    aria-label={`${cam.title}, live video`}
+  ></video>
+
+  <!-- Loading: shown over the poster until the first frame plays -->
+  <div data-when="loading" class="pointer-events-none absolute inset-0 grid place-items-center bg-night-950/40">
+    <div class="flex flex-col items-center gap-4" role="status">
+      <span class="size-12 animate-spin rounded-full border-2 border-crystal/25 border-t-gold" aria-hidden="true"></span>
+      <span class="rounded-full bg-night-950/80 px-4 py-1.5 text-base text-crystal">Connecting to {cam.title}…</span>
+    </div>
+  </div>
+
+  <!-- Offline -->
+  <div data-when="offline" hidden class="absolute inset-0 grid place-items-center bg-night-950/80 p-4 text-center sm:p-6">
+    <div role="status" class="max-w-md">
+      <p class="font-display text-[clamp(1.375rem,4vw,2.666rem)] leading-tight text-crystal">This cam is offline right now</p>
+      <p class="mt-1 text-sm text-crystal-muted sm:mt-3 sm:text-base">
+        We’ll keep trying every 30 seconds.<span class="hidden sm:inline"> You can also try the other cam.</span>
+      </p>
+      <button type="button" data-retry class="btn-gold mt-3 min-h-11 px-5 py-2 text-base sm:mt-6 sm:min-h-12">Try again now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { mountLiveCam } from '../scripts/live-cam';
+  for (const el of document.querySelectorAll<HTMLElement>('[data-livecam]')) mountLiveCam(el);
+</script>

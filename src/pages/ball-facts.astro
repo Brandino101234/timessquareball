@@ -1,0 +1,167 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import NextPage from '../components/NextPage.astro';
+import CrystalScale from '../components/CrystalScale.astro';
+import NumeralPucks from '../components/NumeralPucks.astro';
+import {
+  intro,
+  ball,
+  features,
+  visitorExperiences,
+  crystalNotes,
+  numerals,
+} from '../data/ball-facts';
+import ballPhoto from '../assets/facts/constellation-ball-17.jpg';
+
+const fmt = (n: number) => n.toLocaleString('en-US');
+const atAGlance = [
+  { value: `${ball.diameterFeet}`, unit: 'feet', label: 'Diameter' },
+  { value: fmt(ball.weightPounds), unit: 'pounds', label: 'Weight' },
+  { value: fmt(ball.crystals), unit: '', label: 'Waterford crystals' },
+  { value: `${ball.mastHeightFeet}`, unit: 'feet', label: 'Mast atop One Times Square' },
+];
+---
+
+<BaseLayout
+  title="Ball facts"
+  description={`The ${ball.name} by the numbers: ${ball.diameterFeet} feet across, ${fmt(ball.weightPounds)} pounds and ${fmt(ball.crystals)} Waterford crystals, plus the gold ${numerals.year} numerals.`}
+  image={ballPhoto}
+>
+  <PageHeader title="Ball facts" intro={intro}>
+    <a href={ball.factSheet} download class="btn-gold mt-10">
+      <span>Download the {numerals.year} fact sheet <span class="font-normal whitespace-nowrap">(PDF, {ball.factSheetSize})</span></span>
+    </a>
+  </PageHeader>
+
+  <!-- The Ball at a glance -->
+  <section aria-labelledby="glance-heading" class="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-10">
+    <div class="relative overflow-hidden rounded-[2rem]">
+      <Image
+        src={ballPhoto}
+        alt="The Constellation Ball seen from directly below, its circular crystals glowing pink, violet, blue and orange around the mast"
+        width={1600}
+        widths={[600, 1000, 1600]}
+        sizes="(min-width: 1440px) 1360px, 100vw"
+        class="aspect-[4/5] w-full object-cover sm:aspect-[16/9] lg:aspect-[21/9]"
+        loading="eager"
+      />
+    </div>
+    <div class="grid gap-10 py-14 lg:grid-cols-12 lg:gap-10 lg:py-20">
+      <div class="lg:col-span-4">
+        <h2 id="glance-heading" class="text-[clamp(2.25rem,4.5vw,3.554rem)]">The {ball.name}</h2>
+        <p class="mt-6 text-crystal-muted">{ball.summary}</p>
+      </div>
+      <dl class="grid grid-cols-2 gap-x-6 gap-y-10 lg:col-span-7 lg:col-start-6">
+        {
+          atAGlance.map((f) => (
+            <div class="border-t border-night-600 pt-5">
+              <dt class="text-sm text-crystal-muted sm:text-base">{f.label}</dt>
+              <dd class="mt-2 flex flex-wrap items-baseline gap-x-2">
+                <span class="font-display text-[clamp(2.25rem,6vw,4.738rem)] leading-none text-gold">{f.value}</span>
+                {f.unit && <span class="text-base text-crystal">{f.unit}</span>}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- About the Constellation Ball -->
+  <section aria-labelledby="about-heading" class="border-t border-night-600/60 bg-night-900">
+    <div class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+      <h2 id="about-heading" class="max-w-2xl text-[clamp(2.25rem,4.5vw,3.554rem)]">About the {ball.name}</h2>
+      <dl class="mt-12 grid gap-x-16 gap-y-12 md:grid-cols-2">
+        {
+          features.map((f) => (
+            <div>
+              <dt class="font-display text-[1.75rem] leading-tight text-crystal">{f.title}</dt>
+              <dd class="mt-3 max-w-[60ch] text-crystal-muted">{f.text}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="mt-20 grid gap-10 border-t border-night-600/70 pt-12 lg:grid-cols-12">
+        <div class="lg:col-span-4">
+          <h3 class="text-[clamp(1.75rem,3vw,2.25rem)]">Visit the Ball</h3>
+          <p class="mt-4 text-crystal-muted">{visitorExperiences.intro}</p>
+        </div>
+        <ul class="grid gap-6 sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
+          {
+            visitorExperiences.items.map((x) => (
+              <li class="rounded-[1.5rem] border border-night-600 p-6">
+                <h4 class="font-display text-[1.75rem] leading-tight text-crystal">{x.title}</h4>
+                <p class="mt-3 text-base text-crystal-muted">{x.text}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- About the crystals -->
+  <section aria-labelledby="crystals-heading">
+    <div class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+      <div class="grid gap-14 lg:grid-cols-12 lg:gap-10">
+        <div class="lg:col-span-5">
+          <h2 id="crystals-heading" class="text-[clamp(2.25rem,4.5vw,3.554rem)]">About the crystals</h2>
+          <p class="mt-6 text-crystal-muted">
+            Shown at their true size relative to each other, with how many of each are on the Ball.
+          </p>
+        </div>
+        <div class="lg:col-span-7">
+          <CrystalScale />
+        </div>
+      </div>
+      <dl class="mt-16 grid gap-x-16 gap-y-10 border-t border-night-600/70 pt-12 md:grid-cols-2">
+        {
+          crystalNotes.map((n) => (
+            <div>
+              <dt class="font-display text-[1.75rem] leading-tight text-crystal">{n.title}</dt>
+              <dd class="mt-3 max-w-[60ch] text-crystal-muted">{n.text}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- The numerals -->
+  <section aria-labelledby="numerals-heading" class="border-t border-night-600/60 bg-night-900">
+    <div class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+      <div class="grid gap-14 lg:grid-cols-12 lg:gap-10">
+        <div class="lg:col-span-4">
+          <h2 id="numerals-heading" class="text-[clamp(2.25rem,4.5vw,3.554rem)]">
+            The new {numerals.year} numerals
+          </h2>
+          <p class="mt-6 text-crystal-muted">
+            Each numeral stands {numerals.heightFeet} feet tall. Here’s how many LED light pucks light each one.
+          </p>
+        </div>
+        <div class="lg:col-span-7 lg:col-start-6">
+          <NumeralPucks />
+        </div>
+      </div>
+      <dl class="mt-16 grid gap-x-16 gap-y-10 border-t border-night-600/70 pt-12 md:grid-cols-2">
+        {
+          numerals.notes.map((n) => (
+            <div>
+              <dt class="font-display text-[1.75rem] leading-tight text-crystal">{n.title}</dt>
+              <dd class="mt-3 max-w-[60ch] text-crystal-muted">{n.text}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <NextPage
+    href="/ball-cam-1"
+    title="Ball Cam 1"
+    description="See the Constellation Ball live atop One Times Square."
+  />
+</BaseLayout>

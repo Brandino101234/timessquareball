@@ -1,0 +1,203 @@
+@import '@fontsource-variable/bodoni-moda/opsz.css';
+@import '@fontsource-variable/hanken-grotesk';
+/* Scan everything under src/ for class names, regardless of where the dev server is started. */
+@import 'tailwindcss' source('..');
+
+/*
+ * Design tokens — "Constellation" direction.
+ * Night sky base, crystal text, prism for links/focus, numeral gold for the
+ * countdown and primary actions, confetti rose reserved for celebration.
+ */
+@theme {
+  --color-night-950: #070a24;
+  --color-night-900: #0a0f31;
+  --color-night: #0e1440;
+  --color-night-700: #172060;
+  --color-night-600: #26317a;
+  --color-crystal: #eef2ff;
+  --color-crystal-muted: #b8c0e3;
+  --color-prism: #9adcf5;
+  --color-gold: #e2b04a;
+  --color-gold-bright: #f0c86e;
+  --color-rose: #f27bb0;
+
+  --font-display: 'Bodoni Moda Variable', 'Bodoni 72', 'Didot', Georgia, serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale: perfect fourth (1.333) from an 18px body. */
+  --text-sm: 0.875rem;
+  --text-base: 1.125rem;
+  --text-lg: 1.5rem;
+  --text-xl: 2rem;
+  --text-2xl: 2.666rem;
+  --text-3xl: 3.554rem;
+  --text-4xl: 4.738rem;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-night);
+    color: var(--color-crystal);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.1;
+    text-wrap: balance;
+    font-optical-sizing: auto;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-prism);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-night-950);
+  }
+}
+
+@layer components {
+  /* Text links inside running copy. */
+  .link {
+    color: var(--color-prism);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .link:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .btn-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 999px;
+    background: var(--color-gold);
+    color: var(--color-night-950);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 150ms ease;
+  }
+  .btn-gold:hover {
+    background: var(--color-gold-bright);
+  }
+
+  .btn-quiet {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--color-crystal) 35%, transparent);
+    color: var(--color-crystal);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 150ms ease;
+  }
+  .btn-quiet:hover {
+    border-color: var(--color-crystal);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Long-form text from Markdown files (history pages, legal pages, releases). */
+@layer components {
+  .prose {
+    max-width: 65ch;
+    /* Long words and URLs (e.g. "Contact/Questions/Comments") wrap instead of widening the page. */
+    overflow-wrap: break-word;
+    color: color-mix(in oklab, var(--color-crystal) 88%, var(--color-night));
+    line-height: 1.7;
+  }
+  .prose > * + * {
+    margin-top: 1.25em;
+  }
+  .prose h2 {
+    margin-top: 2.25em;
+    font-size: var(--text-xl);
+    color: var(--color-crystal);
+  }
+  .prose h3 {
+    margin-top: 2em;
+    font-size: var(--text-lg);
+    color: var(--color-crystal);
+  }
+  .prose a {
+    color: var(--color-prism);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .prose a:hover {
+    text-decoration-thickness: 2px;
+  }
+  .prose strong {
+    color: var(--color-crystal);
+    font-weight: 600;
+  }
+  .prose ul,
+  .prose ol {
+    padding-left: 1.25em;
+  }
+  .prose ul {
+    list-style: disc;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li {
+    margin-top: 0.5em;
+  }
+  .prose li::marker {
+    color: var(--color-gold);
+  }
+  .prose blockquote {
+    border-left: 2px solid var(--color-gold);
+    padding-left: 1.25em;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    line-height: 1.4;
+    color: var(--color-crystal);
+  }
+}

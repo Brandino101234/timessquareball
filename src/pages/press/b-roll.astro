@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PressNav from '../../components/PressNav.astro';
+import VideoList from '../../components/VideoList.astro';
+import { bRoll, bRollArchive } from '../../data/videos';
+---
+
+<BaseLayout
+  title="B-roll video"
+  description="HD b-roll of Times Square New Year’s Eve preparations and past Midnight Moments, free to download for editorial use."
+>
+  <PageHeader
+    title="B-roll video"
+    intro="Raw HD footage of this year’s preparations, from the Ball raising to the final Ball test."
+  >
+    <PressNav />
+  </PageHeader>
+
+  <div class="mx-auto max-w-[90rem] px-4 pb-20 sm:px-6 lg:px-10 lg:pb-28">
+    <p class="max-w-[62ch] text-base text-crystal-muted">
+      Files are broadcast-quality and large, so downloads can take a few minutes. If a video opens in your browser
+      instead of downloading, use your browser’s save option.
+    </p>
+
+    <section aria-labelledby="current-heading" class="mt-12">
+      <h2 id="current-heading" class="mb-6 text-[clamp(2rem,4vw,3rem)]">This year</h2>
+      <VideoList videos={bRoll} />
+    </section>
+
+    <section aria-labelledby="archive-heading" class="mt-20">
+      <h2 id="archive-heading" class="text-[clamp(2rem,4vw,3rem)]">Archive: Midnight Moments</h2>
+      <p class="mt-3 mb-6 max-w-[62ch] text-base text-crystal-muted">The stroke of midnight in Times Square, year by year.</p>
+      <VideoList videos={bRollArchive} previews={false} />
+    </section>
+  </div>
+</BaseLayout>

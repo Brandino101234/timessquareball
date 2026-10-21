@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import { sponsors, sponsorYear } from '../data/sponsors';
+---
+
+{
+  sponsors.length > 0 && (
+    <section aria-labelledby="sponsors-heading" class="bg-crystal text-night">
+      <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:px-10 lg:py-20">
+        <h2 id="sponsors-heading" class="text-center text-[clamp(1.75rem,3.5vw,2.666rem)]">
+          Thank you to our {sponsorYear} sponsors
+        </h2>
+        <ul class="mt-10 grid grid-cols-2 items-start gap-x-6 gap-y-10 md:grid-cols-4">
+          {sponsors.map((s) => (
+            <li class="flex flex-col items-center text-center">
+              <a href={s.url} rel="sponsored noopener" class="block rounded-lg">
+                <Image src={s.logo} alt={s.name} width={183} class="h-auto w-[150px] mix-blend-multiply sm:w-[183px]" />
+              </a>
+              {s.role && <p class="mt-2 text-sm text-night-600">{s.role}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

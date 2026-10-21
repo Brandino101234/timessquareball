@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/times-square-ball-facts", "destination": "/ball-facts", "permanent": true },
+    { "source": "/nye-webcast", "destination": "/webcast", "permanent": true },
+    { "source": "/photographs", "destination": "/press/photos", "permanent": true },
+    { "source": "/b-roll", "destination": "/press/b-roll", "permanent": true },
+    { "source": "/press-releases", "destination": "/press/releases", "permanent": true },
+    { "source": "/packaged-video-2", "destination": "/press/video-segments", "permanent": true },
+    { "source": "/privacy-policy", "destination": "/privacy", "permanent": true },
+    { "source": "/wp-content/uploads/:year/:month/:file.pdf", "destination": "/press/releases/:file.pdf", "permanent": true }
+  ]
+}

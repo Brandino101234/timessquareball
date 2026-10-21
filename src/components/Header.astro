@@ -1,0 +1,179 @@
+---
+import BallMark from './BallMark.astro';
+import { mainNav, isGroup } from '../data/navigation';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => path === href;
+const inSection = (href: string) => path === href || path.startsWith(href + '/');
+---
+
+<header class="sticky top-0 z-40 border-b border-night-600/60 bg-night/90 backdrop-blur-md">
+  <div class="mx-auto flex h-16 max-w-[90rem] items-center justify-between gap-6 px-4 sm:px-6 lg:h-20 lg:px-10">
+    <a href="/" class="flex items-center gap-3 text-crystal no-underline" aria-label="Times Square Ball, home">
+      <BallMark size={34} class="text-gold" />
+      <span class="font-display text-[1.1875rem] leading-none font-medium whitespace-nowrap tracking-[-0.01em] sm:text-[1.375rem]">Times Square Ball</span>
+    </a>
+
+    <nav aria-label="Main" class="hidden xl:block">
+      <ul class="flex items-center gap-1">
+        {
+          mainNav.map((item) =>
+            isGroup(item) ? (
+              <li class="relative" data-dropdown>
+                <button
+                  type="button"
+                  class:list={[
+                    'flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.9375rem] font-medium transition-colors hover:text-gold',
+                    inSection(item.href) ? 'text-gold' : 'text-crystal',
+                  ]}
+                  aria-expanded="false"
+                  aria-controls="press-menu"
+                >
+                  {item.label}
+                  <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" class="transition-transform" data-chevron>
+                    <path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                </button>
+                <ul
+                  id="press-menu"
+                  hidden
+                  class="absolute top-full right-0 mt-2 w-60 rounded-2xl border border-night-600 bg-night-900 p-2 shadow-[0_24px_48px_-12px_rgba(3,5,20,0.8)]"
+                >
+                  {item.children.map((child) => (
+                    <li>
+                      <a
+                        href={child.href}
+                        aria-current={isCurrent(child.href) ? 'page' : undefined}
+                        class="block rounded-xl px-4 py-2.5 text-[0.9375rem] text-crystal no-underline hover:bg-night-700 aria-[current=page]:text-gold"
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={isCurrent(item.href) ? 'page' : undefined}
+                  class="block rounded-full px-3.5 py-2 text-[0.9375rem] font-medium text-crystal no-underline transition-colors hover:text-gold aria-[current=page]:text-gold"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ),
+          )
+        }
+      </ul>
+    </nav>
+
+    <button
+      type="button"
+      class="flex h-11 items-center gap-2 rounded-full border border-night-600 px-4 text-[0.9375rem] font-medium xl:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-toggle
+    >
+      <span data-menu-label>Menu</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M2 5h12M2 11h12" stroke="currentColor" stroke-width="1.5" data-menu-icon-open />
+        <path d="m3.5 3.5 9 9m0-9-9 9" stroke="currentColor" stroke-width="1.5" class="hidden" data-menu-icon-close />
+      </svg>
+    </button>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    aria-label="Main"
+    hidden
+    class="h-[calc(100svh-4rem)] overflow-y-auto border-t border-night-600/60 bg-night-900 px-4 pt-4 pb-10 sm:px-6 lg:h-[calc(100svh-5rem)] xl:hidden"
+  >
+    <ul class="mx-auto max-w-xl">
+      {
+        mainNav.map((item) =>
+          isGroup(item) ? (
+            <li class="mt-4 border-t border-night-600/60 pt-4">
+              <p class="px-2 pb-1 text-sm text-crystal-muted">{item.label}</p>
+              <ul>
+                {item.children.map((child) => (
+                  <li>
+                    <a
+                      href={child.href}
+                      aria-current={isCurrent(child.href) ? 'page' : undefined}
+                      class="block rounded-xl px-2 py-3 text-lg text-crystal no-underline aria-[current=page]:text-gold"
+                    >
+                      {child.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+                class="block rounded-xl px-2 py-3 font-display text-2xl text-crystal no-underline aria-[current=page]:text-gold"
+              >
+                {item.label}
+              </a>
+            </li>
+          ),
+        )
+      }
+    </ul>
+  </nav>
+</header>
+
+<script>
+  // Press dropdown (desktop)
+  for (const root of document.querySelectorAll<HTMLElement>('[data-dropdown]')) {
+    const button = root.querySelector('button')!;
+    const menu = root.querySelector('ul')!;
+    const chevron = root.querySelector('[data-chevron]');
+    const setOpen = (open: boolean) => {
+      button.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+      chevron?.classList.toggle('rotate-180', open);
+    };
+    button.addEventListener('click', () => setOpen(menu.hidden));
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) {
+        setOpen(false);
+        button.focus();
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (!root.contains(e.target as Node)) setOpen(false);
+    });
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains(e.relatedTarget as Node)) setOpen(false);
+    });
+  }
+
+  // Mobile menu
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = document.getElementById('mobile-menu');
+  if (toggle && panel) {
+    const label = toggle.querySelector('[data-menu-label]')!;
+    const iconOpen = toggle.querySelector('[data-menu-icon-open]')!;
+    const iconClose = toggle.querySelector('[data-menu-icon-close]')!;
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      label.textContent = open ? 'Close' : 'Menu';
+      iconOpen.classList.toggle('hidden', open);
+      iconClose.classList.toggle('hidden', !open);
+      document.documentElement.style.overflow = open ? 'hidden' : '';
+    };
+    toggle.addEventListener('click', () => setOpen(panel.hidden));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    window.matchMedia('(min-width: 80rem)').addEventListener('change', (e) => e.matches && setOpen(false));
+  }
+</script>

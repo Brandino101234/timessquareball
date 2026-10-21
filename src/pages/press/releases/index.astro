@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import PressNav from '../../../components/PressNav.astro';
+import ReleaseItem from '../../../components/ReleaseItem.astro';
+import { ball } from '../../../data/ball-facts';
+
+// Newest first
+const releases = (await getCollection('releases')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const years = [...new Set(releases.map((r) => r.data.date.getUTCFullYear()))];
+---
+
+<BaseLayout
+  title="Press releases"
+  description="Press releases, media advisories and the official schedule for Times Square New Year’s Eve, with PDF downloads."
+>
+  <PageHeader title="Press releases" intro="Releases, media advisories and the official schedule, newest first. Each one is also available as a PDF.">
+    <PressNav />
+  </PageHeader>
+
+  <div class="mx-auto max-w-[90rem] px-4 pb-20 sm:px-6 lg:px-10 lg:pb-28">
+    <aside aria-label="Fact sheet" class="flex flex-col gap-4 rounded-[1.5rem] border border-night-600 bg-night-900 p-6 sm:flex-row sm:items-center sm:justify-between lg:p-8">
+      <div>
+        <p class="font-display text-[1.75rem] leading-tight">Ball and numeral fact sheet</p>
+        <p class="mt-1 text-base text-crystal-muted">The {ball.name} and the gold numerals, by the numbers.</p>
+      </div>
+      <a href={ball.factSheet} download class="btn-gold shrink-0">Download PDF ({ball.factSheetSize})</a>
+    </aside>
+
+    {
+      years.map((year) => (
+        <section aria-labelledby={`y${year}`} class="mt-16">
+          <h2 id={`y${year}`} class="mb-2 text-[clamp(2rem,4vw,3rem)]">{year}</h2>
+          {releases
+            .filter((r) => r.data.date.getUTCFullYear() === year)
+            .map((r) => (
+              <ReleaseItem release={r} />
+            ))}
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>

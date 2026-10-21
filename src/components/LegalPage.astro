@@ -1,0 +1,45 @@
+---
+/**
+ * Privacy and Terms pages: long legal text from src/content/pages/, with a
+ * section index so readers can jump to a numbered section.
+ */
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from './PageHeader.astro';
+
+interface Props {
+  id: 'privacy' | 'terms';
+}
+const page = (await getEntry('pages', Astro.props.id))!;
+const { Content, headings } = await render(page);
+const { title, description, effective } = page.data;
+const sections = headings.filter((h) => h.depth === 2);
+---
+
+<BaseLayout title={title} description={description}>
+  <PageHeader title={title} source={effective && `Effective ${effective}`} />
+
+  <div class="mx-auto grid max-w-[90rem] gap-12 px-4 pb-20 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-10 lg:pb-28">
+    {
+      sections.length > 0 && (
+        <nav aria-label="Sections" class="min-w-0 lg:col-span-3">
+          <div class="lg:sticky lg:top-28">
+            <p class="text-sm font-semibold text-crystal">On this page</p>
+            <ol class="mt-3 columns-1 gap-6 space-y-1.5 text-sm sm:columns-2 lg:columns-1">
+              {sections.map((h) => (
+                <li class="break-inside-avoid">
+                  <a href={`#${h.slug}`} class="text-crystal-muted no-underline [overflow-wrap:anywhere] hover:text-crystal">
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </nav>
+      )
+    }
+    <article class="prose min-w-0 lg:col-span-8 lg:col-start-5 [&_h2]:scroll-mt-28 [&>h2:first-of-type]:mt-12">
+      <Content />
+    </article>
+  </div>
+</BaseLayout>

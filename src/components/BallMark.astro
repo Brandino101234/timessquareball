@@ -1,0 +1,41 @@
+---
+/**
+ * Small constellation-ball mark: the front face of a sphere of circular crystals.
+ * Generated from the same Fibonacci-sphere layout as the hero ball.
+ */
+interface Props {
+  size?: number;
+  class?: string;
+}
+const { size = 32, class: className } = Astro.props;
+
+const count = 90;
+const golden = Math.PI * (3 - Math.sqrt(5));
+const dots: { x: number; y: number; r: number; o: number }[] = [];
+for (let i = 0; i < count; i++) {
+  const y = 1 - (i / (count - 1)) * 2;
+  const radius = Math.sqrt(1 - y * y);
+  const theta = golden * i;
+  const x = Math.cos(theta) * radius;
+  const z = Math.sin(theta) * radius;
+  if (z < -0.05) continue;
+  const size = [0.55, 0.9, 1.15][i % 3];
+  dots.push({
+    x: +(16 + x * 13).toFixed(2),
+    y: +(16 + y * 13).toFixed(2),
+    r: +(size * (0.55 + 0.45 * z)).toFixed(2),
+    o: +(0.45 + 0.55 * z).toFixed(2),
+  });
+}
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 32 32"
+  class={className}
+  aria-hidden="true"
+  focusable="false"
+>
+  {dots.map((d) => <circle cx={d.x} cy={d.y} r={d.r} fill="currentColor" opacity={d.o} />)}
+</svg>

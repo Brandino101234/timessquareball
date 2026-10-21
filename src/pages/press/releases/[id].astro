@@ -1,0 +1,53 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { site } from '../../../data/site';
+import { formatDate, isoDate } from '../../../scripts/format';
+
+export const getStaticPaths = (async () => {
+  const releases = await getCollection('releases');
+  return releases.map((release) => ({ params: { id: release.id }, props: { release } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  release: CollectionEntry<'releases'>;
+}
+const { release } = Astro.props;
+const { title, date, kind, summary, pdf, pdfSize } = release.data;
+const { Content } = await render(release);
+
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: title,
+  description: summary,
+  datePublished: isoDate(date),
+  publisher: { '@type': 'Organization', name: site.owner, url: site.domain },
+  mainEntityOfPage: new URL(Astro.url.pathname, site.domain).href,
+};
+---
+
+<BaseLayout title={title} description={summary} type="article" structuredData={[articleLd]}>
+  <article class="mx-auto max-w-[90rem] px-4 pt-10 pb-20 sm:px-6 lg:px-10 lg:pt-16 lg:pb-28">
+    <a href="/press/releases" class="link text-base">All press releases</a>
+
+    <header class="mt-8 max-w-[52rem]">
+      <p class="text-base text-crystal-muted">
+        {kind}, <time datetime={isoDate(date)}>{formatDate(date)}</time>
+      </p>
+      <h1 class="mt-3 text-[clamp(2.25rem,5vw,4rem)] leading-[1.05]">{title}</h1>
+      {
+        pdf && (
+          <a href={pdf} download class="btn-gold mt-8">
+            Download PDF{pdfSize && ` (${pdfSize})`}
+          </a>
+        )
+      }
+    </header>
+
+    <div class="prose mt-12 border-t border-night-600/70 pt-10 [&_h3]:mt-10 [&_h3]:font-sans [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-gold">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

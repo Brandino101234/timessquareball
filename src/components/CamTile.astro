@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import type { Cam } from '../config/cams';
+
+interface Props {
+  cam: Cam;
+}
+const { cam } = Astro.props;
+---
+
+<a
+  href={`/${cam.slug}`}
+  class="group block overflow-hidden rounded-[1.5rem] border border-night-600 bg-night no-underline transition-colors hover:border-prism"
+>
+  <div class="relative">
+    <Image src={cam.poster} alt="" width={1000} widths={[400, 700, 1000]} sizes="(min-width: 640px) 30vw, 100vw" class="aspect-video w-full object-cover" />
+    <span
+      data-cam-status={cam.streamUrl}
+      hidden
+      class="absolute top-3 left-3 inline-flex items-center gap-2 rounded-full bg-night-950/85 px-3 py-1 text-sm font-medium text-crystal"
+    >
+      <span class="size-2 rounded-full bg-rose" aria-hidden="true"></span>
+      Live now
+    </span>
+  </div>
+  <div class="p-5">
+    <h3 class="font-display text-2xl text-crystal group-hover:text-gold">{cam.title}</h3>
+    <p class="mt-1 text-base text-crystal-muted">{cam.description}</p>
+  </div>
+</a>
+
+<script>
+  // Show "Live now" only when the stream's playlist actually responds.
+  for (const badge of document.querySelectorAll<HTMLElement>('[data-cam-status]')) {
+    const url = badge.dataset.camStatus!;
+    fetch(url, { cache: 'no-store' })
+      .then((res) => (res.ok ? res.text() : ''))
+      .then((body) => {
+        if (body.includes('#EXTM3U')) badge.hidden = false;
+      })
+      .catch(() => {});
+  }
+</script>

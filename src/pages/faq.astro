@@ -1,0 +1,53 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+
+const page = (await getEntry('pages', 'faq'))!;
+const { Content, headings } = await render(page);
+const { title, description, intro } = page.data;
+const questions = headings.filter((h) => h.depth === 2);
+
+// FAQ structured data for search engines, read from the same Markdown:
+// each "## " heading is a question and the text under it is the answer.
+const toText = (md: string) => md.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_`]/g, '').replace(/\s+/g, ' ').trim();
+const pairs = (page.body ?? '')
+  .split(/^## /m)
+  .slice(1)
+  .map((block) => {
+    const [q, ...rest] = block.split('\n');
+    return { q: q.trim(), a: toText(rest.join('\n')) };
+  });
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: pairs.map((p) => ({ '@type': 'Question', name: p.q, acceptedAnswer: { '@type': 'Answer', text: p.a } })),
+};
+---
+
+<BaseLayout title={title} description={description} structuredData={[faqLd]}>
+  <PageHeader title={title} intro={intro} />
+
+  <div class="mx-auto grid max-w-[90rem] gap-12 px-4 pb-20 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-10 lg:pb-28">
+    <nav aria-label="Questions" class="lg:col-span-4">
+      <div class="lg:sticky lg:top-28">
+        <ul class="space-y-2 text-base">
+          {
+            questions.map((h) => (
+              <li>
+                <a href={`#${h.slug}`} class="text-crystal-muted no-underline hover:text-crystal">
+                  {h.text}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+    <article
+      class="prose lg:col-span-7 lg:col-start-6 [&_h2]:mt-0 [&_h2]:scroll-mt-28 [&_h2]:border-t [&_h2]:border-night-600/70 [&_h2]:pt-8 [&_h2]:text-[clamp(1.5rem,2.6vw,2rem)] [&_h2:not(:first-child)]:mt-12"
+    >
+      <Content />
+    </article>
+  </div>
+</BaseLayout>

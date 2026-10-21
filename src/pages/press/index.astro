@@ -1,0 +1,113 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PressNav from '../../components/PressNav.astro';
+import ReleaseItem from '../../components/ReleaseItem.astro';
+import { photos, photoCategories, photosIn } from '../../data/photos';
+import { bRoll, bRollArchive, segments } from '../../data/videos';
+import { ball } from '../../data/ball-facts';
+
+const releases = (await getCollection('releases')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const mediaAlert = releases.find((r) => r.data.kind === 'Media alert');
+const archiveYears = bRollArchive.map((v) => Number(v.date.slice(0, 4)));
+
+const sections = [
+  {
+    href: '/press/photos',
+    title: 'Hi-res photos',
+    detail: `${photos.length} photos in ${photoCategories.length} categories, full size for download`,
+    image: photosIn('ball-photos')[13]?.image ?? photos[0].image,
+  },
+  {
+    href: '/press/b-roll',
+    title: 'B-roll video',
+    detail: `${bRoll.length} HD clips, plus Midnight Moment footage from ${Math.min(...archiveYears)} to ${Math.max(...archiveYears)}`,
+    image: photosIn('confetti-test')[0]?.image ?? photos[0].image,
+  },
+  {
+    href: '/press/releases',
+    title: 'Press releases',
+    detail: `${releases.length} releases, media advisories and the official schedule`,
+    image: photosIn('numeral-delivery')[0]?.image ?? photos[0].image,
+  },
+  {
+    href: '/press/video-segments',
+    title: 'Video segments',
+    detail: `${segments.length} pre-packaged HD segments, edited and ready to air`,
+    image: photosIn('wishing-wall')[0]?.image ?? photos[0].image,
+  },
+];
+---
+
+<BaseLayout
+  title="Press"
+  description="Hi-res photos, HD b-roll, pre-packaged video segments and press releases for Times Square New Year’s Eve."
+>
+  <PageHeader title="Press" intro="High resolution media files and press releases. Check back often for updates.">
+    <PressNav />
+  </PageHeader>
+
+  <section aria-label="Press materials" class="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-10">
+    <ul class="grid gap-6 md:grid-cols-2">
+      {
+        sections.map((s) => (
+          <li>
+            <a
+              href={s.href}
+              class="group block overflow-hidden rounded-[1.5rem] border border-night-600 bg-night-900 no-underline transition-colors hover:border-prism"
+            >
+              <Image
+                src={s.image}
+                alt=""
+                width={1000}
+                widths={[480, 800, 1000]}
+                sizes="(min-width: 768px) 45vw, 100vw"
+                class="aspect-[16/9] w-full object-cover"
+              />
+              <div class="p-6 lg:p-8">
+                <h2 class="text-[clamp(1.75rem,3vw,2.25rem)] text-crystal group-hover:text-gold">{s.title}</h2>
+                <p class="mt-2 text-base text-crystal-muted">{s.detail}</p>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="latest-heading" class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h2 id="latest-heading" class="text-[clamp(2.25rem,4.5vw,3.554rem)]">Latest releases</h2>
+      <a href="/press/releases" class="link font-medium">All press releases</a>
+    </div>
+    <div class="mt-10">
+      {releases.slice(0, 3).map((r) => <ReleaseItem release={r} />)}
+    </div>
+  </section>
+
+  <section aria-labelledby="quick-heading" class="border-t border-night-600/60 bg-night-900">
+    <div class="mx-auto grid max-w-[90rem] gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-10 lg:py-20">
+      <h2 id="quick-heading" class="sr-only">Quick links</h2>
+      <div>
+        <h3 class="text-[1.75rem]">Ball and numeral fact sheet</h3>
+        <p class="mt-3 max-w-[50ch] text-base text-crystal-muted">
+          Size, weight, crystal counts and themes for the {ball.name} and the gold numerals.
+        </p>
+        <a href={ball.factSheet} download class="btn-gold mt-6">Download the fact sheet (PDF, {ball.factSheetSize})</a>
+      </div>
+      {
+        mediaAlert && (
+          <div>
+            <h3 class="text-[1.75rem]">Live TV feed and webcast embedding</h3>
+            <p class="mt-3 max-w-[50ch] text-base text-crystal-muted">
+              Fiber and satellite coordinates for the free broadcast feed, and how to embed the commercial-free webcast.
+            </p>
+            <a href={`/press/releases/${mediaAlert.id}`} class="btn-quiet mt-6">Read the media alert</a>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

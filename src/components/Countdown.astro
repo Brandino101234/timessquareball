@@ -1,0 +1,123 @@
+---
+/**
+ * Live countdown to midnight, January 1, in Times Square (America/New_York).
+ * The build-time values below are only a fallback; the script corrects them
+ * as soon as the page loads, so the countdown is right whatever the visitor's
+ * own time zone is.
+ */
+import { countdownState } from '../scripts/countdown';
+
+interface Props {
+  /** "hero" is the large home page version; "compact" fits inside other pages. */
+  size?: 'hero' | 'compact';
+  /** Use "p" when the page already has its own h1. */
+  captionTag?: 'h1' | 'p';
+}
+const { size = 'hero', captionTag: Caption = 'h1' } = Astro.props;
+const digitSize =
+  size === 'hero' ? 'text-[clamp(2.6rem,11.2vw,8.5rem)]' : 'text-[clamp(2.6rem,8vw,5.25rem)]';
+
+const initial = countdownState(new Date());
+const targetYear = initial.kind === 'counting' ? initial.targetYear : initial.year + 1;
+const units = [
+  { key: 'days', label: 'days' },
+  { key: 'hours', label: 'hours' },
+  { key: 'minutes', label: 'minutes' },
+  { key: 'seconds', label: 'seconds' },
+] as const;
+---
+
+<div data-countdown class="flex flex-col items-center">
+  <div data-counting class="flex flex-col items-center">
+    <div aria-hidden="true" class="flex items-start justify-center gap-[clamp(1.1rem,4vw,3rem)]">
+      {
+        units.map((u) => (
+          <div class="flex flex-col items-center">
+            <span
+              data-unit={u.key}
+              class:list={[
+                "font-display leading-[0.95] font-normal text-gold tabular-nums [font-variation-settings:'opsz'_96]",
+                digitSize,
+              ]}
+            >
+              {u.key === 'days' ? '—' : '––'}
+            </span>
+            <span class="mt-2 text-sm text-crystal-muted sm:text-base">{u.label}</span>
+          </div>
+        ))
+      }
+    </div>
+    <p class="sr-only" aria-live="polite" data-spoken>
+      Counting down to midnight, January 1, {targetYear}, in Times Square.
+    </p>
+    <Caption
+      class:list={[
+        'font-display text-crystal',
+        size === 'hero' ? 'mt-8 text-[clamp(1.75rem,4.2vw,2.666rem)]' : 'mt-6 text-[clamp(1.5rem,3vw,2rem)]',
+      ]}
+    >
+      until <span data-year>{targetYear}</span> arrives in Times Square
+    </Caption>
+    <p class="mt-3 text-base text-crystal-muted">
+      Midnight, January 1, Eastern Time
+    </p>
+  </div>
+
+  <div data-celebrating hidden class="flex flex-col items-center">
+    <Caption class="font-display text-[clamp(3.5rem,12vw,8.5rem)] leading-none text-rose">
+      Happy New Year
+    </Caption>
+    <p class="mt-4 font-display text-[clamp(2rem,6vw,4rem)] text-gold" data-year-celebrating></p>
+  </div>
+</div>
+
+<script>
+  import { countdownState } from '../scripts/countdown';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-countdown]')) {
+    const counting = root.querySelector<HTMLElement>('[data-counting]')!;
+    const celebrating = root.querySelector<HTMLElement>('[data-celebrating]')!;
+    const spoken = root.querySelector<HTMLElement>('[data-spoken]')!;
+    const year = root.querySelector<HTMLElement>('[data-year]')!;
+    const yearCelebrating = root.querySelector<HTMLElement>('[data-year-celebrating]')!;
+    const fields = {
+      days: root.querySelector<HTMLElement>('[data-unit="days"]')!,
+      hours: root.querySelector<HTMLElement>('[data-unit="hours"]')!,
+      minutes: root.querySelector<HTMLElement>('[data-unit="minutes"]')!,
+      seconds: root.querySelector<HTMLElement>('[data-unit="seconds"]')!,
+    };
+    let lastSpokenMinute = -1;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+    const tick = () => {
+      const s = countdownState(new Date());
+      if (s.kind === 'celebrating') {
+        counting.hidden = true;
+        celebrating.hidden = false;
+        yearCelebrating.textContent = String(s.year);
+        return;
+      }
+      counting.hidden = false;
+      celebrating.hidden = true;
+      year.textContent = String(s.targetYear);
+      fields.days.textContent = String(s.days);
+      fields.hours.textContent = pad(s.hours);
+      fields.minutes.textContent = pad(s.minutes);
+      fields.seconds.textContent = pad(s.seconds);
+      // Screen readers hear an update once a minute, not every second.
+      const minuteKey = Math.floor(s.totalMs / 60000);
+      if (minuteKey !== lastSpokenMinute) {
+        lastSpokenMinute = minuteKey;
+        spoken.textContent = `${plural(s.days, 'day')}, ${plural(s.hours, 'hour')} and ${plural(s.minutes, 'minute')} until ${s.targetYear} in Times Square.`;
+      }
+    };
+
+    tick();
+    // Align ticks to the start of each second so the digits change together.
+    setTimeout(() => {
+      tick();
+      setInterval(tick, 1000);
+    }, 1000 - (Date.now() % 1000));
+  }
+</script>

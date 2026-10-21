@@ -1,0 +1,182 @@
+---
+import { Image, getImage } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PressNav from '../../components/PressNav.astro';
+import { photoCategories, photosIn, photos } from '../../data/photos';
+import { formatDate, isoDate } from '../../scripts/format';
+
+const groups = await Promise.all(
+  photoCategories
+    .map((c) => ({ ...c, items: photosIn(c.slug) }))
+    .filter((c) => c.items.length > 0)
+    .map(async (c) => ({
+      ...c,
+      items: await Promise.all(
+        c.items.map(async (p) => ({
+          ...p,
+          large: (await getImage({ src: p.image, width: 1600, format: 'webp' })).src,
+        })),
+      ),
+    })),
+);
+---
+
+<BaseLayout
+  title="Hi-res photos"
+  description={`${photos.length} high-resolution press photos of Times Square New Year’s Eve, free to download at full size for editorial use.`}
+>
+  <PageHeader
+    title="Hi-res photos"
+    intro="Images for press use. Photographs will be posted shortly after each event."
+  >
+    <PressNav />
+  </PageHeader>
+
+  <div class="mx-auto max-w-[90rem] px-4 pb-20 sm:px-6 lg:px-10 lg:pb-28">
+    <nav aria-label="Photo categories" class="sticky top-16 z-10 -mx-4 border-b border-night-600/60 bg-night/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:top-20 lg:-mx-10 lg:px-10">
+      <ul class="flex gap-x-5 gap-y-2 overflow-x-auto whitespace-nowrap lg:flex-wrap">
+        {
+          groups.map((g) => (
+            <li>
+              <a href={`#${g.slug}`} class="inline-flex min-h-11 items-center text-[0.9375rem] text-crystal-muted no-underline hover:text-crystal">
+                {g.label}
+                <span class="ml-1.5 text-sm text-crystal-muted/80">{g.items.length}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <p class="mt-8 max-w-[60ch] text-base text-crystal-muted">
+      Select a photo to see it larger. Every photo downloads at its original size, up to 6000 pixels wide.
+    </p>
+
+    {
+      groups.map((g) => (
+        <section id={g.slug} aria-labelledby={`${g.slug}-heading`} class="scroll-mt-36 pt-14 lg:scroll-mt-40">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-night-600/70 pt-6">
+            <h2 id={`${g.slug}-heading`} class="text-[clamp(1.75rem,3vw,2.25rem)]">{g.label}</h2>
+            <p class="text-base text-crystal-muted">
+              <time datetime={isoDate(g.date)}>{formatDate(g.date)}</time>, {g.items.length} photos
+            </p>
+          </div>
+          <ul class="mt-6 grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 xl:grid-cols-4">
+            {g.items.map((p) => (
+              <li>
+                <a
+                  href={p.original}
+                  data-photo
+                  data-large={p.large}
+                  data-original={p.original}
+                  data-file={p.file}
+                  data-label={g.label}
+                  data-alt={p.alt}
+                  class="group block overflow-hidden rounded-xl bg-night-950"
+                >
+                  <Image
+                    src={p.image}
+                    alt={p.alt}
+                    width={600}
+                    widths={[300, 450, 600]}
+                    sizes="(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 48vw"
+                    class="aspect-[3/2] w-full object-cover transition-opacity group-hover:opacity-85"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+
+  <!-- Lightbox -->
+  <dialog
+    data-lightbox
+    aria-labelledby="lightbox-title"
+    class="m-0 h-full max-h-none w-full max-w-none bg-night-950/97 p-0 text-crystal backdrop:bg-night-950/80"
+  >
+    <div class="flex h-full flex-col">
+      <div class="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <p id="lightbox-title" class="min-w-0 truncate text-base">
+          <span data-lb-label class="font-medium"></span>
+          <span data-lb-count class="ml-2 text-crystal-muted"></span>
+        </p>
+        <button type="button" data-lb-close class="btn-quiet min-h-11 shrink-0 px-4 py-2">Close</button>
+      </div>
+      <div data-lb-stage class="relative flex min-h-0 flex-1 items-center justify-center px-2 sm:px-16">
+        <img data-lb-img alt="" class="max-h-full max-w-full rounded-lg object-contain" />
+        <button
+          type="button"
+          data-lb-prev
+          class="absolute top-1/2 left-2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-night-900/90 text-crystal hover:bg-night-700 sm:left-4"
+        >
+          <span class="sr-only">Previous photo</span>
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M11.5 3.5 6 9l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+        </button>
+        <button
+          type="button"
+          data-lb-next
+          class="absolute top-1/2 right-2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-night-900/90 text-crystal hover:bg-night-700 sm:right-4"
+        >
+          <span class="sr-only">Next photo</span>
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M6.5 3.5 12 9l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+        </button>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
+        <p data-lb-file class="min-w-0 truncate text-sm text-crystal-muted"></p>
+        <a data-lb-download href="#" download class="btn-gold">Download full size</a>
+      </div>
+    </div>
+  </dialog>
+</BaseLayout>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]')!;
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-photo]')];
+  const img = dialog.querySelector<HTMLImageElement>('[data-lb-img]')!;
+  const label = dialog.querySelector('[data-lb-label]')!;
+  const count = dialog.querySelector('[data-lb-count]')!;
+  const file = dialog.querySelector('[data-lb-file]')!;
+  const download = dialog.querySelector<HTMLAnchorElement>('[data-lb-download]')!;
+  let index = 0;
+  let opener: HTMLElement | null = null;
+
+  function show(i: number) {
+    index = (i + links.length) % links.length;
+    const d = links[index].dataset;
+    img.src = d.large!;
+    img.alt = d.alt!;
+    label.textContent = d.label!;
+    count.textContent = `${index + 1} of ${links.length}`;
+    file.textContent = d.file!;
+    download.href = d.original!;
+    download.setAttribute('download', d.file!);
+  }
+
+  links.forEach((link, i) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      opener = link;
+      show(i);
+      dialog.showModal();
+    });
+  });
+  dialog.querySelector('[data-lb-prev]')!.addEventListener('click', () => show(index - 1));
+  dialog.querySelector('[data-lb-next]')!.addEventListener('click', () => show(index + 1));
+  dialog.querySelector('[data-lb-close]')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') show(index - 1);
+    if (e.key === 'ArrowRight') show(index + 1);
+  });
+  // Clicking the dark area around the photo closes it
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog || (e.target as HTMLElement).hasAttribute('data-lb-stage')) dialog.close();
+  });
+  dialog.addEventListener('close', () => {
+    img.removeAttribute('src');
+    opener?.focus();
+  });
+</script>

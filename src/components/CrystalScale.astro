@@ -1,0 +1,60 @@
+---
+/**
+ * The Ball's three crystal sizes drawn at true relative scale, with how many
+ * of each are on the Ball. Reads from src/data/ball-facts.ts.
+ */
+import { crystals, ball } from '../data/ball-facts';
+
+const tones = ['var(--color-prism)', 'var(--color-crystal)', 'var(--color-gold)'];
+const largest = Math.max(...crystals.map((c) => c.sizeInches));
+const total = crystals.reduce((n, c) => n + c.count, 0);
+const fmt = (n: number) => n.toLocaleString('en-US');
+
+// Facet lines for a circular crystal of radius r
+const facets = (r: number) =>
+  Array.from({ length: 12 }, (_, i) => {
+    const a = (i / 12) * Math.PI * 2;
+    return { x1: Math.cos(a) * r * 0.42, y1: Math.sin(a) * r * 0.42, x2: Math.cos(a) * r * 0.86, y2: Math.sin(a) * r * 0.86 };
+  });
+---
+
+<div>
+  <ul class="grid grid-cols-3 items-start gap-4 sm:gap-10">
+    {
+      crystals.map((c, i) => {
+        const pct = (c.sizeInches / largest) * 100;
+        return (
+          <li class="flex flex-col items-center text-center">
+            <div class="flex aspect-square w-full max-w-[11rem] items-end justify-center">
+            <svg viewBox="-50 -50 100 100" style={`width:${pct}%`} class="h-auto" aria-hidden="true">
+              <circle r="48" fill="var(--color-night-700)" stroke={tones[i]} stroke-width="1.5" />
+              <circle r="30" fill="none" stroke={tones[i]} stroke-width="1" opacity="0.7" />
+              <circle r="16" fill="none" stroke={tones[i]} stroke-width="1" opacity="0.55" />
+              {facets(48).map((f) => (
+                <line {...f} stroke={tones[i]} stroke-width="0.8" opacity="0.45" />
+              ))}
+            </svg>
+            </div>
+            <p class="mt-5 font-display text-[clamp(1.5rem,4vw,2.666rem)] leading-none text-crystal">
+              {c.sizeInches}″
+            </p>
+            <p class="mt-2 text-sm text-crystal-muted sm:text-base">{c.theme}</p>
+            <p class="mt-1 text-sm font-semibold text-crystal sm:text-base">{fmt(c.count)} crystals</p>
+          </li>
+        );
+      })
+    }
+  </ul>
+
+  <figure class="mt-12">
+    <div class="flex h-4 overflow-hidden rounded-full" aria-hidden="true">
+      {crystals.map((c, i) => <span style={`width:${(c.count / total) * 100}%;background:${tones[i]}`} class="border-r-2 border-night last:border-r-0" />)}
+    </div>
+    <figcaption class="mt-3 flex flex-wrap justify-between gap-x-6 gap-y-1 text-sm text-crystal-muted">
+      <span>Share of the Ball’s {fmt(ball.crystals)} crystals</span>
+      <span>
+        {crystals.map((c, i) => `${c.sizeInches}″ ${Math.round((c.count / total) * 100)}%`).join(', ')}
+      </span>
+    </figcaption>
+  </figure>
+</div>

@@ -1,0 +1,49 @@
+---
+/**
+ * A list of downloadable press videos (B-roll or segments) from src/data/videos.ts.
+ */
+import { Image } from 'astro:assets';
+import { formatOf, type Video } from '../data/videos';
+import { photosIn } from '../data/photos';
+import { formatDate, isoDate } from '../scripts/format';
+
+interface Props {
+  videos: Video[];
+  /** Show a preview photo from the matching photo category. */
+  previews?: boolean;
+  /** Heading level for each video title: h2 when the list sits directly under the page title. */
+  headingLevel?: 'h2' | 'h3';
+}
+const { videos, previews = true, headingLevel: Title = 'h3' } = Astro.props;
+---
+
+<ul>
+  {
+    videos.map((v) => {
+      const preview = previews && v.photo ? photosIn(v.photo)[0]?.image : undefined;
+      return (
+        <li class="grid items-center gap-4 border-t border-night-600/70 py-6 sm:grid-cols-[auto_1fr_auto] sm:gap-6">
+          {preview && (
+            <Image
+              src={preview}
+              alt=""
+              width={320}
+              widths={[160, 320]}
+              sizes="10rem"
+              class="hidden aspect-[3/2] w-40 rounded-lg object-cover sm:block"
+            />
+          )}
+          <div class:list={['min-w-0', !preview && 'sm:col-span-2']}>
+            <Title class="font-display text-[clamp(1.25rem,2vw,1.5rem)] leading-tight text-crystal">{v.title}</Title>
+            <p class="mt-1 text-sm text-crystal-muted">
+              <time datetime={isoDate(v.date)}>{formatDate(v.date)}</time>, HD {formatOf(v.url)}, {v.sizeMB} MB
+            </p>
+          </div>
+          <a href={v.url} download class="btn-quiet justify-self-start sm:justify-self-end">
+            Download<span class="sr-only">: {v.title}</span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>

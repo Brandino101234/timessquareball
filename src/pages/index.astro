@@ -1,0 +1,167 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Countdown from '../components/Countdown.astro';
+import ConstellationBall from '../components/ConstellationBall.astro';
+import CamTile from '../components/CamTile.astro';
+import SponsorStrip from '../components/SponsorStrip.astro';
+import { cams } from '../config/cams';
+import { ball } from '../data/ball-facts';
+import { site } from '../data/site';
+import { webcast } from '../config/webcast';
+import { newYearInstant, countdownState } from '../scripts/countdown';
+import ballAtNight from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_14.jpg';
+
+const state = countdownState(new Date());
+const nextYear = state.kind === 'counting' ? state.targetYear : state.year + 1;
+
+// Milestones for the history strip (from the Ball History page).
+const balls = [
+  { year: 1907, note: 'Iron and wood, 100 light bulbs' },
+  { year: 1920, note: 'Wrought iron, 400 pounds' },
+  { year: 1955, note: 'Aluminum, 150 pounds' },
+  { year: 1981, note: 'The “I Love New York” apple' },
+  { year: 1995, note: 'Rhinestones, strobes, computer controls' },
+  { year: 2000, note: 'The first crystal Ball' },
+  { year: 2007, note: 'The Centennial Ball, lit by LEDs' },
+  { year: 2008, note: 'The Big Ball, 12 feet across' },
+  { year: 2025, note: 'The Constellation Ball' },
+];
+
+const eventLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: `Times Square New Year’s Eve ${nextYear}`,
+  startDate: new Date(newYearInstant(nextYear).getTime() - 6 * 3600 * 1000).toISOString(),
+  endDate: new Date(newYearInstant(nextYear).getTime() + 15 * 60 * 1000).toISOString(),
+  eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  location: [
+    {
+      '@type': 'Place',
+      name: 'Times Square',
+      address: { '@type': 'PostalAddress', addressLocality: 'New York', addressRegion: 'NY', addressCountry: 'US' },
+    },
+    { '@type': 'VirtualLocation', url: new URL('/webcast', site.domain).href },
+  ],
+  description: 'The Times Square New Year’s Eve Ball Drop atop One Times Square, with a live commercial-free webcast.',
+  isAccessibleForFree: true,
+};
+---
+
+<BaseLayout title="Home" structuredData={[eventLd]}>
+  <!-- Hero: the Ball and the countdown -->
+  <section class="relative isolate overflow-hidden">
+    <div class="mx-auto flex max-w-[90rem] flex-col items-center px-4 pt-6 pb-16 text-center sm:px-6 lg:pt-8 lg:pb-24">
+      <ConstellationBall class="w-[min(88vw,52svh,34rem)]" />
+      <div class="-mt-[clamp(3rem,9svh,6rem)]">
+        <Countdown />
+      </div>
+      <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row">
+        <a href="/webcast" class="btn-gold">Watch the live webcast</a>
+        <a href={`/${cams[0].slug}`} class="btn-quiet">Watch the Ball cams</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Watch it live -->
+  <section aria-labelledby="watch-heading" class="border-t border-night-600/60 bg-night-900">
+    <div class="mx-auto grid max-w-[90rem] gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 lg:px-10 lg:py-28">
+      <div class="max-w-xl">
+        <h2 id="watch-heading" class="text-[clamp(2.25rem,5vw,3.554rem)]">Watch from anywhere</h2>
+        <p class="mt-6 text-crystal-muted">
+          The commercial-free webcast starts at {webcast.startsAt} on December 31 with the lighting and raising of
+          the Ball, then follows the hourly countdowns, live performances and the Ball Drop at midnight.
+        </p>
+        <p class="mt-4 text-crystal-muted">
+          The Ball cams are live all year. Get a behind-the-scenes look at what it takes to put on this dazzling show.
+        </p>
+        <a href="/webcast" class="link mt-8 inline-block font-medium">About the NYE webcast</a>
+      </div>
+      <ul class="grid gap-6 sm:grid-cols-2">
+        {
+          cams.map((cam) => (
+            <li>
+              <CamTile cam={cam} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- This year's Ball -->
+  <section aria-labelledby="ball-heading" class="relative">
+    <div class="mx-auto grid max-w-[90rem] items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-10 lg:py-28">
+      <Image
+        src={ballAtNight}
+        alt="The Constellation Ball lit in swirling red, blue and gold on the roof of One Times Square at night"
+        width={1600}
+        widths={[480, 800, 1200, 1600]}
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        class="aspect-[4/3] w-full rounded-[2rem] object-cover"
+      />
+      <div>
+        <h2 id="ball-heading" class="text-[clamp(2rem,3.8vw,3rem)] leading-[1.15]">
+          {`The ${ball.edition} Ball since ${ball.firstBallYear}: ${ball.diameterFeet} feet across, ${ball.weightPounds.toLocaleString('en-US')} pounds, and ${ball.crystals.toLocaleString('en-US')} circular Waterford crystals.`}
+        </h2>
+        <p class="mt-6 max-w-xl text-crystal-muted">
+          The Constellation Ball replaced the triangular crystals used since 1999 with circles that evoke stars in the
+          night sky. Every crystal is lit by its own programmable LED light puck.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+          <a href="/ball-facts" class="link font-medium">See all the Ball facts</a>
+          <a href={ball.factSheet} class="link font-medium" download>Download the fact sheet (PDF, {ball.factSheetSize})</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- History: the Ball through the years -->
+  <section aria-labelledby="history-heading" class="border-t border-night-600/60">
+    <div class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-2xl">
+          <h2 id="history-heading" class="text-[clamp(2.25rem,5vw,3.554rem)]">The Ball through the years</h2>
+          <p class="mt-6 text-crystal-muted">
+            Times Square has welcomed the new year since 1904. The first Ball was lowered from the flagpole of the
+            Times Tower to mark the arrival of 1908.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-x-8 gap-y-3">
+          <a href="/nye-history" class="link font-medium">Read the NYE history</a>
+          <a href="/ball-history" class="link font-medium">Read the Ball history</a>
+        </div>
+      </div>
+
+      <ol class="mt-14 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-9 lg:gap-x-4">
+        {
+          balls.map((b, i) => (
+            <li class="relative border-t border-night-600 pt-5">
+              <span
+                class:list={[
+                  'absolute -top-[5px] left-0 size-[9px] rounded-full',
+                  i === balls.length - 1 ? 'bg-gold' : 'bg-crystal-muted',
+                ]}
+                aria-hidden="true"
+              />
+              <a href={`/ball-history#y${b.year}`} class="group block no-underline">
+                <span
+                  class:list={[
+                    'block font-display text-2xl group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4',
+                    i === balls.length - 1 ? 'text-gold' : 'text-crystal',
+                  ]}
+                >
+                  {b.year}
+                </span>
+                <span class="mt-2 block text-sm leading-snug text-crystal-muted">{b.note}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <SponsorStrip />
+</BaseLayout>

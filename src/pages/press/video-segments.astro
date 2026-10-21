@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PressNav from '../../components/PressNav.astro';
+import VideoList from '../../components/VideoList.astro';
+import { segments } from '../../data/videos';
+---
+
+<BaseLayout
+  title="Video segments"
+  description="Pre-packaged HD video segments about Times Square New Year’s Eve, edited and ready to air."
+>
+  <PageHeader
+    title="Video segments"
+    intro="Pre-packaged HD segments, edited and ready to air."
+  >
+    <PressNav />
+  </PageHeader>
+
+  <div class="mx-auto max-w-[90rem] px-4 pb-20 sm:px-6 lg:px-10 lg:pb-28">
+    <p class="mb-10 max-w-[62ch] text-base text-crystal-muted">
+      Files are broadcast-quality and large, so downloads can take a few minutes. If a video opens in your browser
+      instead of downloading, use your browser’s save option.
+    </p>
+    <VideoList videos={segments} headingLevel="h2" />
+  </div>
+</BaseLayout>

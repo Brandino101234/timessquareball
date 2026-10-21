@@ -1,0 +1,26 @@
+---
+/** Links between the press pages, shown under each press page title. */
+import { mainNav, isGroup } from '../data/navigation';
+
+const path = Astro.url.pathname.replace(/\/$/, '');
+const links = mainNav.find(isGroup)?.children ?? [];
+const isCurrent = (href: string) => (href === '/press' ? path === '/press' : path === href || path.startsWith(href + '/'));
+---
+
+<nav aria-label="Press sections" class="mt-10 -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+  <ul class="flex w-max gap-2">
+    {
+      links.map((l) => (
+        <li>
+          <a
+            href={l.href}
+            aria-current={isCurrent(l.href) ? 'page' : undefined}
+            class="inline-flex min-h-11 items-center rounded-full border border-night-600 px-4 text-[0.9375rem] font-medium whitespace-nowrap text-crystal no-underline hover:border-crystal aria-[current=page]:border-gold aria-[current=page]:bg-gold aria-[current=page]:text-night-950"
+          >
+            {l.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

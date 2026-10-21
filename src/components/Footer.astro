@@ -1,0 +1,77 @@
+---
+import BallMark from './BallMark.astro';
+import { site } from '../data/site';
+import { social } from '../data/social';
+import { mainNav, footerLinks, isGroup } from '../data/navigation';
+
+const year = new Date().getFullYear();
+const explore = mainNav.filter((item) => !isGroup(item));
+const press = mainNav.find(isGroup)?.children ?? [];
+---
+
+<footer class="border-t border-night-600/60 bg-night-950 text-crystal-muted">
+  <div class="mx-auto grid max-w-[90rem] gap-12 px-4 py-16 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr_1fr] lg:px-10">
+    <div>
+      <a href="/" class="inline-flex items-center gap-3 text-crystal no-underline">
+        <BallMark size={30} class="text-gold" />
+        <span class="font-display text-xl">Times Square Ball</span>
+      </a>
+      <p class="mt-4 max-w-xs text-base">
+        Lowered from the top of One Times Square every New Year’s Eve since 1907.
+      </p>
+    </div>
+
+    <nav aria-labelledby="footer-explore">
+      <h2 id="footer-explore" class="font-sans text-sm font-semibold text-crystal">Explore</h2>
+      <ul class="mt-4 space-y-2 text-base">
+        {explore.map((l) => <li><a href={l.href} class="no-underline hover:text-crystal">{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="footer-press">
+      <h2 id="footer-press" class="font-sans text-sm font-semibold text-crystal">Press</h2>
+      <ul class="mt-4 space-y-2 text-base">
+        {press.map((l) => <li><a href={l.href} class="no-underline hover:text-crystal">{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="footer-follow">
+      <h2 id="footer-follow" class="font-sans text-sm font-semibold text-crystal">Follow</h2>
+      <ul class="mt-4 space-y-2 text-base">
+        {
+          social.map((s) => (
+            <li>
+              <a href={s.url} class="no-underline hover:text-crystal" rel="noopener" target="_blank">
+                {s.name}
+                <span class="sr-only"> (opens in a new tab)</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <div class="border-t border-night-600/40">
+    <div
+      class="mx-auto flex max-w-[90rem] flex-col gap-4 px-4 py-6 text-sm sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-10"
+    >
+      <p>
+        {`© ${year} ${site.owner}. All content is owned and licensed by ${site.owner}.`}
+      </p>
+      <ul class="flex flex-wrap gap-x-6 gap-y-2">
+        {footerLinks.map((l) => <li><a href={l.href} class="no-underline hover:text-crystal">{l.label}</a></li>)}
+        {
+          site.credits.map((c) => (
+            <li>
+              {c.role}{' '}
+              <a href={c.url} class="no-underline hover:text-crystal" rel="noopener">
+                {c.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>

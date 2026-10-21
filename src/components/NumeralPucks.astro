@@ -1,0 +1,40 @@
+---
+/**
+ * The year's numerals drawn as fields of gold light pucks, with each
+ * numeral's real puck count underneath. Reads from src/data/ball-facts.ts.
+ */
+import { numerals } from '../data/ball-facts';
+---
+
+<figure>
+  <ul class="grid grid-cols-4 gap-2 sm:gap-6">
+      {
+        numerals.pucks.map((n, i) => (
+          <li class="flex flex-col items-center">
+            <svg viewBox="0 0 120 160" class="h-auto w-full" aria-hidden="true">
+              <defs>
+                <pattern id={`pucks-${i}`} width="7" height="7" patternUnits="userSpaceOnUse">
+                  <circle cx="3.5" cy="3.5" r="2.4" fill="var(--color-gold)" />
+                </pattern>
+              </defs>
+              <rect x="2" y="2" width="116" height="156" rx="10" fill="var(--color-night-700)" stroke="var(--color-night-600)" />
+              <text
+                x="60"
+                y="134"
+                text-anchor="middle"
+                style="font-family: var(--font-sans); font-weight: 800; font-size: 148px"
+                fill={`url(#pucks-${i})`}
+              >
+                {n.digit}
+              </text>
+            </svg>
+            <p class="mt-3 font-display text-[clamp(1.25rem,3.5vw,2rem)] leading-none text-gold">{n.count}</p>
+            <p class="mt-1 text-sm text-crystal-muted">pucks</p>
+          </li>
+        ))
+      }
+  </ul>
+  <figcaption class="sr-only">
+    LED light pucks in each numeral: {numerals.pucks.map((n) => `${n.digit}, ${n.count} pucks`).join('; ')}. Each numeral is {numerals.heightFeet} feet tall.
+  </figcaption>
+</figure>

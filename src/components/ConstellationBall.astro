@@ -1,0 +1,26 @@
+---
+/**
+ * Animated Constellation Ball (decorative). See src/scripts/constellation-ball.ts.
+ * Without JavaScript the canvas stays empty and the countdown below still reads.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<canvas data-constellation-ball aria-hidden="true" class:list={['block aspect-square', className]}></canvas>
+
+<script>
+  import { mountConstellationBall } from '../scripts/constellation-ball';
+  import { countdownState } from '../scripts/countdown';
+
+  // The Ball glows a little brighter as midnight approaches.
+  const s = countdownState(new Date());
+  const days = s.kind === 'counting' ? s.days : 0;
+  const intensity = 0.7 + 0.3 * (1 - Math.min(days, 90) / 90);
+
+  for (const canvas of document.querySelectorAll<HTMLCanvasElement>('[data-constellation-ball]')) {
+    mountConstellationBall(canvas, { intensity });
+  }
+</script>

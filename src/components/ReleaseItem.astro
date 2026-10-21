@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, isoDate } from '../scripts/format';
+
+interface Props {
+  release: CollectionEntry<'releases'>;
+}
+const { release } = Astro.props;
+const { title, date, kind, summary, pdf, pdfSize } = release.data;
+const href = `/press/releases/${release.id}`;
+---
+
+<article class="grid gap-3 border-t border-night-600/70 py-8 md:grid-cols-[12rem_1fr_auto] md:gap-8">
+  <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 md:flex-col md:gap-1">
+    <time datetime={isoDate(date)} class="font-display text-xl leading-tight text-crystal">{formatDate(date, 'short')}</time>
+    <span class="text-sm text-crystal-muted">{kind}</span>
+  </div>
+  <div class="max-w-[62ch]">
+    <h3 class="font-display text-[clamp(1.375rem,2.2vw,1.75rem)] leading-tight">
+      <a href={href} class="text-crystal no-underline hover:text-gold">{title}</a>
+    </h3>
+    <p class="mt-2 text-base text-crystal-muted">{summary}</p>
+  </div>
+  <div class="flex flex-wrap items-start gap-x-6 gap-y-2 md:flex-col md:items-end md:text-right">
+    <a href={href} class="link text-base font-medium">Read<span class="sr-only">: {title}</span></a>
+    {
+      pdf && (
+        <a href={pdf} download class="link text-base font-medium">
+          PDF{pdfSize && `, ${pdfSize}`}
+          <span class="sr-only">: {title}</span>
+        </a>
+      )
+    }
+  </div>
+</article>

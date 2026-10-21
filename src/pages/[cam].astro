@@ -1,0 +1,73 @@
+---
+/**
+ * Ball cam pages: /ball-cam-1 and /ball-cam-2, one per entry in src/config/cams.ts.
+ */
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LiveCam from '../components/LiveCam.astro';
+import { cams, type Cam } from '../config/cams';
+import { webcast } from '../config/webcast';
+
+export const getStaticPaths = (() =>
+  cams.map((cam) => ({ params: { cam: cam.slug }, props: { cam } }))) satisfies GetStaticPaths;
+
+interface Props {
+  cam: Cam;
+}
+const { cam } = Astro.props;
+const streamOrigin = new URL(cam.streamUrl).origin;
+---
+
+<BaseLayout title={cam.title} description={`${cam.description} Watch the Times Square New Year’s Eve Ball live.`} image={cam.poster}>
+  <link slot="head" rel="preconnect" href={streamOrigin} crossorigin />
+
+  <div class="mx-auto max-w-[90rem] px-4 pt-4 pb-16 sm:px-6 lg:px-10 lg:pt-6">
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 lg:mb-5">
+      <div class="flex items-center gap-4">
+        <h1 class="text-[clamp(1.75rem,3vw,2.25rem)] leading-none">{cam.title}</h1>
+        <span data-live-badge hidden class="inline-flex items-center gap-2 rounded-full bg-night-700 px-3 py-1 text-sm font-medium">
+          <span class="size-2 animate-pulse rounded-full bg-rose" aria-hidden="true"></span>
+          Live
+        </span>
+      </div>
+      <nav aria-label="Ball cams">
+        <ul class="flex gap-1 rounded-full border border-night-600 p-1">
+          {
+            cams.map((c) => (
+              <li>
+                <a
+                  href={`/${c.slug}`}
+                  aria-current={c.id === cam.id ? 'page' : undefined}
+                  class="block rounded-full px-4 py-2 text-[0.9375rem] font-medium text-crystal no-underline hover:bg-night-700 aria-[current=page]:bg-gold aria-[current=page]:text-night-950"
+                >
+                  {c.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Sized so the whole player fits on screen under the header on desktop -->
+    <div class="mx-auto w-full lg:w-[min(100%,calc((100svh-12.5rem)*16/9))]">
+      <LiveCam cam={cam} />
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:mt-12 lg:grid-cols-12 lg:gap-10">
+      <p class="text-crystal-muted lg:col-span-6">{cam.description} The cams run all year, so you can check on the Ball any time.</p>
+      <p class="text-crystal-muted lg:col-span-5 lg:col-start-8">
+        On December 31, the live webcast starts at {webcast.startsAt}.{' '}
+        <a href="/webcast" class="link">Watch the NYE webcast</a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Show the "Live" badge next to the title only while the stream is playing.
+  const badge = document.querySelector<HTMLElement>('[data-live-badge]');
+  document.addEventListener('livecam:state', (e) => {
+    if (badge) badge.hidden = (e as CustomEvent<{ state: string }>).detail.state !== 'playing';
+  });
+</script>
