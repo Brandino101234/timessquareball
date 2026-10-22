@@ -25,6 +25,8 @@ import hero4 from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_
 import camsPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_10.jpg';
 import webcastPhoto from '../assets/press-photos/confetti-test/TS2026_Confetti-Test_01.jpg';
 import historyPhoto from '../assets/ball-history/crystal-ball-2000.jpg';
+// Full-width photo band
+import wishesPhoto from '../assets/press-photos/wishing-wall/TS2026_Wishing-Wall_14.jpg';
 // "Since 1907" gallery
 import crowdPhoto from '../assets/history/history-2.jpg';
 import aluminumBall from '../assets/ball-history/aluminum-ball.jpg';
@@ -35,7 +37,6 @@ import constellationBall from '../assets/ball-history/constellation-ball.jpg';
 
 const state = countdownState(new Date());
 const nextYear = state.kind === 'counting' ? state.targetYear : state.year + 1;
-const fmt = (n: number) => n.toLocaleString('en-US');
 
 const heroPhotos = [
   { src: hero1, alt: 'The Constellation Ball glowing in swirls of red, blue and gold on the roof of One Times Square at night' },
@@ -77,11 +78,12 @@ const gallery = [
   { src: constellationBall, caption: '2025', alt: 'The Constellation Ball seen from below, lit in swirling colors' },
 ];
 
+// Numbers count up from 0 as they scroll into view.
 const facts = [
-  { value: `${ball.diameterFeet}`, unit: 'ft', label: 'Diameter' },
-  { value: fmt(ball.weightPounds), unit: 'lb', label: 'Weight' },
-  { value: fmt(ball.crystals), unit: '', label: 'Waterford crystals' },
-  { value: `${ball.mastHeightFeet}`, unit: 'ft', label: 'Mast atop One Times Square' },
+  { value: ball.diameterFeet, decimals: 1, unit: 'ft', label: 'Diameter' },
+  { value: ball.weightPounds, decimals: 0, unit: 'lb', label: 'Weight' },
+  { value: ball.crystals, decimals: 0, unit: '', label: 'Waterford crystals' },
+  { value: ball.mastHeightFeet, decimals: 0, unit: 'ft', label: 'Mast atop One Times Square' },
 ];
 
 // The first four questions in src/content/pages/faq.md appear here.
@@ -114,9 +116,9 @@ const eventLd = {
     photos={heroPhotos}
     eyebrow="Times Square, New York"
     headline="Where the world counts down"
-    text="The Times Square Ball has marked midnight from atop One Times Square since 1907. Watch it live, any day of the year."
-    cta={{ label: 'Watch the Ball live', href: `/${cams[0].slug}` }}
-    secondaryCta={{ label: 'Buy tickets', href: '#tickets' }}
+    text="The Times Square Ball has marked midnight from atop One Times Square since 1907. See it up close, or watch it live any day of the year."
+    cta={{ label: 'Buy tickets', href: '#tickets' }}
+    secondaryCta={{ label: 'Watch live', href: `/${cams[0].slug}`, live: true }}
     scrollTarget="#live"
   />
 
@@ -124,88 +126,118 @@ const eventLd = {
 
   <!-- Tickets -->
   <section id="tickets" aria-labelledby="tickets-heading" class="scroll-mt-16">
-    <div class="mx-auto max-w-[90rem] px-4 pt-20 sm:px-6 lg:px-10 lg:pt-28">
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+    <div class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between" data-reveal="up">
         <div class="max-w-2xl">
           <p class="eyebrow">Tickets at One Times Square</p>
-          <h2 id="tickets-heading" class="mt-3 text-[clamp(2.25rem,4.5vw,3.554rem)]">Visit the Ball</h2>
-          <p class="mt-5 text-crystal-muted">{visitorExperiences.intro}</p>
+          <h2 id="tickets-heading" class="mt-3 text-[clamp(2.5rem,5vw,4rem)] leading-[1.02]">Visit the Ball</h2>
+          <p class="mt-5 text-muted">{visitorExperiences.intro}</p>
         </div>
         <a href={visitorExperiences.allTicketsUrl} target="_blank" rel="noopener" class="btn-quiet self-start lg:self-auto">
           All tickets<span class="sr-only"> on One Times Square’s site (opens in a new tab)</span>
         </a>
       </div>
-      <div class="mt-10">
+      <div class="mt-12">
         <TicketCards />
       </div>
     </div>
   </section>
 
   <!-- Three ways in -->
-  <section aria-label="Explore" class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
-    <ul class="grid gap-4 md:grid-cols-3 lg:gap-6">
+  <section aria-label="Explore" class="bg-alt">
+    <div class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+      <ul class="grid gap-4 md:grid-cols-3 lg:gap-6" data-reveal-stagger="140">
+        {
+          cards.map((card) => (
+            <li data-reveal="up">
+              <a href={card.href} class="group relative block overflow-hidden bg-deep no-underline">
+                <div data-reveal="image">
+                  <Image
+                    src={card.image}
+                    alt=""
+                    width={900}
+                    widths={[480, 720, 900]}
+                    sizes="(min-width: 768px) 32vw, 100vw"
+                    class="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05] motion-reduce:transition-none"
+                  />
+                </div>
+                <div class="theme-dark absolute inset-0 bg-gradient-to-t from-deep/95 via-deep/25 to-transparent" />
+                <div class="theme-dark absolute inset-x-0 bottom-0 p-6 lg:p-8">
+                  <p class="eyebrow text-ink/85">{card.eyebrow}</p>
+                  <h2 class="mt-2 text-[clamp(2rem,3.2vw,2.75rem)] leading-none text-ink">{card.title}</h2>
+                  <p class="mt-3 max-w-[30ch] text-base text-ink/85">{card.text}</p>
+                  <span class="mt-5 inline-block h-0.5 w-10 bg-gold transition-[width] duration-500 group-hover:w-24" aria-hidden="true" />
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
       {
-        cards.map((card) => (
-          <li>
-            <a href={card.href} class="group relative block overflow-hidden rounded-[1.25rem] bg-night-950 no-underline">
-              <Image
-                src={card.image}
-                alt=""
-                width={900}
-                widths={[480, 720, 900]}
-                sizes="(min-width: 768px) 32vw, 100vw"
-                class="aspect-[4/5] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-night-950/95 via-night-950/30 to-transparent" />
-              <div class="absolute inset-x-0 bottom-0 p-6 lg:p-8">
-                <p class="eyebrow text-crystal/85">{card.eyebrow}</p>
-                <h2 class="mt-2 text-[clamp(2rem,3.2vw,2.75rem)] leading-none text-crystal">{card.title}</h2>
-                <p class="mt-3 max-w-[30ch] text-base text-crystal/85">{card.text}</p>
-              </div>
+        camSponsor && (
+          <p class="mt-6 text-sm text-muted">
+            The official Ball cams are brought to you by{' '}
+            <a href={camSponsor.url} rel="sponsored noopener" class="link">
+              {camSponsor.name}
             </a>
-          </li>
-        ))
+          </p>
+        )
       }
-    </ul>
-    {
-      camSponsor && (
-        <p class="mt-5 text-sm text-crystal-muted">
-          The official Ball cams are brought to you by{' '}
-          <a href={camSponsor.url} rel="sponsored noopener" class="link">
-            {camSponsor.name}
-          </a>
-        </p>
-      )
-    }
+    </div>
+  </section>
+
+  <!-- Wishes: full-width parallax photo -->
+  <section aria-labelledby="wishes-heading" class="theme-dark relative isolate overflow-hidden bg-surface">
+    <div class="absolute inset-0 -z-10" aria-hidden="true">
+      <Image
+        src={wishesPhoto}
+        alt=""
+        width={2400}
+        widths={[900, 1600, 2400]}
+        sizes="100vw"
+        data-parallax="0.18"
+        class="absolute inset-0 size-full scale-[1.15] object-cover will-change-transform"
+      />
+      <div class="absolute inset-0 bg-deep/60"></div>
+    </div>
+    <div class="mx-auto max-w-[90rem] px-4 py-32 text-center sm:px-6 lg:px-10 lg:py-44">
+      <p class="eyebrow text-ink" data-reveal="up">At the stroke of midnight</p>
+      <h2 id="wishes-heading" class="mx-auto mt-5 max-w-[18ch] text-[clamp(2.5rem,6vw,5rem)] leading-[1.02] text-ink" data-reveal="up" style="--reveal-delay: 120ms">
+        3,000 pounds of confetti, carrying wishes from around the world
+      </h2>
+      <div class="mt-10 flex flex-wrap justify-center gap-3" data-reveal="up" style="--reveal-delay: 240ms">
+        <a href="/webcast" class="btn-quiet">Watch the webcast</a>
+      </div>
+    </div>
   </section>
 
   <!-- Since 1907 -->
-  <section aria-labelledby="since-heading" class="border-t border-night-600/60">
+  <section aria-labelledby="since-heading">
     <div class="mx-auto grid max-w-[90rem] items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-10 lg:py-28">
-      <div class="lg:col-span-4">
+      <div class="lg:col-span-4" data-reveal="up">
         <p class="eyebrow">Since 1907</p>
         <h2 id="since-heading" class="mt-3 text-[clamp(2.25rem,4.5vw,3.554rem)]">More than a century of midnights</h2>
-        <p class="mt-6 text-crystal-muted">
+        <p class="mt-6 text-muted">
           Times Square has welcomed the new year since 1904. The first Ball was lowered from the flagpole of the Times
           Tower to welcome 1908. Nine Balls later, it marks the stroke of midnight for over one billion people watching
           worldwide.
         </p>
         <a href="/ball-history" class="btn-quiet mt-8">Learn more</a>
       </div>
-      <ul class="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:col-span-7 lg:col-start-6">
+      <ul class="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:col-span-7 lg:col-start-6" data-reveal-stagger="90">
         {
           gallery.map((g) => (
-            <li>
-              <figure class="relative overflow-hidden rounded-xl bg-night-950">
+            <li data-reveal="image">
+              <figure class="group relative overflow-hidden bg-deep">
                 <Image
                   src={g.src}
                   alt={g.alt}
                   width={400}
                   widths={[240, 400]}
                   sizes="(min-width: 1024px) 18vw, (min-width: 640px) 31vw, 48vw"
-                  class="aspect-square w-full object-cover"
+                  class="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <figcaption class="eyebrow absolute bottom-0 left-0 m-2 rounded-full bg-night-950/80 px-2.5 py-1 text-[0.6875rem] text-crystal">
+                <figcaption class="eyebrow absolute bottom-0 left-0 bg-black/75 px-2.5 py-1.5 text-[0.6875rem] text-white">
                   {g.caption}
                 </figcaption>
               </figure>
@@ -217,53 +249,60 @@ const eventLd = {
   </section>
 
   <!-- Ball facts -->
-  <section aria-labelledby="facts-heading" class="border-t border-night-600/60 bg-night-900">
+  <section aria-labelledby="facts-heading" class="theme-dark bg-surface">
     <div class="mx-auto grid max-w-[90rem] items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-10 lg:py-28">
-      <div class="flex justify-center lg:col-span-5">
+      <div class="flex justify-center lg:col-span-5" data-reveal="up">
         <ConstellationBall class="w-[min(80vw,26rem)]" />
       </div>
       <div class="lg:col-span-7">
-        <p class="eyebrow">Ball facts</p>
-        <h2 id="facts-heading" class="mt-3 text-[clamp(2.25rem,4.5vw,3.554rem)]">The {ball.name}</h2>
-        <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-10">
+        <div data-reveal="up">
+          <p class="eyebrow">Ball facts</p>
+          <h2 id="facts-heading" class="mt-3 text-[clamp(2.25rem,4.5vw,3.554rem)]">The {ball.name}</h2>
+        </div>
+        <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-10" data-reveal-stagger="120">
           {
             facts.map((f) => (
-              <div class="border-t border-night-600 pt-5">
+              <div class="relative pt-5" data-reveal="up">
+                <span class="absolute inset-x-0 top-0 h-px bg-line" data-reveal-line aria-hidden="true" />
                 <dt class="eyebrow">{f.label}</dt>
                 <dd class="mt-2 flex flex-wrap items-baseline gap-x-2">
-                  <span class="text-[clamp(2.75rem,6vw,4.75rem)] leading-none font-semibold tracking-[-0.03em] text-crystal">
-                    {f.value}
+                  <span
+                    class="text-[clamp(2.75rem,6vw,4.75rem)] leading-none font-semibold tracking-[-0.03em] text-ink tabular-nums"
+                    data-count-to={f.value}
+                    data-count-decimals={f.decimals}
+                  >
+                    {f.value.toLocaleString('en-US', { minimumFractionDigits: f.decimals })}
                   </span>
-                  {f.unit && <span class="text-lg text-crystal-muted">{f.unit}</span>}
+                  {f.unit && <span class="text-lg text-muted">{f.unit}</span>}
                 </dd>
               </div>
             ))
           }
         </dl>
-        <a href="/ball-facts" class="btn-quiet mt-10">All Ball facts</a>
+        <a href="/ball-facts" class="btn-quiet mt-10" data-reveal="up">All Ball facts</a>
       </div>
     </div>
   </section>
 
   <!-- FAQ preview -->
-  <section aria-labelledby="faq-heading" class="border-t border-night-600/60">
+  <section aria-labelledby="faq-heading">
     <div class="mx-auto grid max-w-[90rem] gap-10 px-4 py-20 sm:px-6 lg:grid-cols-12 lg:px-10 lg:py-28">
-      <div class="lg:col-span-4">
+      <div class="lg:col-span-4" data-reveal="up">
         <p class="eyebrow">Planning your New Year’s Eve</p>
         <h2 id="faq-heading" class="mt-3 text-[clamp(2.25rem,4.5vw,3.554rem)]">NYE questions</h2>
         <a href="/faq" class="btn-quiet mt-8">See all questions</a>
       </div>
-      <div class="lg:col-span-7 lg:col-start-6">
+      <div class="lg:col-span-7 lg:col-start-6" data-reveal-stagger="90">
         {
           faqPreview.map((item) => (
-            <details class="group border-t border-night-600/70 last:border-b">
-              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-[clamp(1.125rem,1.8vw,1.375rem)] font-medium text-crystal [&::-webkit-details-marker]:hidden">
+            <details class="group border-t border-line last:border-b" data-reveal="up">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-[clamp(1.125rem,1.8vw,1.375rem)] font-medium text-ink transition-colors hover:text-muted [&::-webkit-details-marker]:hidden">
                 {item.question}
-                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" class="shrink-0 transition-transform group-open:rotate-45">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" class="shrink-0 transition-transform duration-300 group-open:rotate-45">
                   <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" />
                 </svg>
               </summary>
-              <div class="prose pb-6 text-base [&_p]:text-crystal-muted" set:html={answerHtml(item.answer)} />
+              <div class="prose pb-6 text-base [&_p]:text-muted" set:html={answerHtml(item.answer)} />
             </details>
           ))
         }
@@ -272,16 +311,16 @@ const eventLd = {
   </section>
 
   <!-- Getting to Times Square -->
-  <section id="getting-there" aria-labelledby="getting-heading" class="scroll-mt-16 border-t border-night-600/60 bg-night-900">
+  <section id="getting-there" aria-labelledby="getting-heading" class="scroll-mt-16 bg-alt">
     <div class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
-      <div class="max-w-2xl">
+      <div class="max-w-2xl" data-reveal="up">
         <p class="eyebrow">Visit on New Year’s Eve</p>
         <h2 id="getting-heading" class="mt-3 text-[clamp(2.25rem,4.5vw,3.554rem)]">Getting to Times Square</h2>
-        <p class="mt-6 text-crystal-muted">{gettingThere.intro}</p>
+        <p class="mt-6 text-muted">{gettingThere.intro}</p>
       </div>
       <div class="mt-12 grid gap-10 lg:grid-cols-12">
-        <div class="lg:col-span-6">
-          <div class="overflow-hidden rounded-[1.25rem] border border-night-600 bg-night-950">
+        <div class="lg:col-span-6" data-reveal="image">
+          <div class="overflow-hidden border border-line bg-deep">
             <iframe
               src={gettingThere.map.embedUrl}
               title="Map of Times Square and the surrounding streets, from OpenStreetMap"
@@ -294,17 +333,17 @@ const eventLd = {
           </a>
         </div>
         <div class="lg:col-span-5 lg:col-start-8">
-          <dl>
+          <dl data-reveal-stagger="90">
             {
               gettingThere.facts.map((f) => (
-                <div class="border-t border-night-600/70 py-5 first:border-t-0 first:pt-0">
+                <div class="border-t border-line py-5 first:border-t-0 first:pt-0" data-reveal="up">
                   <dt class="eyebrow">{f.label}</dt>
-                  <dd class="mt-2 text-crystal">{f.value}</dd>
+                  <dd class="mt-2 text-ink">{f.value}</dd>
                 </div>
               ))
             }
           </dl>
-          <p class="mt-4 text-sm text-crystal-muted">
+          <p class="mt-4 text-sm text-muted">
             Details can change each year. Check the{' '}
             <a href={gettingThere.moreInfo.url} class="link" target="_blank" rel="noopener">
               {gettingThere.moreInfo.label}

@@ -26,10 +26,10 @@ const latest = milestones.at(-1);
               <a
                 href={`#${m.id}`}
                 class:list={[
-                  'inline-flex min-h-11 items-center rounded-full border px-4 font-display text-lg no-underline transition-colors',
+                  'inline-flex min-h-11 items-center border px-4 font-display text-lg no-underline transition-colors',
                   m === latest
-                    ? 'border-gold text-gold hover:bg-gold hover:text-night-950'
-                    : 'border-night-600 text-crystal hover:border-crystal',
+                    ? 'border-ink bg-ink text-surface'
+                    : 'border-line text-ink hover:border-ink',
                 ]}
               >
                 {m.yearLabel ?? m.year}
@@ -49,14 +49,14 @@ const latest = milestones.at(-1);
           return (
             <li
               id={m.id}
-              class="relative grid scroll-mt-28 gap-6 border-t border-night-600/70 py-12 pl-8 lg:grid-cols-12 lg:gap-10 lg:py-16 lg:pl-0"
+              class="relative grid scroll-mt-28 gap-6 border-t border-line/70 py-12 pl-8 lg:grid-cols-12 lg:gap-10 lg:py-16 lg:pl-0"
             >
               {/* Timeline rail and marker */}
-              <span class="absolute top-0 bottom-0 left-[5px] w-px bg-night-600 lg:hidden" aria-hidden="true" />
+              <span class="absolute top-0 bottom-0 left-[5px] w-px bg-line lg:hidden" aria-hidden="true" />
               <span
                 class:list={[
                   'absolute top-[3.6rem] left-0 size-[11px] rounded-full lg:hidden',
-                  isLatest ? 'bg-gold' : 'bg-crystal-muted',
+                  isLatest ? 'bg-gold' : 'bg-muted',
                 ]}
                 aria-hidden="true"
               />
@@ -67,7 +67,7 @@ const latest = milestones.at(-1);
                   class:list={[
                     'font-display leading-none tracking-[-0.01em]',
                     m.yearLabel ? 'text-[clamp(2.5rem,5vw,3.6rem)]' : 'text-[clamp(3rem,7vw,5.25rem)]',
-                    isLatest ? 'text-gold' : 'text-crystal',
+                    isLatest ? 'font-semibold text-ink' : 'text-ink',
                   ]}
                 >
                   {m.yearLabel ?? m.year}
@@ -82,11 +82,11 @@ const latest = milestones.at(-1);
                 </div>
                 {
                   m.stats.length > 0 && (
-                    <dl class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-night-600/70 pt-6 sm:grid-cols-4 lg:grid-cols-2">
+                    <dl class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-line/70 pt-6 sm:grid-cols-4 lg:grid-cols-2">
                       {m.stats.map((s) => (
                         <div>
-                          <dt class="text-sm text-crystal-muted">{s.label}</dt>
-                          <dd class:list={['mt-1 font-display text-xl leading-tight', isLatest ? 'text-gold' : 'text-crystal']}>
+                          <dt class="text-sm text-muted">{s.label}</dt>
+                          <dd class:list={['mt-1 font-display text-xl leading-tight', isLatest ? 'font-semibold text-ink' : 'text-ink']}>
                             {s.value}
                           </dd>
                         </div>
@@ -104,7 +104,7 @@ const latest = milestones.at(-1);
                       alt={m.imageAlt ?? ''}
                       widths={[320, 480, 640]}
                       sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
-                      class="aspect-square w-full max-w-sm rounded-[2rem] bg-night-950 object-cover lg:max-w-none"
+                      class="aspect-square w-full max-w-sm bg-deep object-cover lg:max-w-none"
                     />
                   </div>
                 )
@@ -116,7 +116,7 @@ const latest = milestones.at(-1);
     </ol>
   </section>
 
-  <section class="border-t border-night-600/60">
+  <section class="border-t border-line/60">
     <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-10 lg:px-10 lg:py-24">
       <div class="prose lg:col-span-7 lg:col-start-4 [&>h2:first-child]:mt-0">
         <Closing />

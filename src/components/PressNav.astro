@@ -15,7 +15,7 @@ const isCurrent = (href: string) => (href === '/press' ? path === '/press' : pat
           <a
             href={l.href}
             aria-current={isCurrent(l.href) ? 'page' : undefined}
-            class="inline-flex min-h-11 items-center rounded-full border border-night-600 px-4 text-[0.9375rem] font-medium whitespace-nowrap text-crystal no-underline hover:border-crystal aria-[current=page]:border-gold aria-[current=page]:bg-gold aria-[current=page]:text-night-950"
+            class="inline-flex min-h-11 items-center border border-line px-4 text-[0.9375rem] font-medium whitespace-nowrap text-ink no-underline hover:border-ink aria-[current=page]:border-gold aria-[current=page]:bg-gold aria-[current=page]:text-black"
           >
             {l.label}
           </a>

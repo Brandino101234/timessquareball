@@ -47,6 +47,10 @@ export const features = [
   },
 ] as const;
 
+import type { ImageMetadata } from 'astro';
+import ballExperiencePhoto from '../assets/press-photos/crystal-installation/TS2026_Waterford-Crystals_12.jpg';
+import viewingDeckPhoto from '../assets/press-photos/crystal-installation/TS2026_Waterford-Crystals_10.jpg';
+
 /**
  * Ticketed experiences at One Times Square, shown with "Buy tickets" buttons on
  * the homepage and the Ball Facts page. Tickets are sold by One Times Square.
@@ -56,6 +60,8 @@ export const features = [
  */
 export const visitorExperiences = {
   intro: 'One Times Square offers ticketed experiences that bring you up close to the Ball and the building.',
+  // Each experience can have a photo (from src/assets). Without one, its card
+  // shows the experience name in large type instead.
   /** One Times Square's page listing every ticket. */
   allTicketsUrl: 'https://onetimessquare.com/buy-tickets',
   items: [
@@ -65,6 +71,8 @@ export const visitorExperiences = {
       text: 'Up-close access to the Ball for photos and the official Ball Show, plus admission to the Skywalk Viewing Deck.',
       url: 'https://onetimessquare.com/nye-ball',
       ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/21155d63-e4fc-407e-bf6a-d5197ee8c856?fac=OTS&locale=en&skin=vipball',
+      image: ballExperiencePhoto,
+      imageAlt: 'A visitor reaches out to the glowing circular crystals of the Ball',
     },
     {
       title: 'Skywalk Viewing Deck',
@@ -72,6 +80,8 @@ export const visitorExperiences = {
       text: 'A 360-degree wraparound viewing deck overlooking Times Square.',
       url: 'https://onetimessquare.com/skywalk-viewing-deck',
       ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/6fceff3f-55b8-495e-92b3-e704acca869f/shop/multiple-event-search?fac=OTS&locale=en&skin=viewingdeck',
+      image: viewingDeckPhoto,
+      imageAlt: 'Guests on the rooftop deck of One Times Square beside the Ball, with Times Square towers behind',
     },
     {
       title: 'One Times Square Candy Experience',
@@ -80,8 +90,16 @@ export const visitorExperiences = {
       url: 'https://onetimessquare.com/candy-experience',
       ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/53193bd5-28b5-447a-a559-07ce1378583f/shop/select?fac=OTS&locale=en&skin=icandy',
     },
-  ],
-} as const;
+  ] as {
+    title: string;
+    eyebrow: string;
+    text: string;
+    url: string;
+    ticketsUrl: string;
+    image?: ImageMetadata;
+    imageAlt?: string;
+  }[],
+};
 
 /** Crystal sizes on the Ball, smallest first. Counts must add up to `ball.crystals`. */
 export const crystals = [

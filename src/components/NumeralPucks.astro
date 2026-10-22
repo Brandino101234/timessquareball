@@ -17,7 +17,7 @@ import { numerals } from '../data/ball-facts';
                   <circle cx="3.5" cy="3.5" r="2.4" fill="var(--color-gold)" />
                 </pattern>
               </defs>
-              <rect x="2" y="2" width="116" height="156" rx="10" fill="var(--color-night-700)" stroke="var(--color-night-600)" />
+              <rect x="2" y="2" width="116" height="156" fill="var(--raised)" stroke="var(--line)" />
               <text
                 x="60"
                 y="134"
@@ -31,10 +31,10 @@ import { numerals } from '../data/ball-facts';
             {n.count ? (
               <>
                 <p class="mt-3 font-display text-[clamp(1.25rem,3.5vw,2rem)] leading-none text-gold">{n.count}</p>
-                <p class="mt-1 text-sm text-crystal-muted">pucks</p>
+                <p class="mt-1 text-sm text-muted">pucks</p>
               </>
             ) : (
-              <p class="mt-3 text-center text-sm leading-snug text-crystal-muted">Count coming soon</p>
+              <p class="mt-3 text-center text-sm leading-snug text-muted">Count coming soon</p>
             )}
           </li>
         ))

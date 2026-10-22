@@ -20,10 +20,10 @@ const years = [...new Set(releases.map((r) => r.data.date.getUTCFullYear()))];
   </PageHeader>
 
   <div class="mx-auto max-w-[90rem] px-4 pb-20 sm:px-6 lg:px-10 lg:pb-28">
-    <aside aria-label="Fact sheet" class="flex flex-col gap-4 rounded-[1.5rem] border border-night-600 bg-night-900 p-6 sm:flex-row sm:items-center sm:justify-between lg:p-8">
+    <aside aria-label="Fact sheet" class="flex flex-col gap-4 border border-line bg-alt p-6 sm:flex-row sm:items-center sm:justify-between lg:p-8">
       <div>
         <p class="font-display text-[1.75rem] leading-tight">Ball and numeral fact sheet</p>
-        <p class="mt-1 text-base text-crystal-muted">The {ball.name} and the gold numerals, by the numbers.</p>
+        <p class="mt-1 text-base text-muted">The {ball.name} and the gold numerals, by the numbers.</p>
       </div>
       <a href={ball.factSheet} download class="btn-gold shrink-0">Download PDF ({ball.factSheetSize})</a>
     </aside>

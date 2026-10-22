@@ -33,7 +33,7 @@ const articleLd = {
     <a href="/press/releases" class="link text-base">All press releases</a>
 
     <header class="mt-8 max-w-[52rem]">
-      <p class="text-base text-crystal-muted">
+      <p class="text-base text-muted">
         {kind}, <time datetime={isoDate(date)}>{formatDate(date)}</time>
       </p>
       <h1 class="mt-3 text-[clamp(2.25rem,5vw,4rem)] leading-[1.05]">{title}</h1>
@@ -46,7 +46,7 @@ const articleLd = {
       }
     </header>
 
-    <div class="prose mt-12 border-t border-night-600/70 pt-10 [&_h3]:mt-10 [&_h3]:font-sans [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-gold">
+    <div class="prose mt-12 border-t border-line/70 pt-10 [&_h3]:mt-10 [&_h3]:font-sans [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-ink">
       <Content />
     </div>
   </article>

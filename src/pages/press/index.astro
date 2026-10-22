@@ -56,7 +56,7 @@ const sections = [
           <li>
             <a
               href={s.href}
-              class="group block overflow-hidden rounded-[1.5rem] border border-night-600 bg-night-900 no-underline transition-colors hover:border-prism"
+              class="group block overflow-hidden border border-line bg-alt no-underline transition-colors hover:border-link"
             >
               <Image
                 src={s.image}
@@ -67,8 +67,8 @@ const sections = [
                 class="aspect-[16/9] w-full object-cover"
               />
               <div class="p-6 lg:p-8">
-                <h2 class="text-[clamp(1.75rem,3vw,2.25rem)] text-crystal group-hover:text-gold">{s.title}</h2>
-                <p class="mt-2 text-base text-crystal-muted">{s.detail}</p>
+                <h2 class="text-[clamp(1.75rem,3vw,2.25rem)] text-ink group-hover:underline">{s.title}</h2>
+                <p class="mt-2 text-base text-muted">{s.detail}</p>
               </div>
             </a>
           </li>
@@ -87,12 +87,12 @@ const sections = [
     </div>
   </section>
 
-  <section aria-labelledby="quick-heading" class="border-t border-night-600/60 bg-night-900">
+  <section aria-labelledby="quick-heading" class="border-t border-line/60 bg-alt">
     <div class="mx-auto grid max-w-[90rem] gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-10 lg:py-20">
       <h2 id="quick-heading" class="sr-only">Quick links</h2>
       <div>
         <h3 class="text-[1.75rem]">Ball and numeral fact sheet</h3>
-        <p class="mt-3 max-w-[50ch] text-base text-crystal-muted">
+        <p class="mt-3 max-w-[50ch] text-base text-muted">
           Size, weight, crystal counts and themes for the {ball.name} and the gold numerals.
         </p>
         <a href={ball.factSheet} download class="btn-gold mt-6">Download the fact sheet (PDF, {ball.factSheetSize})</a>
@@ -101,7 +101,7 @@ const sections = [
         mediaAlert && (
           <div>
             <h3 class="text-[1.75rem]">Live TV feed and webcast embedding</h3>
-            <p class="mt-3 max-w-[50ch] text-base text-crystal-muted">
+            <p class="mt-3 max-w-[50ch] text-base text-muted">
               Fiber and satellite coordinates for the free broadcast feed, and how to embed the commercial-free webcast.
             </p>
             <a href={`/press/releases/${mediaAlert.id}`} class="btn-quiet mt-6">Read the media alert</a>

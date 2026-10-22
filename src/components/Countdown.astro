@@ -36,13 +36,13 @@ const units = [
             <span
               data-unit={u.key}
               class:list={[
-                "font-display leading-[0.95] font-medium tracking-[-0.03em] text-gold tabular-nums",
+                "font-display leading-[0.95] font-medium tracking-[-0.03em] text-ink tabular-nums",
                 digitSize,
               ]}
             >
               {u.key === 'days' ? '—' : '––'}
             </span>
-            <span class="mt-2 text-sm text-crystal-muted sm:text-base">{u.label}</span>
+            <span class="mt-2 text-sm text-muted sm:text-base">{u.label}</span>
           </div>
         ))
       }
@@ -52,13 +52,13 @@ const units = [
     </p>
     <Caption
       class:list={[
-        'font-display text-crystal',
+        'font-display text-ink',
         size === 'hero' ? 'mt-8 text-[clamp(1.75rem,4.2vw,2.666rem)]' : 'mt-6 text-[clamp(1.5rem,3vw,2rem)]',
       ]}
     >
       until <span data-year>{targetYear}</span> arrives in Times Square
     </Caption>
-    <p class="mt-3 text-base text-crystal-muted">
+    <p class="mt-3 text-base text-muted">
       Midnight, January 1, Eastern Time
     </p>
   </div>
@@ -67,7 +67,7 @@ const units = [
     <Caption class="font-display text-[clamp(3.5rem,12vw,8.5rem)] leading-none text-rose">
       Happy New Year
     </Caption>
-    <p class="mt-4 font-display text-[clamp(2rem,6vw,4rem)] text-gold" data-year-celebrating></p>
+    <p class="mt-4 font-display text-[clamp(2rem,6vw,4rem)] text-ink" data-year-celebrating></p>
   </div>
 </div>
 

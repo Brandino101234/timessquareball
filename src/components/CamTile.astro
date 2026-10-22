@@ -10,22 +10,22 @@ const { cam } = Astro.props;
 
 <a
   href={`/${cam.slug}`}
-  class="group block overflow-hidden rounded-[1.5rem] border border-night-600 bg-night no-underline transition-colors hover:border-prism"
+  class="group block overflow-hidden border border-line bg-surface no-underline transition-colors hover:border-link"
 >
   <div class="relative">
     <Image src={cam.poster} alt="" width={1000} widths={[400, 700, 1000]} sizes="(min-width: 1024px) 18vw, (min-width: 640px) 48vw, 100vw" class="aspect-video w-full object-cover" />
     <span
       data-cam-status={cam.streamUrl}
       hidden
-      class="absolute top-3 left-3 inline-flex items-center gap-2 rounded-full bg-night-950/85 px-3 py-1 text-sm font-medium text-crystal"
+      class="absolute top-3 left-3 inline-flex items-center gap-2 bg-deep/85 px-3 py-1 text-sm font-medium text-ink"
     >
       <span class="size-2 rounded-full bg-rose" aria-hidden="true"></span>
       Live now
     </span>
   </div>
   <div class="p-4">
-    <h3 class="font-display text-xl text-crystal group-hover:text-gold">{cam.title}</h3>
-    <p class="mt-1 text-sm text-crystal-muted">{cam.description}</p>
+    <h3 class="font-display text-xl text-ink group-hover:underline">{cam.title}</h3>
+    <p class="mt-1 text-sm text-muted">{cam.description}</p>
   </div>
 </a>
 

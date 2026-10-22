@@ -22,7 +22,7 @@ const { videos, previews = true, headingLevel: Title = 'h3' } = Astro.props;
     videos.map((v) => {
       const preview = previews && v.photo ? photosIn(v.photo)[0]?.image : undefined;
       return (
-        <li class="grid items-center gap-4 border-t border-night-600/70 py-6 sm:grid-cols-[auto_1fr_auto] sm:gap-6">
+        <li class="grid items-center gap-4 border-t border-line/70 py-6 sm:grid-cols-[auto_1fr_auto] sm:gap-6">
           {preview && (
             <Image
               src={preview}
@@ -30,12 +30,12 @@ const { videos, previews = true, headingLevel: Title = 'h3' } = Astro.props;
               width={320}
               widths={[160, 320]}
               sizes="10rem"
-              class="hidden aspect-[3/2] w-40 rounded-lg object-cover sm:block"
+              class="hidden aspect-[3/2] w-40 object-cover sm:block"
             />
           )}
           <div class:list={['min-w-0', !preview && 'sm:col-span-2']}>
-            <Title class="font-display text-[clamp(1.25rem,2vw,1.5rem)] leading-tight text-crystal">{v.title}</Title>
-            <p class="mt-1 text-sm text-crystal-muted">
+            <Title class="font-display text-[clamp(1.25rem,2vw,1.5rem)] leading-tight text-ink">{v.title}</Title>
+            <p class="mt-1 text-sm text-muted">
               <time datetime={isoDate(v.date)}>{formatDate(v.date)}</time>, HD {formatOf(v.url)}, {v.sizeMB} MB
             </p>
           </div>

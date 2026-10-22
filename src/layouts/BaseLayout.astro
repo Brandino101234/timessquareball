@@ -69,7 +69,7 @@ const jsonLd = [
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {hideFromSearch && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content="#0e1440" />
+    <meta name="theme-color" content="#000000" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -84,12 +84,20 @@ const jsonLd = [
     <meta name="twitter:card" content="summary_large_image" />
 
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    <script is:inline>
+      // Turn on scroll animations before first paint. If the animation script
+      // has not run within 3 seconds, show everything so nothing stays hidden.
+      document.documentElement.classList.add('js-reveal');
+      setTimeout(function () {
+        if (!window.__revealReady) document.documentElement.classList.remove('js-reveal');
+      }, 3000);
+    </script>
     <slot name="head" />
   </head>
-  <body class="bg-night text-crystal">
+  <body class="bg-surface text-ink">
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-gold focus:px-5 focus:py-3 focus:font-semibold focus:text-night-950"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-gold focus:px-5 focus:py-3 focus:font-semibold focus:text-black"
     >
       Skip to content
     </a>
@@ -98,5 +106,8 @@ const jsonLd = [
       <slot />
     </main>
     <Footer />
+    <script>
+      import '../scripts/reveal';
+    </script>
   </body>
 </html>

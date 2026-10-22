@@ -13,9 +13,9 @@ const { cam } = Astro.props;
 const poster = await getImage({ src: cam.poster, width: 1600, format: 'webp' });
 ---
 
-<div id={`player-${cam.id}`} data-livecam data-src={cam.streamUrl} data-state="loading" class="relative overflow-hidden rounded-[1.25rem] bg-night-950 shadow-[0_30px_80px_-20px_rgba(3,5,20,0.9)] sm:rounded-[2rem]">
+<div id={`player-${cam.id}`} data-livecam data-src={cam.streamUrl} data-state="loading" class="relative overflow-hidden bg-deep shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]">
   <video
-    class="aspect-video w-full bg-night-950 object-cover"
+    class="aspect-video w-full bg-deep object-cover"
     poster={poster.src}
     muted
     autoplay
@@ -25,18 +25,18 @@ const poster = await getImage({ src: cam.poster, width: 1600, format: 'webp' });
   ></video>
 
   <!-- Loading: shown over the poster until the first frame plays -->
-  <div data-when="loading" class="pointer-events-none absolute inset-0 grid place-items-center bg-night-950/40">
+  <div data-when="loading" class="pointer-events-none absolute inset-0 grid place-items-center bg-deep/40">
     <div class="flex flex-col items-center gap-4" role="status">
-      <span class="size-12 animate-spin rounded-full border-2 border-crystal/25 border-t-gold" aria-hidden="true"></span>
-      <span class="rounded-full bg-night-950/80 px-4 py-1.5 text-base text-crystal">Connecting to {cam.title}…</span>
+      <span class="size-12 animate-spin rounded-full border-2 border-ink/25 border-t-gold" aria-hidden="true"></span>
+      <span class="bg-deep/80 px-4 py-1.5 text-base text-ink">Connecting to {cam.title}…</span>
     </div>
   </div>
 
   <!-- Offline -->
-  <div data-when="offline" hidden class="absolute inset-0 grid place-items-center bg-night-950/80 p-4 text-center sm:p-6">
+  <div data-when="offline" hidden class="absolute inset-0 grid place-items-center bg-deep/80 p-4 text-center sm:p-6">
     <div role="status" class="max-w-md">
-      <p class="font-display text-[clamp(1.375rem,4vw,2.666rem)] leading-tight text-crystal">This cam is offline right now</p>
-      <p class="mt-1 text-sm text-crystal-muted sm:mt-3 sm:text-base">
+      <p class="font-display text-[clamp(1.375rem,4vw,2.666rem)] leading-tight text-ink">This cam is offline right now</p>
+      <p class="mt-1 text-sm text-muted sm:mt-3 sm:text-base">
         We’ll keep trying every 30 seconds.<span class="hidden sm:inline"> You can also try the other cam.</span>
       </p>
       <button type="button" data-retry class="btn-gold mt-3 min-h-11 px-5 py-2 text-base sm:mt-6 sm:min-h-12">Try again now</button>

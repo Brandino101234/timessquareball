@@ -12,9 +12,9 @@ const { title, intro, source } = Astro.props;
   <h1 class="text-[clamp(3rem,9vw,6.3rem)] leading-[0.98] tracking-[-0.01em]">{title}</h1>
   {
     intro && (
-      <p class="mt-8 max-w-[38ch] font-display text-[clamp(1.375rem,2.6vw,2rem)] leading-[1.3] text-crystal">{intro}</p>
+      <p class="mt-8 max-w-[38ch] font-display text-[clamp(1.375rem,2.6vw,2rem)] leading-[1.3] text-ink">{intro}</p>
     )
   }
-  {source && <p class="mt-6 text-base text-crystal-muted">{source}</p>}
+  {source && <p class="mt-6 text-base text-muted">{source}</p>}
   <slot />
 </header>

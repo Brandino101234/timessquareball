@@ -38,11 +38,11 @@ const columns = [
 const legal = footerLinks.filter((l) => l.href !== '/faq');
 ---
 
-<footer class="border-t border-night-600/60 bg-night-950 text-crystal-muted">
+<footer class="theme-dark border-t border-line bg-surface text-muted">
   <div class="mx-auto max-w-[90rem] px-4 pt-16 pb-10 sm:px-6 lg:px-10 lg:pt-24">
     <div class="grid gap-14 lg:grid-cols-12 lg:gap-10">
       <div class="lg:col-span-4">
-        <a href="/" class="inline-flex items-center gap-3 text-crystal no-underline">
+        <a href="/" class="inline-flex items-center gap-3 text-ink no-underline">
           <BallMark size={36} class="text-gold" />
           <span class="font-serif text-2xl">Times Square Ball</span>
         </a>
@@ -57,7 +57,7 @@ const legal = footerLinks.filter((l) => l.href !== '/faq');
                   href={s.url}
                   target="_blank"
                   rel="noopener"
-                  class="grid size-11 place-items-center rounded-full border border-night-600 text-crystal transition-colors hover:border-crystal"
+                  class="grid size-11 place-items-center border border-line text-ink transition-colors hover:border-ink"
                 >
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
                     <path d={icons[s.name]?.path} />
@@ -74,19 +74,19 @@ const legal = footerLinks.filter((l) => l.href !== '/faq');
         {
           columns.map((col, i) => (
             <nav aria-labelledby={`footer-col-${i}`}>
-              <h2 id={`footer-col-${i}`} class="eyebrow font-nav text-crystal">
+              <h2 id={`footer-col-${i}`} class="eyebrow font-nav text-ink">
                 {col.heading}
               </h2>
               <ul class="mt-5 space-y-2.5 text-[0.9375rem]">
                 {col.links.map((l) => (
                   <li>
                     {l.external ? (
-                      <a href={l.href} target="_blank" rel="noopener" class="no-underline hover:text-crystal">
+                      <a href={l.href} target="_blank" rel="noopener" class="no-underline hover:text-ink">
                         {l.label}
                         <span class="sr-only"> (opens in a new tab)</span>
                       </a>
                     ) : (
-                      <a href={l.href} class="no-underline hover:text-crystal">
+                      <a href={l.href} class="no-underline hover:text-ink">
                         {l.label}
                       </a>
                     )}
@@ -99,15 +99,15 @@ const legal = footerLinks.filter((l) => l.href !== '/faq');
       </div>
     </div>
 
-    <div class="mt-16 flex flex-col gap-4 border-t border-night-600/40 pt-6 text-sm lg:flex-row lg:items-center lg:justify-between">
+    <div class="mt-16 flex flex-col gap-4 border-t border-line/40 pt-6 text-sm lg:flex-row lg:items-center lg:justify-between">
       <p>{`© ${year} ${site.copyrightHolder}.`}</p>
       <ul class="flex flex-wrap gap-x-6 gap-y-2">
-        {legal.map((l) => <li><a href={l.href} class="no-underline hover:text-crystal">{l.label}</a></li>)}
+        {legal.map((l) => <li><a href={l.href} class="no-underline hover:text-ink">{l.label}</a></li>)}
         {
           site.credits.map((c) => (
             <li>
               {c.role}{' '}
-              <a href={c.url} class="no-underline hover:text-crystal" rel="noopener">
+              <a href={c.url} class="no-underline hover:text-ink" rel="noopener">
                 {c.name}
               </a>
             </li>

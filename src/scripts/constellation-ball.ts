@@ -92,30 +92,30 @@ export function mountConstellationBall(canvas: HTMLCanvasElement, options: { int
     const mastTop = cy - R * 1.22;
     const poleWidth = R * 0.2;
     const pole = ctx.createLinearGradient(cx - poleWidth / 2, 0, cx + poleWidth / 2, 0);
-    pole.addColorStop(0, '#1d2670');
-    pole.addColorStop(0.45, '#5565b8');
-    pole.addColorStop(1, '#161d5a');
+    pole.addColorStop(0, '#1a1a1a');
+    pole.addColorStop(0.45, '#7a7a7a');
+    pole.addColorStop(1, '#141414');
     ctx.fillStyle = pole;
     ctx.fillRect(cx - poleWidth / 2, cy, poleWidth, height - cy);
     // Thinner tip above the Ball
     ctx.fillRect(cx - poleWidth * 0.2, mastTop, poleWidth * 0.4, cy - mastTop);
     // Soften only the very bottom so the pole meets the countdown gently
     const fade = ctx.createLinearGradient(0, height * 0.9, 0, height);
-    fade.addColorStop(0, 'rgba(14, 20, 64, 0)');
-    fade.addColorStop(1, 'rgba(14, 20, 64, 0.85)');
+    fade.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    fade.addColorStop(1, 'rgba(0, 0, 0, 0.9)');
     ctx.fillStyle = fade;
     ctx.fillRect(cx - poleWidth, height * 0.9, poleWidth * 2, height * 0.1);
 
     // Light the Ball throws into the night around it
     const halo = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * 1.2);
-    halo.addColorStop(0, `rgba(154, 220, 245, ${0.22 * intensity})`);
+    halo.addColorStop(0, `rgba(255, 244, 220, ${0.18 * intensity})`);
     halo.addColorStop(0.5, `rgba(226, 176, 74, ${0.07 * intensity})`);
-    halo.addColorStop(1, 'rgba(14, 20, 64, 0)');
+    halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = halo;
     ctx.fillRect(0, 0, width, height);
 
     // Dark body of the Ball
-    ctx.fillStyle = '#0a0f31';
+    ctx.fillStyle = '#070707';
     ctx.beginPath();
     ctx.arc(cx, cy, R * 1.01, 0, Math.PI * 2);
     ctx.fill();

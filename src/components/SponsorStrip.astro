@@ -5,7 +5,7 @@ import { sponsors, sponsorYear } from '../data/sponsors';
 
 {
   sponsors.length > 0 && (
-    <section aria-labelledby="sponsors-heading" class="bg-crystal text-night">
+    <section aria-labelledby="sponsors-heading" class="border-t border-line bg-alt text-ink">
       <div class="mx-auto max-w-[90rem] px-4 py-16 sm:px-6 lg:px-10 lg:py-20">
         <h2 id="sponsors-heading" class="text-center text-[clamp(1.75rem,3.5vw,2.666rem)]">
           Welcome to our {sponsorYear} sponsors
@@ -13,14 +13,14 @@ import { sponsors, sponsorYear } from '../data/sponsors';
         <ul class="mt-10 flex flex-wrap items-start justify-center gap-x-6 gap-y-10 sm:gap-x-10">
           {sponsors.map((s) => (
             <li class="flex w-[9.5rem] flex-col items-center text-center sm:w-[11.5rem]">
-              <a href={s.url} rel="sponsored noopener" class="flex h-[104px] w-full items-center justify-center rounded-lg sm:h-[125px]">
+              <a href={s.url} rel="sponsored noopener" class="flex h-[104px] w-full items-center justify-center sm:h-[125px]">
                 {s.logo ? (
                   <Image src={s.logo} alt={s.name} width={183} class="h-auto w-[150px] mix-blend-multiply sm:w-[183px]" />
                 ) : (
-                  <span class="font-sans text-2xl font-bold tracking-tight text-night">{s.name}</span>
+                  <span class="font-sans text-2xl font-bold tracking-tight text-ink">{s.name}</span>
                 )}
               </a>
-              {s.role && <p class="mt-2 text-sm text-night-600">{s.role}</p>}
+              {s.role && <p class="mt-2 text-sm text-muted">{s.role}</p>}
             </li>
           ))}
         </ul>
