@@ -1,8 +1,13 @@
 ---
 /**
- * Thin fixed header: logo, main menu, and a "Watch Live" button.
+ * Thin fixed black header: logo, main menu, Watch Live and Buy Tickets.
  * With `overlay` (the homepage) it starts transparent over the hero and turns
- * solid once the visitor scrolls.
+ * solid black once the visitor scrolls.
+ *
+ * Menu motion (styles in global.css, "Header menu"): items drop in one after
+ * another on page load; on hover an item turns gold and a gold bar slides in
+ * along the bottom edge of the header; dropdowns open on hover as black panels
+ * whose items fill with gold.
  */
 import BallMark from './BallMark.astro';
 import LiveDot from './LiveDot.astro';
@@ -23,9 +28,8 @@ const menuId = (label: string) => `menu-${label.toLowerCase().replace(/[^a-z0-9]
 const streamUrls = JSON.stringify(cams.map((c) => c.streamUrl));
 const watchLiveHref = `/${cams[0].slug}`;
 
-// .nav-link (global.css) draws the gold underline that sweeps in on hover.
 const itemClass =
-  'nav-link flex items-center gap-2 px-3 py-2 text-[0.8125rem] font-semibold tracking-[0.12em] text-ink uppercase no-underline';
+  'nav-link flex h-16 items-center gap-2 px-3 text-[0.8125rem] font-semibold tracking-[0.12em] text-ink uppercase no-underline';
 ---
 
 <header
@@ -33,10 +37,10 @@ const itemClass =
   data-overlay={overlay ? 'true' : undefined}
   data-streams={streamUrls}
   class:list={[
-    'fixed inset-x-0 top-0 z-40 transition-[background-color,border-color] duration-300',
+    'theme-dark fixed inset-x-0 top-0 z-40 transition-[background-color,border-color] duration-300',
     overlay
-      ? 'theme-dark border-b border-transparent bg-gradient-to-b from-deep/70 to-transparent data-[scrolled]:border-line/60 data-[scrolled]:bg-surface/95 data-[scrolled]:backdrop-blur-md data-[menu-open]:bg-surface'
-      : 'border-b border-line/60 bg-surface/95 backdrop-blur-md',
+      ? 'border-b border-transparent bg-gradient-to-b from-black/70 to-transparent data-[scrolled]:border-line data-[scrolled]:bg-black data-[menu-open]:bg-black'
+      : 'border-b border-line bg-black',
   ]}
 >
   <div class="mx-auto flex h-16 max-w-[90rem] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
@@ -46,12 +50,12 @@ const itemClass =
     </a>
 
     <div class="flex items-center gap-2 lg:gap-4">
-      <nav aria-label="Main" class="hidden font-nav xl:block">
-        <ul class="flex items-center">
+      <nav aria-label="Main" class="hidden self-stretch font-nav xl:block" data-nav-anim>
+        <ul class="flex h-full items-stretch">
           {
             mainNav.map((item) =>
               isGroup(item) && !item.direct ? (
-                <li class="relative" data-dropdown>
+                <li class="nav-item relative" data-dropdown>
                   <button
                     type="button"
                     class={itemClass}
@@ -67,14 +71,14 @@ const itemClass =
                   <ul
                     id={menuId(item.label)}
                     hidden
-                    class="absolute top-full right-0 mt-3 w-64 -translate-y-2 border-t-2 border-gold bg-surface p-2 opacity-0 shadow-[0_24px_48px_-16px_rgba(0,0,0,0.35)] transition duration-200 ease-out data-[open]:translate-y-0 data-[open]:opacity-100"
+                    class="absolute top-full left-0 w-64 origin-top -translate-y-1 scale-y-95 bg-black py-2 opacity-0 shadow-[0_24px_48px_-16px_rgba(0,0,0,0.6)] transition duration-200 ease-out data-[open]:translate-y-0 data-[open]:scale-y-100 data-[open]:opacity-100"
                   >
                     {item.children.map((child) => (
                       <li>
                         <a
                           href={child.href}
                           aria-current={isCurrent(child.href) ? 'page' : undefined}
-                          class="block border-l-2 border-transparent px-4 py-2.5 text-[0.9375rem] text-ink no-underline transition-[border-color,background-color,padding] duration-200 hover:border-gold hover:bg-alt hover:pl-5 aria-[current=page]:border-ink"
+                          class="nav-sub-link block px-5 py-2.5 text-[0.9375rem] text-ink no-underline"
                         >
                           {child.label}
                         </a>
@@ -83,7 +87,7 @@ const itemClass =
                   </ul>
                 </li>
               ) : (
-                <li>
+                <li class="nav-item">
                   <a
                     href={item.href}
                     aria-current={(isGroup(item) ? groupActive(item) : isCurrent(item.href)) ? 'page' : undefined}
@@ -133,17 +137,17 @@ const itemClass =
     id="mobile-menu"
     aria-label="Main"
     hidden
-    class="h-[calc(100svh-4rem)] overflow-y-auto border-t border-line/60 bg-alt px-4 pt-4 pb-10 font-nav sm:px-6 xl:hidden"
+    class="h-[calc(100svh-4rem)] overflow-y-auto border-t border-line bg-black px-4 pt-4 pb-10 font-nav sm:px-6 xl:hidden"
   >
     <a href={watchLiveHref} data-watch-live class="btn-quiet mx-auto mb-4 flex w-full max-w-xl md:hidden" data-menu-close>
       <LiveDot />
       Watch Live
     </a>
-    <ul class="mx-auto max-w-xl">
+    <ul class="mx-auto max-w-xl" data-mobile-items>
       {
         mainNav.map((item) =>
           isGroup(item) ? (
-            <li class="mt-4 border-t border-line/60 pt-4">
+            <li class="mt-4 border-t border-line pt-4">
               <p class="px-2 pb-1 text-sm text-muted">{item.label}</p>
               <ul class:list={[item.direct && 'grid grid-cols-2 gap-x-4']}>
                 {item.children.map((child) => (
@@ -188,7 +192,6 @@ const itemClass =
     const update = () => {
       const solid = window.scrollY > 24 || header.hasAttribute('data-menu-open');
       header.toggleAttribute('data-scrolled', solid);
-      header.classList.toggle('theme-dark', !solid);
     };
     new MutationObserver(update).observe(header, { attributes: true, attributeFilter: ['data-menu-open'] });
     update();
@@ -231,6 +234,18 @@ const itemClass =
       }
     };
     button.addEventListener('click', () => setOpen(!menu.hasAttribute('data-open')));
+    // Open on hover with a mouse; a short delay keeps it from flickering shut
+    // while the pointer crosses into the panel.
+    let hoverTimer = 0;
+    root.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      clearTimeout(hoverTimer);
+      setOpen(true);
+    });
+    root.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      hoverTimer = window.setTimeout(() => setOpen(false), 120);
+    });
     root.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && menu.hasAttribute('data-open')) {
         setOpen(false);

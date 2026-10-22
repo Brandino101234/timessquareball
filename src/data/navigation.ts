@@ -20,9 +20,9 @@ export interface NavGroup {
 }
 
 export const mainNav: (NavLink | NavGroup)[] = [
-  { label: 'NYE history', href: '/nye-history' },
-  { label: 'Ball history', href: '/ball-history' },
-  { label: 'Ball facts', href: '/ball-facts' },
+  { label: 'NYE History', href: '/nye-history' },
+  { label: 'Ball History', href: '/ball-history' },
+  { label: 'Ball Facts', href: '/ball-facts' },
   {
     // One entry per cam in src/config/cams.ts
     label: 'Ball Cams',
@@ -31,7 +31,7 @@ export const mainNav: (NavLink | NavGroup)[] = [
     direct: true,
     liveDot: true,
   },
-  { label: 'Webcast', href: '/webcast' },
+  { label: 'NYE Webcast', href: '/webcast' },
   {
     label: 'Press',
     href: '/press',

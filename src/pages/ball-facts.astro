@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import NextPage from '../components/NextPage.astro';
+import nextPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_10.jpg';
 import CrystalScale from '../components/CrystalScale.astro';
 import NumeralPucks from '../components/NumeralPucks.astro';
 import TicketCards from '../components/TicketCards.astro';
@@ -26,11 +27,11 @@ const atAGlance = [
 ---
 
 <BaseLayout
-  title="Ball facts"
+  title="Ball Facts"
   description={`The ${ball.name} by the numbers: ${ball.diameterFeet} feet across, ${fmt(ball.weightPounds)} pounds and ${fmt(ball.crystals)} Waterford crystals, plus the gold ${numerals.year} numerals.`}
   image={ballPhoto}
 >
-  <PageHeader title="Ball facts" intro={intro}>
+  <PageHeader title="Ball Facts" intro={intro}>
     <a href={ball.factSheet} download class="btn-gold mt-10">
       <span>Download the {ball.factSheetYear} fact sheet <span class="font-normal whitespace-nowrap">(PDF, {ball.factSheetSize})</span></span>
     </a>
@@ -157,5 +158,6 @@ const atAGlance = [
     href="/ball-cam-1"
     title="Ball Cam 1"
     description="See the Constellation Ball live atop One Times Square."
+    image={nextPhoto}
   />
 </BaseLayout>

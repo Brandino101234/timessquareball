@@ -2,8 +2,10 @@
 import { Image } from 'astro:assets';
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeader from '../components/PageHeader.astro';
+import PageHero from '../components/PageHero.astro';
 import NextPage from '../components/NextPage.astro';
+import heroPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_01.jpg';
+import nextPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_11.jpg';
 
 const page = (await getEntry('pages', 'ball-history'))!;
 const { Content: Closing } = await render(page);
@@ -16,9 +18,18 @@ const milestones = await Promise.all(
 const latest = milestones.at(-1);
 ---
 
-<BaseLayout title={title} description={description} image={latest?.image}>
-  <PageHeader title={title} intro={intro}>
-    <nav aria-label="Jump to a year" class="mt-12">
+<BaseLayout title={title} description={description} image={heroPhoto} overlayHeader>
+  <PageHero
+    title={title}
+    eyebrow="Since 1907"
+    intro={intro}
+    image={heroPhoto}
+    imageAlt="One Times Square at the top of Times Square, with the Ball on its mast above the year numerals and confetti in the air"
+    focus="center 30%"
+  />
+
+  <div class="mx-auto max-w-[90rem] px-4 pt-12 pb-10 sm:px-6 lg:px-10 lg:pt-16">
+    <nav aria-label="Jump to a year">
       <ul class="flex flex-wrap gap-2">
         {
           milestones.map((m) => (
@@ -39,7 +50,7 @@ const latest = milestones.at(-1);
         }
       </ul>
     </nav>
-  </PageHeader>
+  </div>
 
   <section aria-label="Timeline" class="mx-auto max-w-[90rem] px-4 pb-8 sm:px-6 lg:px-10">
     <ol class="relative">
@@ -126,7 +137,8 @@ const latest = milestones.at(-1);
 
   <NextPage
     href="/ball-facts"
-    title="Ball facts"
-    description="The Constellation Ball’s crystals, light pucks and the gold 2026 numerals, by the numbers."
+    title="Ball Facts"
+    description="The Constellation Ball’s 5,280 crystals, its light pucks and the gold numerals, by the numbers."
+    image={nextPhoto}
   />
 </BaseLayout>

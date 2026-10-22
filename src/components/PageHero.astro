@@ -1,0 +1,47 @@
+---
+/**
+ * Full-width photo header for a page: the photo fills the top of the page and
+ * the title sits over it. The header bar overlays it, so the photo starts at
+ * the very top. Use instead of PageHeader when a page should open with a picture.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  title: string;
+  intro?: string;
+  eyebrow?: string;
+  image: ImageMetadata;
+  /** Describes the photo for screen readers. */
+  imageAlt: string;
+  /** Where in the photo to keep in view when it is cropped (CSS object-position). */
+  focus?: string;
+}
+const { title, intro, eyebrow, image, imageAlt, focus = 'center' } = Astro.props;
+---
+
+<header class="theme-dark relative isolate flex min-h-[78svh] items-end overflow-hidden bg-surface lg:min-h-[86svh]">
+  <div class="absolute inset-0 -z-10">
+    <Image
+      src={image}
+      alt={imageAlt}
+      width={2400}
+      widths={[800, 1400, 2000, 2400]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      data-parallax="0.12"
+      style={`object-position: ${focus}`}
+      class="absolute inset-0 size-full scale-[1.15] object-cover will-change-transform"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-black/25"></div>
+  </div>
+  <div class="mx-auto w-full max-w-[90rem] px-4 pt-32 pb-14 sm:px-6 lg:px-10 lg:pb-20">
+    {eyebrow && <p class="eyebrow text-ink" data-reveal="up">{eyebrow}</p>}
+    <h1 class="mt-3 text-[clamp(3.25rem,10vw,7.5rem)] leading-[0.95] font-bold tracking-[-0.03em] text-ink uppercase" data-reveal="up" style="--reveal-delay: 100ms">
+      {title}
+    </h1>
+    {intro && <p class="mt-6 max-w-[48ch] text-[clamp(1.0625rem,1.6vw,1.375rem)] leading-[1.5] text-ink/90" data-reveal="up" style="--reveal-delay: 200ms">{intro}</p>}
+    <slot />
+  </div>
+</header>

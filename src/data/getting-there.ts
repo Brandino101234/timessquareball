@@ -33,10 +33,17 @@ export const gettingThere = {
   ],
   /** Where visitors can check this year's details. */
   moreInfo: { label: 'Times Square Alliance NYE FAQ', url: 'https://www.timessquarenyc.org/nye/nye-faq' },
-  /** OpenStreetMap embed centered on One Times Square (lat 40.7564, lon -73.9862). */
+  /**
+   * Map of One Times Square (lat 40.7564, lon -73.9862). The OpenStreetMap
+   * embed shows on the page; the buttons open directions in Apple Maps or
+   * Google Maps (plain links, no API key needed).
+   */
   map: {
     embedUrl:
       'https://www.openstreetmap.org/export/embed.html?bbox=-73.9945%2C40.7525%2C-73.9775%2C40.7625&layer=mapnik&marker=40.7564%2C-73.9862',
-    largerUrl: 'https://www.openstreetmap.org/?mlat=40.7564&mlon=-73.9862#map=16/40.7564/-73.9862',
+    appleMapsUrl: 'https://maps.apple.com/?q=One+Times+Square&address=1+Times+Square,+New+York,+NY+10036&ll=40.7564,-73.9862',
+    googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=One+Times+Square%2C+New+York%2C+NY+10036',
+    directionsAppleUrl: 'https://maps.apple.com/?daddr=1+Times+Square,+New+York,+NY+10036&dirflg=r',
+    directionsGoogleUrl: 'https://www.google.com/maps/dir/?api=1&destination=One+Times+Square%2C+New+York%2C+NY+10036&travelmode=transit',
   },
 };

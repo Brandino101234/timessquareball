@@ -21,6 +21,7 @@ These are open items. Each one is explained in more detail further down.
 
 - [ ] **Domain.** Set the real domain in `src/data/site.ts` (`domain`). Links in search results and social previews use it.
 - [ ] **Ball cam streams.** Replace the placeholder URLs for all five cams in `src/config/cams.ts`, and the descriptions for cams 3–5. The streams the old site used are listed in a comment at the top of that file.
+- [ ] **Opening hours.** One Times Square doesn’t publish its hours, so the live strip says “Hours vary” and links to its ticket page. Fill in `src/config/hours.ts` when the company confirms them.
 - [ ] **Wegovy logo.** Add it to `src/assets/sponsors/` and `src/data/sponsors.ts`. Until then the sponsor band shows the name.
 - [ ] **2027 numerals.** Add the light-puck count for the “7” in `src/data/ball-facts.ts` when it’s published, and replace the 2026 fact sheet.
 - [ ] **Webcast.** Add this year’s embed URL to `src/config/webcast.ts` once the provider is confirmed.
@@ -115,6 +116,8 @@ A paragraph is just text. Leave a blank line between paragraphs.
 | Homepage FAQ preview                              | The first four questions in `src/content/pages/faq.md` |
 | “Getting to Times Square” facts and map           | `src/data/getting-there.ts` (check each December)     |
 | Weather in the live strip (on/off, source)        | `src/config/weather.ts`                               |
+| One Times Square opening hours in the live strip  | `src/config/hours.ts` (empty until the company confirms them) |
+| Apple Maps / Google Maps direction links          | `src/data/getting-there.ts` (`map`)                   |
 | Site name, domain, owner, contact email           | `src/data/site.ts`                                    |
 
 The countdown needs no yearly update. It always counts to the next midnight on January 1 in New York time, shows “Happy New Year” for 24 hours, then starts counting to the following year.

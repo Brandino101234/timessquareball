@@ -1,11 +1,12 @@
 ---
 /**
- * The "live from Times Square" bar under the homepage hero:
- * countdown to midnight, whether the Ball cams are live, and the weather.
+ * The "live from Times Square" bar under the homepage hero, in two centered
+ * pairs: countdown and Ball cam status, then today's hours and the weather.
  * All three fill in with JavaScript; the build-time text is a fallback.
  */
 import { cams } from '../config/cams';
 import { weather } from '../config/weather';
+import { hours } from '../config/hours';
 import { countdownState } from '../scripts/countdown';
 
 interface Props {
@@ -15,6 +16,8 @@ const { id } = Astro.props;
 const initial = countdownState(new Date());
 const targetYear = initial.kind === 'counting' ? initial.targetYear : initial.year + 1;
 const streamUrls = JSON.stringify(cams.map((c) => c.streamUrl));
+const tile = 'flex flex-col items-center px-3 py-7 text-center md:px-8 md:py-10';
+const value = 'text-[clamp(1.0625rem,2vw,1.75rem)] leading-tight font-semibold text-ink';
 ---
 
 <section
@@ -22,64 +25,75 @@ const streamUrls = JSON.stringify(cams.map((c) => c.streamUrl));
   aria-label="Live from Times Square"
   data-live-strip
   data-streams={streamUrls}
+  data-hours={JSON.stringify(hours.schedule)}
   data-weather-url={weather.enabled ? weather.forecastUrl : undefined}
   class="scroll-mt-16 border-b border-line bg-surface"
 >
-  <dl
-    class:list={[
-      'mx-auto grid max-w-[90rem] divide-y divide-line px-4 text-center sm:px-6 md:divide-x md:divide-y-0 lg:px-10',
-      weather.enabled ? 'md:grid-cols-3' : 'md:grid-cols-2',
-    ]}
-    data-reveal-stagger="120"
-  >
-    <div class="flex flex-col items-center py-8 md:py-10" data-reveal="up">
-      <svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.4" class="text-ink" aria-hidden="true">
-        <circle cx="16" cy="17" r="11" /><path d="M16 10v7l4.5 3M13 3h6M16 3v3" />
-      </svg>
-      <dt class="eyebrow mt-4" data-countdown-label>Countdown to {targetYear}</dt>
-      <dd class="mt-2">
-        <span class="block text-[clamp(1.5rem,2.6vw,2rem)] leading-tight font-semibold text-ink tabular-nums" data-strip-countdown aria-hidden="true">
-          —
-        </span>
-        <span class="sr-only" aria-live="polite" data-strip-spoken>Counting down to midnight, January 1, {targetYear}.</span>
-        <span class="mt-1 block text-sm text-muted">Midnight, January 1, Eastern Time</span>
-      </dd>
-    </div>
-
-    <div class="flex flex-col items-center py-8 md:py-10" data-reveal="up">
-      <svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.4" class="text-ink" aria-hidden="true">
-        <rect x="3" y="9" width="19" height="14" /><path d="m22 14 7-4v12l-7-4" />
-      </svg>
-      <dt class="eyebrow mt-4">Ball Cams</dt>
-      <dd class="mt-2">
-        <span class="flex items-center justify-center gap-3 text-[clamp(1.5rem,2.6vw,2rem)] leading-tight font-semibold text-ink">
-          <span class="relative flex size-3" aria-hidden="true" data-cam-dot>
-            <span class="absolute inline-flex size-full rounded-full bg-muted/60" data-cam-dot-fill></span>
-          </span>
-          <span data-cam-state>Checking…</span>
-        </span>
-        <a href={`/${cams[0].slug}`} class="link mt-1 inline-block text-sm">Watch the {cams.length} Ball cams</a>
-      </dd>
-    </div>
-
-    {
-      weather.enabled && (
-        <div class="flex flex-col items-center py-8 md:py-10" data-reveal="up">
-          <svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.4" class="text-ink" aria-hidden="true">
-            <circle cx="16" cy="16" r="5.5" />
-            <path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8" />
-          </svg>
-          <dt class="eyebrow mt-4">{weather.label}</dt>
-          <dd class="mt-2">
-            <span class="block text-[clamp(1.5rem,2.6vw,2rem)] leading-tight font-semibold text-ink" data-weather>
-              —
+  <div class="mx-auto flex max-w-[90rem] flex-col items-stretch justify-center px-2 sm:px-6 md:flex-row lg:px-10" data-reveal-stagger="110">
+    <!-- Pair 1: countdown and Ball cams -->
+    <dl class="grid grid-cols-2 md:w-[min(40rem,46%)]">
+      <div class={tile} data-reveal="up">
+        <svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" class="text-ink" aria-hidden="true">
+          <circle cx="16" cy="17" r="11" /><path d="M16 10v7l4.5 3M13 3h6M16 3v3" />
+        </svg>
+        <dt class="eyebrow mt-3" data-countdown-label>Countdown to {targetYear}</dt>
+        <dd class="mt-1.5">
+          <span class:list={[value, 'block tabular-nums']} data-strip-countdown aria-hidden="true">—</span>
+          <span class="sr-only" aria-live="polite" data-strip-spoken>Counting down to midnight, January 1, {targetYear}.</span>
+          <span class="mt-1 block text-sm text-muted">Midnight, Jan 1, ET</span>
+        </dd>
+      </div>
+      <div class={tile} data-reveal="up">
+        <svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" class="text-ink" aria-hidden="true">
+          <rect x="3" y="9" width="19" height="14" /><path d="m22 14 7-4v12l-7-4" />
+        </svg>
+        <dt class="eyebrow mt-3">Ball Cams</dt>
+        <dd class="mt-1.5">
+          <span class:list={[value, 'flex items-center justify-center gap-2.5']}>
+            <span class="relative flex size-2.5" aria-hidden="true" data-cam-dot>
+              <span class="absolute inline-flex size-full rounded-full bg-muted/60" data-cam-dot-fill></span>
             </span>
-            <span class="mt-1 block text-sm text-muted">Now, from the {weather.source}</span>
-          </dd>
-        </div>
-      )
-    }
-  </dl>
+            <span data-cam-state>Checking…</span>
+          </span>
+          <a href={`/${cams[0].slug}`} class="link mt-1 inline-block text-sm">Watch the {cams.length} cams</a>
+        </dd>
+      </div>
+    </dl>
+
+    <span class="hidden w-px self-center bg-line md:block md:h-28" aria-hidden="true"></span>
+    <span class="mx-4 h-px bg-line md:hidden" aria-hidden="true"></span>
+
+    <!-- Pair 2: today's hours and weather -->
+    <dl class="grid grid-cols-2 md:w-[min(40rem,46%)]">
+      <div class={tile} data-reveal="up">
+        <svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" class="text-ink" aria-hidden="true">
+          <path d="M5 28V12l11-7 11 7v16" /><path d="M12 28v-9h8v9M3 28h26" />
+        </svg>
+        <dt class="eyebrow mt-3">{hours.label}</dt>
+        <dd class="mt-1.5">
+          <span class:list={[value, 'block']} data-hours-today>Hours vary</span>
+          <a href={hours.timesUrl} target="_blank" rel="noopener" class="link mt-1 inline-block text-sm" data-hours-link>
+            See today’s times<span class="sr-only"> on One Times Square’s site (opens in a new tab)</span>
+          </a>
+        </dd>
+      </div>
+      {
+        weather.enabled && (
+          <div class={tile} data-reveal="up">
+            <svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" class="text-ink" aria-hidden="true">
+              <circle cx="16" cy="16" r="5.5" />
+              <path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8" />
+            </svg>
+            <dt class="eyebrow mt-3">Weather</dt>
+            <dd class="mt-1.5">
+              <span class:list={[value, 'block']} data-weather>—</span>
+              <span class="mt-1 block text-sm text-muted">Times Square now</span>
+            </dd>
+          </div>
+        )
+      }
+    </dl>
+  </div>
 </section>
 
 <script>
@@ -121,6 +135,17 @@ const streamUrls = JSON.stringify(cams.map((c) => c.streamUrl));
       fill.classList.add(live ? 'bg-live' : 'bg-muted/40');
       if (live) fill.insertAdjacentHTML('beforebegin', '<span class="absolute inline-flex size-full animate-ping rounded-full bg-live opacity-75"></span>');
     });
+
+    // Today's hours (in New York), from src/config/hours.ts
+    const hoursEl = strip.querySelector<HTMLElement>('[data-hours-today]');
+    const schedule: Record<string, string> = JSON.parse(strip.dataset.hours ?? '{}');
+    const weekday = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'long' }).format(new Date()).toLowerCase();
+    const todays = schedule[weekday]?.trim();
+    if (hoursEl && todays) {
+      hoursEl.textContent = todays === 'Closed' ? 'Closed today' : todays;
+      const link = strip.querySelector<HTMLElement>('[data-hours-link]');
+      if (link) link.firstChild!.textContent = 'Get tickets';
+    }
 
     // Weather (National Weather Service hourly forecast, current hour)
     const weatherEl = strip.querySelector<HTMLElement>('[data-weather]');

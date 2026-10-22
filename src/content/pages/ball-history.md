@@ -1,5 +1,5 @@
 ---
-title: Ball history
+title: Ball History
 description: Every version of the Times Square New Year’s Eve Ball, from the 700-pound iron and wood Ball of 1907 to the 12,350-pound Constellation Ball of 2025.
 intro: Revelers began celebrating New Year’s Eve in Times Square as early as 1904, but it was in 1907 that the New Year’s Eve Ball made its maiden descent from the flagpole atop One Times Square. Nine versions of the Ball have been designed to signal the New Year.
 ---

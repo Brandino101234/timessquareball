@@ -1,5 +1,5 @@
 ---
-title: NYE history
+title: NYE History
 description: How New Year’s Eve in Times Square began in 1904, when The New York Times opened its new headquarters at the Times Tower, and how the first Ball came to drop in 1907.
 source: From the Times Square Alliance
 pullQuote:

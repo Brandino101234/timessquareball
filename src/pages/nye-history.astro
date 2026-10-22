@@ -4,6 +4,7 @@ import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import NextPage from '../components/NextPage.astro';
+import nextPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_02.jpg';
 
 const page = (await getEntry('pages', 'nye-history'))!;
 const { Content } = await render(page);
@@ -55,7 +56,8 @@ const { title, description, intro, source, pullQuote, images } = page.data;
 
   <NextPage
     href="/ball-history"
-    title="Ball history"
+    title="Ball History"
     description="From a 700-pound iron and wood Ball in 1907 to the 12,350-pound Constellation Ball."
+    image={nextPhoto}
   />
 </BaseLayout>

@@ -209,32 +209,56 @@
     color: var(--surface);
   }
 
-  /* Main menu items: a gold rule sweeps in underneath on hover and stays under the current page. */
+  /*
+   * Header menu. On hover an item turns gold and a gold bar slides in along the
+   * bottom edge of the header; the current page keeps a white bar.
+   */
   .nav-link {
     position: relative;
+    transition: color 250ms ease-in-out;
   }
   .nav-link::after {
     content: '';
     position: absolute;
-    left: 0.75rem;
-    right: 0.75rem;
-    bottom: 0.15rem;
-    height: 2px;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 3px;
     background: var(--color-gold);
     transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 350ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    transform-origin: left;
+    transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .nav-link:hover,
+  .nav-link:focus-visible,
+  .nav-link[aria-expanded='true'] {
+    color: var(--color-gold);
   }
   .nav-link:hover::after,
   .nav-link:focus-visible::after,
   .nav-link[aria-expanded='true']::after {
     transform: scaleX(1);
-    transform-origin: left;
   }
-  .nav-link[aria-current='page']::after,
-  .nav-link[data-active]::after {
+  .nav-link[aria-current='page']:not(:hover)::after,
+  .nav-link[data-active]:not(:hover):not([aria-expanded='true'])::after {
     transform: scaleX(1);
-    background: currentColor;
+    background: var(--ink);
+  }
+
+  /* Dropdown items: gold fills in from the left behind the text. */
+  .nav-sub-link {
+    background-image: linear-gradient(to right, var(--color-gold) 50%, transparent 50%);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: background-position 300ms ease-in-out, color 300ms ease-in-out;
+  }
+  .nav-sub-link:hover,
+  .nav-sub-link:focus-visible {
+    background-position: 0 0;
+    color: #000;
+  }
+  .nav-sub-link[aria-current='page'] {
+    box-shadow: inset 3px 0 0 var(--ink);
   }
 
   /* Small uppercase label above a heading or value. */
@@ -259,6 +283,37 @@
  * Set --reveal-delay (or use data-reveal-stagger on a parent) to stagger.
  */
 @media (prefers-reduced-motion: no-preference) {
+  /* Header menu items drop in one after another when the page loads. */
+  @keyframes nav-drop {
+    from {
+      opacity: 0;
+      transform: translateY(-0.75rem);
+    }
+  }
+  [data-nav-anim] .nav-item {
+    animation: nav-drop 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  [data-nav-anim] .nav-item:nth-child(2) { animation-delay: 60ms; }
+  [data-nav-anim] .nav-item:nth-child(3) { animation-delay: 120ms; }
+  [data-nav-anim] .nav-item:nth-child(4) { animation-delay: 180ms; }
+  [data-nav-anim] .nav-item:nth-child(5) { animation-delay: 240ms; }
+  [data-nav-anim] .nav-item:nth-child(6) { animation-delay: 300ms; }
+  /* Mobile menu items slide in when the menu opens. */
+  @keyframes menu-slide {
+    from {
+      opacity: 0;
+      transform: translateX(1.5rem);
+    }
+  }
+  #mobile-menu:not([hidden]) [data-mobile-items] > li {
+    animation: menu-slide 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  #mobile-menu:not([hidden]) [data-mobile-items] > li:nth-child(2) { animation-delay: 50ms; }
+  #mobile-menu:not([hidden]) [data-mobile-items] > li:nth-child(3) { animation-delay: 100ms; }
+  #mobile-menu:not([hidden]) [data-mobile-items] > li:nth-child(4) { animation-delay: 150ms; }
+  #mobile-menu:not([hidden]) [data-mobile-items] > li:nth-child(5) { animation-delay: 200ms; }
+  #mobile-menu:not([hidden]) [data-mobile-items] > li:nth-child(6) { animation-delay: 250ms; }
+
   .js-reveal [data-reveal] {
     transition-property: opacity, transform;
     transition-duration: 900ms;
