@@ -1,0 +1,94 @@
+---
+/**
+ * Full-screen homepage hero: night photos of the Ball, crossfading slowly,
+ * with the headline and one button. Stays on the first photo for visitors who
+ * prefer reduced motion.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  photos: { src: ImageMetadata; alt: string }[];
+  eyebrow: string;
+  headline: string;
+  text: string;
+  cta: { label: string; href: string };
+  /** Optional second button, shown in the outline style. */
+  secondaryCta?: { label: string; href: string };
+  scrollTarget: string;
+}
+const { photos, eyebrow, headline, text, cta, secondaryCta, scrollTarget } = Astro.props;
+---
+
+<section aria-labelledby="hero-heading" class="relative isolate flex h-[100svh] min-h-[34rem] items-end overflow-hidden bg-night-950" data-hero>
+  <div class="absolute inset-0 -z-10" data-hero-slides>
+    {
+      photos.map((p, i) => (
+        <Image
+          src={p.src}
+          alt={i === 0 ? p.alt : ''}
+          width={2400}
+          widths={[800, 1400, 2000, 2400]}
+          sizes="100vw"
+          loading={i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={i === 0 ? 'high' : 'auto'}
+          data-slide
+          data-active={i === 0 ? '' : undefined}
+          class="absolute inset-0 size-full scale-105 object-cover opacity-0 transition-[opacity,transform] duration-[1600ms,8000ms] ease-out data-[active]:scale-100 data-[active]:opacity-100 motion-reduce:scale-100"
+        />
+      ))
+    }
+    <div class="absolute inset-0 bg-gradient-to-t from-night-950 via-night-950/45 to-night-950/10"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-night-950/70 via-transparent to-transparent"></div>
+  </div>
+
+  <div class="mx-auto w-full max-w-[90rem] px-4 pb-24 sm:px-6 sm:pb-28 lg:px-10 lg:pb-32">
+    <p class="eyebrow text-crystal">{eyebrow}</p>
+    <h1
+      id="hero-heading"
+      class="mt-4 max-w-[14ch] text-[clamp(2.75rem,8vw,6.75rem)] leading-[0.95] font-bold tracking-[-0.03em] text-crystal uppercase"
+    >
+      {headline}
+    </h1>
+    <p class="mt-6 max-w-[44ch] text-[clamp(1.0625rem,1.6vw,1.25rem)] text-crystal/90">{text}</p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href={cta.href} class="btn-gold">{cta.label}</a>
+      {secondaryCta && <a href={secondaryCta.href} class="btn-quiet bg-night-950/40 backdrop-blur-sm">{secondaryCta.label}</a>}
+    </div>
+  </div>
+
+  <a
+    href={scrollTarget}
+    class="group absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 text-crystal no-underline sm:flex"
+  >
+    <span class="eyebrow text-crystal/80 group-hover:text-crystal">Scroll</span>
+    <span class="relative h-10 w-px overflow-hidden bg-crystal/25" aria-hidden="true">
+      <span class="absolute inset-x-0 top-0 h-1/2 bg-crystal motion-safe:animate-[scroll-cue_2s_ease-in-out_infinite]"></span>
+    </span>
+  </a>
+</section>
+
+<style is:global>
+  @keyframes scroll-cue {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(200%); }
+  }
+</style>
+
+<script>
+  // Crossfade to the next photo every 6 seconds (not for reduced motion,
+  // and paused while the tab is hidden).
+  const slides = [...document.querySelectorAll<HTMLElement>('[data-hero-slides] [data-slide]')];
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let index = 0;
+  if (slides.length > 1) {
+    setInterval(() => {
+      if (reduced.matches || document.hidden) return;
+      slides[index].removeAttribute('data-active');
+      index = (index + 1) % slides.length;
+      const next = slides[index] as HTMLImageElement;
+      next.loading = 'eager';
+      next.setAttribute('data-active', '');
+    }, 6000);
+  }
+</script>

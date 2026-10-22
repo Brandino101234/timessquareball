@@ -1,0 +1,139 @@
+---
+/**
+ * The "live from Times Square" bar under the homepage hero:
+ * countdown to midnight, whether the Ball cams are live, and the weather.
+ * All three fill in with JavaScript; the build-time text is a fallback.
+ */
+import { cams } from '../config/cams';
+import { weather } from '../config/weather';
+import { countdownState } from '../scripts/countdown';
+
+interface Props {
+  id?: string;
+}
+const { id } = Astro.props;
+const initial = countdownState(new Date());
+const targetYear = initial.kind === 'counting' ? initial.targetYear : initial.year + 1;
+const streamUrls = JSON.stringify(cams.map((c) => c.streamUrl));
+---
+
+<section
+  {id}
+  aria-label="Live from Times Square"
+  data-live-strip
+  data-streams={streamUrls}
+  data-weather-url={weather.enabled ? weather.forecastUrl : undefined}
+  class="scroll-mt-16 border-y border-night-600/60 bg-night-900"
+>
+  <dl class:list={['mx-auto grid max-w-[90rem] divide-y divide-night-600/60 px-4 sm:px-6 md:divide-x md:divide-y-0 lg:px-10', weather.enabled ? 'md:grid-cols-3' : 'md:grid-cols-2']}>
+    <div class="py-6 md:py-8 md:pr-8">
+      <dt class="eyebrow" data-countdown-label>Countdown to {targetYear}</dt>
+      <dd class="mt-2">
+        <span class="block text-[clamp(1.5rem,2.6vw,2rem)] leading-tight font-semibold text-crystal tabular-nums" data-strip-countdown aria-hidden="true">
+          —
+        </span>
+        <span class="sr-only" aria-live="polite" data-strip-spoken>Counting down to midnight, January 1, {targetYear}.</span>
+        <span class="mt-1 block text-sm text-crystal-muted">Midnight, January 1, Eastern Time</span>
+      </dd>
+    </div>
+
+    <div class="py-6 md:py-8 md:px-8">
+      <dt class="eyebrow">Ball Cams</dt>
+      <dd class="mt-2">
+        <span class="flex items-center gap-3 text-[clamp(1.5rem,2.6vw,2rem)] leading-tight font-semibold text-crystal">
+          <span class="relative flex size-3" aria-hidden="true" data-cam-dot>
+            <span class="absolute inline-flex size-full rounded-full bg-crystal-muted/60" data-cam-dot-fill></span>
+          </span>
+          <span data-cam-state>Checking…</span>
+        </span>
+        <a href={`/${cams[0].slug}`} class="link mt-1 inline-block text-sm">Watch the {cams.length} Ball cams</a>
+      </dd>
+    </div>
+
+    {
+      weather.enabled && (
+        <div class="py-6 md:py-8 md:pl-8">
+          <dt class="eyebrow">{weather.label}</dt>
+          <dd class="mt-2">
+            <span class="block text-[clamp(1.5rem,2.6vw,2rem)] leading-tight font-semibold text-crystal" data-weather>
+              —
+            </span>
+            <span class="mt-1 block text-sm text-crystal-muted">Now, from the {weather.source}</span>
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+</section>
+
+<script>
+  import { countdownState } from '../scripts/countdown';
+  import { anyStreamLive } from '../scripts/cam-status';
+
+  const strip = document.querySelector<HTMLElement>('[data-live-strip]');
+  if (strip) {
+    // Countdown
+    const label = strip.querySelector<HTMLElement>('[data-countdown-label]')!;
+    const value = strip.querySelector<HTMLElement>('[data-strip-countdown]')!;
+    const spoken = strip.querySelector<HTMLElement>('[data-strip-spoken]')!;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    let lastMinute = -1;
+    const tick = () => {
+      const s = countdownState(new Date());
+      if (s.kind === 'celebrating') {
+        label.textContent = 'It’s midnight in Times Square';
+        value.textContent = `Happy New Year ${s.year}`;
+        return;
+      }
+      label.textContent = `Countdown to ${s.targetYear}`;
+      value.textContent = `${s.days}d ${pad(s.hours)}h ${pad(s.minutes)}m ${pad(s.seconds)}s`;
+      const minute = Math.floor(s.totalMs / 60000);
+      if (minute !== lastMinute) {
+        lastMinute = minute;
+        spoken.textContent = `${s.days} days, ${s.hours} hours and ${s.minutes} minutes until ${s.targetYear}.`;
+      }
+    };
+    tick();
+    setInterval(tick, 1000);
+
+    // Ball cam status
+    const state = strip.querySelector<HTMLElement>('[data-cam-state]')!;
+    const fill = strip.querySelector<HTMLElement>('[data-cam-dot-fill]')!;
+    anyStreamLive(JSON.parse(strip.dataset.streams ?? '[]')).then((live) => {
+      state.textContent = live ? 'Live now' : 'Offline';
+      fill.classList.remove('bg-crystal-muted/60');
+      fill.classList.add(live ? 'bg-live' : 'bg-crystal-muted/40');
+      if (live) fill.insertAdjacentHTML('beforebegin', '<span class="absolute inline-flex size-full animate-ping rounded-full bg-live opacity-75"></span>');
+    });
+
+    // Weather (National Weather Service hourly forecast, current hour)
+    const weatherEl = strip.querySelector<HTMLElement>('[data-weather]');
+    const url = strip.dataset.weatherUrl;
+    if (weatherEl && url) {
+      const show = (text: string) => (weatherEl.textContent = text);
+      const KEY = 'tsb-weather';
+      let cached: { at: number; text: string } | null = null;
+      try {
+        cached = JSON.parse(sessionStorage.getItem(KEY) ?? 'null');
+      } catch {}
+      if (cached && Date.now() - cached.at < 10 * 60_000) {
+        show(cached.text);
+      } else {
+        fetch(url, { headers: { Accept: 'application/geo+json' } })
+          .then((res) => (res.ok ? res.json() : Promise.reject()))
+          .then((data) => {
+            const now = Date.now();
+            const periods: { startTime: string; endTime: string; temperature: number; temperatureUnit: string; shortForecast: string }[] =
+              data.properties.periods;
+            const p = periods.find((x) => new Date(x.endTime).getTime() > now) ?? periods[0];
+            const text = `${p.temperature}°${p.temperatureUnit}, ${p.shortForecast}`;
+            show(text);
+            try {
+              sessionStorage.setItem(KEY, JSON.stringify({ at: now, text }));
+            } catch {}
+          })
+          .catch(() => show('Unavailable right now'));
+      }
+    }
+  }
+</script>

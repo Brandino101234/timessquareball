@@ -30,14 +30,12 @@ const { cam } = Astro.props;
 </a>
 
 <script>
+  import { isStreamLive } from '../scripts/cam-status';
+
   // Show "Live now" only when the stream's playlist actually responds.
   for (const badge of document.querySelectorAll<HTMLElement>('[data-cam-status]')) {
-    const url = badge.dataset.camStatus!;
-    fetch(url, { cache: 'no-store' })
-      .then((res) => (res.ok ? res.text() : ''))
-      .then((body) => {
-        if (body.includes('#EXTM3U')) badge.hidden = false;
-      })
-      .catch(() => {});
+    isStreamLive(badge.dataset.camStatus!).then((live) => {
+      badge.hidden = !live;
+    });
   }
 </script>

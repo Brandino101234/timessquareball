@@ -1,6 +1,17 @@
 ---
+/**
+ * Thin fixed header: logo, main menu, and a "Watch Live" button.
+ * With `overlay` (the homepage) it starts transparent over the hero and turns
+ * solid once the visitor scrolls.
+ */
 import BallMark from './BallMark.astro';
 import { mainNav, isGroup, currentPath } from '../data/navigation';
+import { cams } from '../config/cams';
+
+interface Props {
+  overlay?: boolean;
+}
+const { overlay = false } = Astro.props;
 
 const path = currentPath(Astro.url);
 const isCurrent = (href: string) => path === href;
@@ -8,103 +19,132 @@ const inSection = (href: string) => path === href || path.startsWith(href + '/')
 const groupActive = (group: { href: string; children: { href: string }[] }) =>
   inSection(group.href) || group.children.some((c) => isCurrent(c.href));
 const menuId = (label: string) => `menu-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+const streamUrls = JSON.stringify(cams.map((c) => c.streamUrl));
+const watchLiveHref = `/${cams[0].slug}`;
+
+const itemClass =
+  'flex items-center gap-2 rounded-full px-3 py-2 text-[0.8125rem] font-semibold tracking-[0.12em] uppercase no-underline transition-colors hover:text-crystal-muted';
 ---
 
-<header class="sticky top-0 z-40 border-b border-night-600/60 bg-night/90 backdrop-blur-md">
-  <div class="mx-auto flex h-16 max-w-[90rem] items-center justify-between gap-6 px-4 sm:px-6 lg:h-20 lg:px-10">
-    <a href="/" class="flex items-center gap-3 text-crystal no-underline" aria-label="Times Square Ball, home">
-      <BallMark size={34} class="text-gold" />
-      <span class="font-serif text-[1.1875rem] leading-none font-medium whitespace-nowrap tracking-[-0.01em] sm:text-[1.375rem]">Times Square Ball</span>
+<header
+  data-site-header
+  data-overlay={overlay ? 'true' : undefined}
+  data-streams={streamUrls}
+  class:list={[
+    'fixed inset-x-0 top-0 z-40 transition-[background-color,border-color] duration-300',
+    overlay
+      ? 'border-b border-transparent bg-gradient-to-b from-night-950/70 to-transparent data-[scrolled]:border-night-600/60 data-[scrolled]:bg-night/95 data-[scrolled]:backdrop-blur-md data-[menu-open]:bg-night'
+      : 'border-b border-night-600/60 bg-night/95 backdrop-blur-md',
+  ]}
+>
+  <div class="mx-auto flex h-16 max-w-[90rem] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
+    <a href="/" class="flex shrink-0 items-center gap-2 text-crystal no-underline sm:gap-2.5" aria-label="Times Square Ball, home">
+      <BallMark size={28} class="text-gold" />
+      <span class="font-serif text-[1.0625rem] leading-none font-medium whitespace-nowrap max-[359px]:sr-only sm:text-[1.25rem]">Times Square Ball</span>
     </a>
 
-    <nav aria-label="Main" class="hidden font-nav xl:block">
-      <ul class="flex items-center gap-1">
-        {
-          mainNav.map((item) =>
-            isGroup(item) ? (
-              <li class="relative" data-dropdown>
-                <button
-                  type="button"
-                  class:list={[
-                    'flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.9375rem] font-medium transition-colors hover:text-gold',
-                    groupActive(item) ? 'text-gold' : 'text-crystal',
-                  ]}
-                  aria-expanded="false"
-                  aria-controls={menuId(item.label)}
-                >
-                  {item.label}
-                  <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" class="transition-transform" data-chevron>
-                    <path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" />
-                  </svg>
-                </button>
-                <ul
-                  id={menuId(item.label)}
-                  hidden
-                  class="absolute top-full right-0 mt-2 w-60 rounded-2xl border border-night-600 bg-night-900 p-2 shadow-[0_24px_48px_-12px_rgba(3,5,20,0.8)]"
-                >
-                  {item.children.map((child) => (
-                    <li>
-                      <a
-                        href={child.href}
-                        aria-current={isCurrent(child.href) ? 'page' : undefined}
-                        class="block rounded-xl px-4 py-2.5 text-[0.9375rem] text-crystal no-underline hover:bg-night-700 aria-[current=page]:text-gold"
-                      >
-                        {child.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ) : (
-              <li>
-                <a
-                  href={item.href}
-                  aria-current={isCurrent(item.href) ? 'page' : undefined}
-                  class="block rounded-full px-3.5 py-2 text-[0.9375rem] font-medium text-crystal no-underline transition-colors hover:text-gold aria-[current=page]:text-gold"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ),
-          )
-        }
-      </ul>
-    </nav>
+    <div class="flex items-center gap-2 lg:gap-4">
+      <nav aria-label="Main" class="hidden font-nav xl:block">
+        <ul class="flex items-center">
+          {
+            mainNav.map((item) =>
+              isGroup(item) && !item.direct ? (
+                <li class="relative" data-dropdown>
+                  <button
+                    type="button"
+                    class:list={[itemClass, 'text-crystal', groupActive(item) && 'underline decoration-2 underline-offset-[6px]']}
+                    aria-expanded="false"
+                    aria-controls={menuId(item.label)}
+                  >
+                    {item.label}
+                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" class="transition-transform" data-chevron>
+                      <path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+                    </svg>
+                  </button>
+                  <ul
+                    id={menuId(item.label)}
+                    hidden
+                    class="absolute top-full right-0 mt-2 w-60 rounded-2xl border border-night-600 bg-night-900 p-2 shadow-[0_24px_48px_-12px_rgba(3,5,20,0.8)]"
+                  >
+                    {item.children.map((child) => (
+                      <li>
+                        <a
+                          href={child.href}
+                          aria-current={isCurrent(child.href) ? 'page' : undefined}
+                          class="block rounded-xl px-4 py-2.5 text-[0.9375rem] text-crystal no-underline hover:bg-night-700 aria-[current=page]:underline aria-[current=page]:underline-offset-4"
+                        >
+                          {child.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ) : (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={(isGroup(item) ? groupActive(item) : isCurrent(item.href)) ? 'page' : undefined}
+                    class:list={[itemClass, 'text-crystal aria-[current=page]:underline aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-[6px]']}
+                  >
+                    {isGroup(item) && item.liveDot && (
+                      <span data-live-dot hidden class="relative flex size-2" aria-hidden="true">
+                        <span class="absolute inline-flex size-full animate-ping rounded-full bg-live opacity-75" />
+                        <span class="relative inline-flex size-2 rounded-full bg-live" />
+                      </span>
+                    )}
+                    {item.label}
+                    {isGroup(item) && item.liveDot && <span data-live-text hidden class="sr-only">(live now)</span>}
+                  </a>
+                </li>
+              ),
+            )
+          }
+        </ul>
+      </nav>
 
-    <button
-      type="button"
-      class="flex h-11 items-center gap-2 rounded-full border border-night-600 px-4 font-nav text-[0.9375rem] font-medium xl:hidden"
-      aria-expanded="false"
-      aria-controls="mobile-menu"
-      data-menu-toggle
-    >
-      <span data-menu-label>Menu</span>
-      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M2 5h12M2 11h12" stroke="currentColor" stroke-width="1.5" data-menu-icon-open />
-        <path d="m3.5 3.5 9 9m0-9-9 9" stroke="currentColor" stroke-width="1.5" class="hidden" data-menu-icon-close />
-      </svg>
-    </button>
+      <a href="/#tickets" class="btn-quiet hidden min-h-10 px-4 py-2 text-[0.875rem] whitespace-nowrap md:inline-flex">
+        Buy Tickets
+      </a>
+      <a href={watchLiveHref} data-watch-live class="btn-gold min-h-10 px-3.5 py-2 text-[0.8125rem] whitespace-nowrap sm:px-5 sm:text-[0.875rem]">
+        Watch Live
+      </a>
+
+      <button
+        type="button"
+        class="flex size-10 shrink-0 items-center justify-center gap-2 rounded-full border border-crystal/30 font-nav text-[0.8125rem] font-semibold tracking-[0.12em] uppercase sm:w-auto sm:px-3.5 xl:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-toggle
+      >
+        <span data-menu-label class="sr-only sm:not-sr-only">Menu</span>
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M2 5h12M2 11h12" stroke="currentColor" stroke-width="1.5" data-menu-icon-open />
+          <path d="m3.5 3.5 9 9m0-9-9 9" stroke="currentColor" stroke-width="1.5" class="hidden" data-menu-icon-close />
+        </svg>
+      </button>
+    </div>
   </div>
 
   <nav
     id="mobile-menu"
     aria-label="Main"
     hidden
-    class="h-[calc(100svh-4rem)] overflow-y-auto font-nav border-t border-night-600/60 bg-night-900 px-4 pt-4 pb-10 sm:px-6 lg:h-[calc(100svh-5rem)] xl:hidden"
+    class="h-[calc(100svh-4rem)] overflow-y-auto border-t border-night-600/60 bg-night-900 px-4 pt-4 pb-10 font-nav sm:px-6 xl:hidden"
   >
+    <a href="/#tickets" class="btn-gold mx-auto mb-4 flex w-full max-w-xl md:hidden" data-menu-tickets>Buy tickets</a>
     <ul class="mx-auto max-w-xl">
       {
         mainNav.map((item) =>
           isGroup(item) ? (
             <li class="mt-4 border-t border-night-600/60 pt-4">
               <p class="px-2 pb-1 text-sm text-crystal-muted">{item.label}</p>
-              <ul>
+              <ul class:list={[item.direct && 'grid grid-cols-2 gap-x-4']}>
                 {item.children.map((child) => (
                   <li>
                     <a
                       href={child.href}
                       aria-current={isCurrent(child.href) ? 'page' : undefined}
-                      class="block rounded-xl px-2 py-3 text-lg text-crystal no-underline aria-[current=page]:text-gold"
+                      class="block rounded-xl px-2 py-3 text-lg text-crystal no-underline aria-[current=page]:underline aria-[current=page]:underline-offset-4"
                     >
                       {child.label}
                     </a>
@@ -117,7 +157,7 @@ const menuId = (label: string) => `menu-${label.toLowerCase().replace(/[^a-z0-9]
               <a
                 href={item.href}
                 aria-current={isCurrent(item.href) ? 'page' : undefined}
-                class="block rounded-xl px-2 py-3 font-serif text-2xl text-crystal no-underline aria-[current=page]:text-gold"
+                class="block rounded-xl px-2 py-3 font-serif text-2xl text-crystal no-underline aria-[current=page]:underline aria-[current=page]:underline-offset-4"
               >
                 {item.label}
               </a>
@@ -128,9 +168,38 @@ const menuId = (label: string) => `menu-${label.toLowerCase().replace(/[^a-z0-9]
     </ul>
   </nav>
 </header>
+{!overlay && <div class="h-16 shrink-0" aria-hidden="true" />}
 
 <script>
-  // Press dropdown (desktop)
+  import { anyStreamLive } from '../scripts/cam-status';
+  import { countdownState, newYearInstant } from '../scripts/countdown';
+
+  const header = document.querySelector<HTMLElement>('[data-site-header]')!;
+
+  // Overlay header: solid once the page scrolls
+  if (header.dataset.overlay) {
+    const update = () => header.toggleAttribute('data-scrolled', window.scrollY > 24);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+
+  // Red live dot next to "Ball Cams" when any stream is live
+  anyStreamLive(JSON.parse(header.dataset.streams ?? '[]')).then((live) => {
+    for (const el of document.querySelectorAll<HTMLElement>('[data-live-dot], [data-live-text]')) el.hidden = !live;
+  });
+
+  // "Watch Live" goes to the webcast while it is on air (6:00 p.m. ET Dec 31 to
+  // 12:15 a.m. Jan 1), and to the Ball cams the rest of the year.
+  const s = countdownState(new Date());
+  const year = s.kind === 'counting' ? s.targetYear : s.year;
+  const midnight = newYearInstant(year).getTime();
+  const now = Date.now();
+  if (now >= midnight - 6 * 3600_000 && now <= midnight + 15 * 60_000) {
+    const link = document.querySelector<HTMLAnchorElement>('[data-watch-live]');
+    if (link) link.href = link.href.replace(/[^/]+$/, 'webcast');
+  }
+
+  // Dropdowns (desktop)
   for (const root of document.querySelectorAll<HTMLElement>('[data-dropdown]')) {
     const button = root.querySelector('button')!;
     const menu = root.querySelector('ul')!;
@@ -169,8 +238,10 @@ const menuId = (label: string) => `menu-${label.toLowerCase().replace(/[^a-z0-9]
       iconOpen.classList.toggle('hidden', open);
       iconClose.classList.toggle('hidden', !open);
       document.documentElement.style.overflow = open ? 'hidden' : '';
+      header.toggleAttribute('data-menu-open', open);
     };
     toggle.addEventListener('click', () => setOpen(panel.hidden));
+    panel.querySelector('[data-menu-tickets]')?.addEventListener('click', () => setOpen(false));
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && !panel.hidden) {
         setOpen(false);

@@ -23,6 +23,7 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "axe-core": "^4.14.0"
+    "axe-core": "^4.14.0",
+    "simple-icons": "^16.35.0"
   }
 }

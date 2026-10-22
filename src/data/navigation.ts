@@ -10,6 +10,13 @@ export interface NavGroup {
   label: string;
   href: string;
   children: NavLink[];
+  /**
+   * On desktop, the label links straight to `href` instead of opening a
+   * dropdown (the children still appear in the mobile menu and footer).
+   */
+  direct?: boolean;
+  /** Show the red "live" dot when a Ball cam stream is live. */
+  liveDot?: boolean;
 }
 
 export const mainNav: (NavLink | NavGroup)[] = [
@@ -18,9 +25,11 @@ export const mainNav: (NavLink | NavGroup)[] = [
   { label: 'Ball facts', href: '/ball-facts' },
   {
     // One entry per cam in src/config/cams.ts
-    label: 'Ball cams',
+    label: 'Ball Cams',
     href: `/${cams[0].slug}`,
     children: cams.map((cam) => ({ label: cam.title, href: `/${cam.slug}` })),
+    direct: true,
+    liveDot: true,
   },
   { label: 'Webcast', href: '/webcast' },
   {

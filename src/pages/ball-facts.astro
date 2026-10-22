@@ -5,6 +5,7 @@ import PageHeader from '../components/PageHeader.astro';
 import NextPage from '../components/NextPage.astro';
 import CrystalScale from '../components/CrystalScale.astro';
 import NumeralPucks from '../components/NumeralPucks.astro';
+import TicketCards from '../components/TicketCards.astro';
 import {
   intro,
   ball,
@@ -89,27 +90,9 @@ const atAGlance = [
           <h3 class="text-[clamp(1.75rem,3vw,2.25rem)]">Visit the Ball</h3>
           <p class="mt-4 text-crystal-muted">{visitorExperiences.intro}</p>
         </div>
-        <ul class="grid gap-4 sm:grid-cols-3 lg:col-span-8 lg:col-start-5">
-          {
-            visitorExperiences.items.map((x) => (
-              <li>
-                <a
-                  href={x.url}
-                  target="_blank"
-                  rel="noopener"
-                  class="group flex h-full flex-col rounded-[1.5rem] border border-night-600 p-6 no-underline transition-colors hover:border-prism"
-                >
-                  <h4 class="text-[1.375rem] leading-tight font-semibold text-crystal group-hover:text-gold">{x.title}</h4>
-                  <p class="mt-3 flex-1 text-base text-crystal-muted">{x.text}</p>
-                  <span class="mt-5 text-base font-medium text-prism underline underline-offset-4">
-                    Learn more and get tickets
-                    <span class="sr-only"> for {x.title} on onetimessquare.com (opens in a new tab)</span>
-                  </span>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+        <div class="lg:col-span-8 lg:col-start-5">
+          <TicketCards titleTag="h4" />
+        </div>
       </div>
     </div>
   </section>

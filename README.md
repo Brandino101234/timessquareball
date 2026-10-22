@@ -24,7 +24,8 @@ These are open items. Each one is explained in more detail further down.
 - [ ] **Wegovy logo.** Add it to `src/assets/sponsors/` and `src/data/sponsors.ts`. Until then the sponsor band shows the name.
 - [ ] **2027 numerals.** Add the light-puck count for the “7” in `src/data/ball-facts.ts` when it’s published, and replace the 2026 fact sheet.
 - [ ] **Webcast.** Add this year’s embed URL to `src/config/webcast.ts` once the provider is confirmed.
-- [ ] **Privacy Policy and Terms need a legal review.** They are copied word for word from the old site (effective December 13, 2010). They still describe retired mobile apps and a “Photo Display Service”, name the old domain, and mention cookies and ads this site doesn’t use.
+- [ ] **Getting to Times Square.** The homepage facts (entry streets, times, prohibited items) are from the 2025 official guidance. Check them each December in `src/data/getting-there.ts`.
+- [ ] **Privacy Policy and Terms need a legal review.** The review should also cover the homepage weather (National Weather Service) and map (OpenStreetMap), which visitors’ browsers load from those services. They are copied word for word from the old site (effective December 13, 2010). They still describe retired mobile apps and a “Photo Display Service”, name the old domain, and mention cookies and ads this site doesn’t use.
 - [ ] **FAQ is a draft.** It was written from facts already on the site. Please review `src/content/pages/faq.md`.
 - [ ] **Fact check on NYE History.** The text calls the Times publisher “Alfred Ochs”. He was Adolph S. Ochs. It is left as originally written until confirmed.
 - [ ] **Contact email.** The FAQ, Privacy and Terms use `support@timessquareball.net` and `remove@timessquareball.net`. Confirm these still work, or update them.
@@ -110,6 +111,10 @@ A paragraph is just text. Leave a blank line between paragraphs.
 | Privacy Policy, Terms                             | `src/content/pages/privacy.md`, `terms.md`            |
 | Social links in the footer                        | `src/data/social.ts`                                  |
 | Main menu                                         | `src/data/navigation.ts`                              |
+| Homepage hero photos, headline and photo cards    | `src/pages/index.astro` (top of the file)             |
+| Homepage FAQ preview                              | The first four questions in `src/content/pages/faq.md` |
+| “Getting to Times Square” facts and map           | `src/data/getting-there.ts` (check each December)     |
+| Weather in the live strip (on/off, source)        | `src/config/weather.ts`                               |
 | Site name, domain, owner, contact email           | `src/data/site.ts`                                    |
 
 The countdown needs no yearly update. It always counts to the next midnight on January 1 in New York time, shows “Happy New Year” for 24 hours, then starts counting to the following year.
@@ -334,11 +339,13 @@ The “Constellation” direction: the Ball as a star map. It is quiet, premium 
 
 By design, the site uses **no analytics, no tracking, no cookies and no advertising scripts**, and it loads no fonts or code from other companies’ servers. Please add analytics or any other third-party service only as a deliberate decision. It would also need to be reflected in the Privacy Policy.
 
-The only outside connections are content the company provides:
+The only outside connections are the company’s own content plus two services approved for the homepage (weather and map):
 
 | Service                         | Where                          | Configured in           |
 | ------------------------------- | ------------------------------ | ----------------------- |
-| Live stream provider (HLS)      | Ball cam pages, home cam tiles | `src/config/cams.ts`    |
+| Live stream provider (HLS)      | Ball cam pages, header live dot, homepage live strip | `src/config/cams.ts`    |
+| National Weather Service (api.weather.gov) | Homepage live strip: current Times Square weather. Free, no key; visitors’ browsers request it | `src/config/weather.ts` |
+| OpenStreetMap                   | Homepage “Getting to Times Square” map (embedded, loads only when scrolled into view) | `src/data/getting-there.ts` |
 | Webcast provider (when set)     | Webcast page                   | `src/config/webcast.ts` |
 | Amazon S3 (`tsbmediaupload`)    | B-roll and segment downloads   | `src/data/videos.ts`    |
 | Vercel                          | Hosting                        | `vercel.json`           |

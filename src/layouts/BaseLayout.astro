@@ -19,6 +19,8 @@ interface Props {
   /** Extra JSON-LD objects for this page (Event, NewsArticle, VideoObject…). */
   structuredData?: Record<string, unknown>[];
   noindex?: boolean;
+  /** Header floats transparent over a full-screen hero (homepage). */
+  overlayHeader?: boolean;
 }
 
 const {
@@ -28,6 +30,7 @@ const {
   type = 'website',
   structuredData = [],
   noindex = false,
+  overlayHeader = false,
 } = Astro.props;
 
 const isHome = currentPath(Astro.url) === '/';
@@ -90,7 +93,7 @@ const jsonLd = [
     >
       Skip to content
     </a>
-    <Header />
+    <Header overlay={overlayHeader} />
     <main id="main" class="flex-1">
       <slot />
     </main>

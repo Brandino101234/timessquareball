@@ -25,6 +25,8 @@
   --color-gold: #e2b04a;
   --color-gold-bright: #f0c86e;
   --color-rose: #f27bb0;
+  /* Status only: the red “live” dot. Not used for buttons or decoration. */
+  --color-live: #ff4d5e;
 
   /* Poppins for nearly everything: body text, page titles, the countdown. */
   --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
@@ -51,7 +53,7 @@
     font-family: var(--font-sans);
     font-size: 100%;
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: 6rem;
+    scroll-padding-top: 5rem;
   }
 
   body {
@@ -130,6 +132,17 @@
   }
   .btn-gold:hover {
     background: var(--color-gold-bright);
+  }
+
+  /* Small uppercase label above a heading or value. */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--color-crystal-muted);
   }
 
   .btn-quiet {

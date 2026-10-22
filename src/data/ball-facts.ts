@@ -48,26 +48,37 @@ export const features = [
 ] as const;
 
 /**
- * Ticketed experiences at One Times Square, shown with links on the Ball Facts page.
- * Names and links are from onetimessquare.com (October 2026); check them each season.
+ * Ticketed experiences at One Times Square, shown with "Buy tickets" buttons on
+ * the homepage and the Ball Facts page. Tickets are sold by One Times Square.
+ *
+ * Names, ticket links and "Learn more" pages are from onetimessquare.com
+ * (October 2026). Check them each season: the ticket links can change.
  */
 export const visitorExperiences = {
   intro: 'One Times Square offers ticketed experiences that bring you up close to the Ball and the building.',
+  /** One Times Square's page listing every ticket. */
+  allTicketsUrl: 'https://onetimessquare.com/buy-tickets',
   items: [
     {
       title: 'New Year’s Eve Ball Experience',
+      eyebrow: 'Up close with the Ball',
       text: 'Up-close access to the Ball for photos and the official Ball Show, plus admission to the Skywalk Viewing Deck.',
       url: 'https://onetimessquare.com/nye-ball',
+      ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/21155d63-e4fc-407e-bf6a-d5197ee8c856?fac=OTS&locale=en&skin=vipball',
     },
     {
       title: 'Skywalk Viewing Deck',
+      eyebrow: 'Above Times Square',
       text: 'A 360-degree wraparound viewing deck overlooking Times Square.',
       url: 'https://onetimessquare.com/skywalk-viewing-deck',
+      ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/6fceff3f-55b8-495e-92b3-e704acca869f/shop/multiple-event-search?fac=OTS&locale=en&skin=viewingdeck',
     },
     {
       title: 'One Times Square Candy Experience',
+      eyebrow: 'For all ages',
       text: 'A New York City–themed indoor candy adventure through sugar-spun versions of city landmarks, ending at The Candy Shop.',
       url: 'https://onetimessquare.com/candy-experience',
+      ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/53193bd5-28b5-447a-a559-07ce1378583f/shop/select?fac=OTS&locale=en&skin=icandy',
     },
   ],
 } as const;
