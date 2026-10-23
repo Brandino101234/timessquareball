@@ -14,7 +14,7 @@ interface Props {
 const { titleTag: Title = 'h3' } = Astro.props;
 ---
 
-<ul class="grid gap-6 md:grid-cols-3 lg:gap-8" data-reveal-stagger="120">
+<ul class="grid gap-6 md:grid-cols-2 lg:gap-8" data-reveal-stagger="120">
   {
     visitorExperiences.items.map((x) => (
       <li class="group flex flex-col" data-reveal="up">

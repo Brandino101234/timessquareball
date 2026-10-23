@@ -1,4 +1,6 @@
 ---
+ball: 1
+illustration: "1907"
 year: 1907
 title: The first Ball
 stats:

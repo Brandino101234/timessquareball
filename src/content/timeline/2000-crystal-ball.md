@@ -1,4 +1,5 @@
 ---
+ball: 6
 year: 2000
 title: The first crystal Ball
 image: ../../assets/ball-history/crystal-ball-2000.jpg

@@ -1,0 +1,32 @@
+---
+/**
+ * "More at One Times Square": the building's other experiences, as a row of
+ * compact cards. Reads from src/data/ball-facts.ts (otherExperiences).
+ */
+import { otherExperiences } from '../data/ball-facts';
+---
+
+<div class="mt-16 border-t border-line pt-10 lg:mt-20" data-reveal="up">
+  <h3 class="eyebrow text-ink">More at One Times Square</h3>
+  <ul class="mt-6 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger="90">
+    {
+      otherExperiences.map((x) => (
+        <li class="group flex flex-col bg-surface p-6 transition-colors hover:bg-alt" data-reveal="up">
+          <p class="text-[1.25rem] leading-tight font-semibold text-ink">{x.title}</p>
+          <p class="mt-2 flex-1 text-base text-muted">{x.text}</p>
+          <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+            {x.ticketsUrl && (
+              <a href={x.ticketsUrl} target="_blank" rel="noopener" class="btn-gold min-h-10 px-4 py-2 text-[0.8125rem]">
+                Buy tickets<span class="sr-only"> for the {x.title} (opens in a new tab)</span>
+              </a>
+            )}
+            <a href={x.url} target="_blank" rel="noopener" class="link text-base font-medium">
+              {x.cta ?? 'Learn more'}
+              <span class="sr-only"> about {x.title} on One Times Square’s site (opens in a new tab)</span>
+            </a>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</div>

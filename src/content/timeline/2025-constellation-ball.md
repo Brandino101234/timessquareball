@@ -1,6 +1,7 @@
 ---
+ball: 9
 year: 2025
-title: The Constellation Ball
+title: The Constellation Ball™
 image: ../../assets/ball-history/constellation-ball.jpg
 imageAlt: The Constellation Ball seen from below, its circular crystals lit in swirling colors around the mast
 stats:

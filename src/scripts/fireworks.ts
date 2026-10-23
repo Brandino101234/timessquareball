@@ -1,132 +1,326 @@
 /**
- * Fireworks over the footer, set off when the visitor reaches the bottom of
- * the page. Shells rise from the bottom of the canvas and burst into gold,
- * white and rose sparks that fall and fade. Runs for a few seconds each time
- * the footer comes into view; skipped entirely for reduced motion.
+ * A short theatrical fireworks show when the visitor reaches the bottom of the
+ * page. The screen dims like house lights going down, shells rise with
+ * sparkling trails and burst as peonies, gold willows, rings, chrysanthemums,
+ * crackling crossettes and glitter, each with a flash of light; a rapid finale
+ * closes the show and the lights come back up.
+ *
+ * Drawn on a fixed, full-screen canvas that never blocks clicks. Plays again
+ * when the visitor returns to the bottom (at most every 20 seconds). Skipped
+ * entirely for visitors who prefer reduced motion.
  */
-const COLORS = ['#e2b04a', '#f0c86e', '#ffffff', '#f27bb0', '#ff8a5b', '#9adcf5'];
+const PALETTES = [
+  ['#e2b04a', '#f0c86e', '#fff4d6'], // gold
+  ['#ffffff', '#dfe8ff', '#b9d7ff'], // silver
+  ['#f27bb0', '#ff9fd0', '#ffffff'], // rose
+  ['#ff5a4e', '#ff9b5a', '#ffd27a'], // red-orange
+  ['#7fd3ff', '#b3a6ff', '#ffffff'], // blue-violet
+  ['#7dffb0', '#e2b04a', '#ffffff'], // green-gold
+];
 
-interface Shell { x: number; y: number; vy: number; targetY: number; color: string }
-interface Spark { x: number; y: number; vx: number; vy: number; life: number; max: number; color: string; size: number }
+type BurstKind = 'peony' | 'chrysanthemum' | 'willow' | 'ring' | 'crossette' | 'glitter';
+
+interface Shell {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  kind: BurstKind;
+  palette: string[];
+  fuse: number;
+}
+
+interface Spark {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  max: number;
+  color: string;
+  width: number;
+  gravity: number;
+  drag: number;
+  trail: number;
+  twinkle: boolean;
+  splits?: boolean;
+}
+
+interface Flash {
+  x: number;
+  y: number;
+  r: number;
+  life: number;
+  color: string;
+}
+
+const rand = (a: number, b: number) => a + Math.random() * (b - a);
+const pick = <T,>(list: T[]) => list[(Math.random() * list.length) | 0];
 
 export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  let width = 0, height = 0, dpr = 1;
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let unit = 1; // scales the show to the screen size
   let shells: Shell[] = [];
   let sparks: Spark[] = [];
-  let launchUntil = 0;
-  let nextLaunch = 0;
+  let flashes: Flash[] = [];
+  let schedule: { at: number; kind: BurstKind }[] = [];
+  let showStart = 0;
+  let lastShow = -Infinity;
   let frame = 0;
   let running = false;
+  let veil = 0; // 0..1, how dark the "house lights" are
 
   const resize = () => {
-    const r = canvas.getBoundingClientRect();
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    width = r.width;
-    height = r.height;
+    width = window.innerWidth;
+    height = window.innerHeight;
+    unit = Math.min(width, height) / 800;
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
   };
 
-  const launch = () => {
-    const color = COLORS[(Math.random() * COLORS.length) | 0];
-    shells.push({
-      x: width * (0.12 + Math.random() * 0.76),
-      y: height,
-      vy: -(height * 0.018 + Math.random() * height * 0.006),
-      targetY: height * (0.15 + Math.random() * 0.3),
-      color,
+  // The running order: an opening volley, a varied middle, then the finale.
+  const buildSchedule = () => {
+    const kinds: BurstKind[] = ['peony', 'chrysanthemum', 'willow', 'ring', 'crossette', 'glitter'];
+    const list: { at: number; kind: BurstKind }[] = [
+      { at: 300, kind: 'chrysanthemum' },
+      { at: 700, kind: 'peony' },
+      { at: 1100, kind: 'willow' },
+    ];
+    let t = 1600;
+    while (t < 6200) {
+      list.push({ at: t, kind: pick(kinds) });
+      if (Math.random() < 0.4) list.push({ at: t + 120, kind: pick(kinds) });
+      t += rand(380, 650);
+    }
+    // Finale: a fast barrage, closing on a wide gold willow canopy.
+    for (let i = 0; i < 16; i++) list.push({ at: 6400 + i * 110, kind: pick(['peony', 'chrysanthemum', 'glitter', 'ring']) });
+    for (let i = 0; i < 4; i++) list.push({ at: 8300 + i * 90, kind: 'willow' });
+    return list.sort((a, b) => a.at - b.at);
+  };
+
+  const launch = (kind: BurstKind) => {
+    const x = width * rand(0.12, 0.88);
+    const apex = height * rand(0.18, 0.45);
+    // Initial speed needed to reach the apex under gravity
+    const g = 0.12 * unit;
+    const vy = -Math.sqrt(2 * g * (height - apex));
+    shells.push({ x, y: height + 10, vx: rand(-0.6, 0.6) * unit, vy, kind, palette: pick(PALETTES), fuse: 0 });
+  };
+
+  const addSpark = (s: Partial<Spark> & Pick<Spark, 'x' | 'y' | 'vx' | 'vy' | 'color'>) => {
+    const max = s.max ?? rand(55, 85);
+    sparks.push({
+      life: max,
+      max,
+      width: 2 * unit,
+      gravity: 0.07 * unit,
+      drag: 0.955,
+      trail: 3,
+      twinkle: false,
+      ...s,
     });
   };
 
-  const burst = (s: Shell) => {
-    const count = 90 + ((Math.random() * 50) | 0);
-    const speed = Math.min(width, height) * (0.012 + Math.random() * 0.007);
-    const second = Math.random() < 0.4 ? COLORS[(Math.random() * COLORS.length) | 0] : s.color;
-    for (let i = 0; i < count; i++) {
-      const a = (i / count) * Math.PI * 2 + Math.random() * 0.2;
-      const v = speed * (0.55 + Math.random() * 0.6);
-      const max = 60 + Math.random() * 40;
-      sparks.push({ x: s.x, y: s.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: max, max, color: i % 3 ? s.color : second, size: 1.6 + Math.random() * 1.8 });
+  const burst = (sh: Shell) => {
+    const [main, accent, light] = sh.palette;
+    const speed = rand(10, 13) * unit;
+    flashes.push({ x: sh.x, y: sh.y, r: 420 * unit, life: 1, color: light });
+
+    switch (sh.kind) {
+      case 'peony': {
+        const n = 150;
+        for (let i = 0; i < n; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const v = speed * Math.cbrt(Math.random()); // fill the sphere
+          addSpark({ x: sh.x, y: sh.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, color: i % 4 ? main : accent, width: 2.6 * unit });
+        }
+        break;
+      }
+      case 'chrysanthemum': {
+        const n = 180;
+        for (let i = 0; i < n; i++) {
+          const a = (i / n) * Math.PI * 2 + rand(-0.03, 0.03);
+          const v = speed * rand(0.85, 1.05);
+          addSpark({ x: sh.x, y: sh.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, color: main, trail: 9, width: 1.6 * unit, max: rand(70, 95), twinkle: Math.random() < 0.3 });
+        }
+        break;
+      }
+      case 'willow': {
+        const n = 120;
+        for (let i = 0; i < n; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const v = speed * rand(0.4, 0.9);
+          addSpark({
+            x: sh.x, y: sh.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1 * unit,
+            color: pick(['#e2b04a', '#f0c86e', '#ffd88a']), trail: 14, width: 1.5 * unit,
+            gravity: 0.05 * unit, drag: 0.972, max: rand(150, 200), twinkle: true,
+          });
+        }
+        break;
+      }
+      case 'ring': {
+        const n = 70;
+        const tilt = rand(0.35, 1);
+        const rot = rand(0, Math.PI);
+        for (let i = 0; i < n; i++) {
+          const a = (i / n) * Math.PI * 2;
+          const x = Math.cos(a) * speed;
+          const y = Math.sin(a) * speed * tilt;
+          addSpark({ x: sh.x, y: sh.y, vx: x * Math.cos(rot) - y * Math.sin(rot), vy: x * Math.sin(rot) + y * Math.cos(rot), color: i % 2 ? main : light, width: 2.4 * unit, drag: 0.955 });
+        }
+        for (let i = 0; i < 24; i++) {
+          const a = Math.random() * Math.PI * 2;
+          addSpark({ x: sh.x, y: sh.y, vx: Math.cos(a) * speed * 0.3, vy: Math.sin(a) * speed * 0.3, color: accent, width: 2 * unit });
+        }
+        break;
+      }
+      case 'crossette': {
+        const n = 10;
+        for (let i = 0; i < n; i++) {
+          const a = (i / n) * Math.PI * 2;
+          addSpark({ x: sh.x, y: sh.y, vx: Math.cos(a) * speed * 0.8, vy: Math.sin(a) * speed * 0.8, color: light, width: 3 * unit, trail: 6, max: 34, splits: true });
+        }
+        break;
+      }
+      case 'glitter': {
+        const n = 130;
+        for (let i = 0; i < n; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const v = speed * Math.sqrt(Math.random());
+          addSpark({ x: sh.x, y: sh.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, color: pick([main, light, '#ffffff']), width: 1.8 * unit, twinkle: true, max: rand(80, 120), drag: 0.95 });
+        }
+        break;
+      }
     }
   };
 
   const tick = (now: number) => {
+    const t = now - showStart;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // Fade the previous frame to leave short trails
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-    ctx.fillRect(0, 0, width, height);
-    ctx.globalCompositeOperation = 'lighter';
+    ctx.clearRect(0, 0, width, height);
 
-    if (now < launchUntil && now >= nextLaunch) {
-      launch();
-      if (Math.random() < 0.6) launch();
-      nextLaunch = now + 220 + Math.random() * 360;
+    // House lights: dim in at the start, back up after the finale
+    const target = t < 9200 ? 0.62 : 0;
+    veil += (target - veil) * 0.05;
+    if (veil > 0.002) {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = `rgba(0, 0, 0, ${veil})`;
+      ctx.fillRect(0, 0, width, height);
     }
 
-    shells = shells.filter((s) => {
-      s.y += s.vy;
-      s.vy *= 0.985;
-      ctx.fillStyle = s.color;
+    while (schedule.length && schedule[0].at <= t) launch(schedule.shift()!.kind);
+
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round';
+
+    // Flashes of light where shells burst
+    flashes = flashes.filter((f) => {
+      const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r);
+      g.addColorStop(0, `rgba(255, 240, 210, ${0.35 * f.life})`);
+      g.addColorStop(1, 'rgba(255, 240, 210, 0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(f.x - f.r, f.y - f.r, f.r * 2, f.r * 2);
+      f.life -= 0.08;
+      return f.life > 0;
+    });
+
+    // Rising shells with a sparkling tail
+    const g = 0.12 * unit;
+    shells = shells.filter((sh) => {
+      sh.x += sh.vx;
+      sh.y += sh.vy;
+      sh.vy += g;
+      sh.fuse++;
+      ctx.strokeStyle = 'rgba(255, 220, 160, 0.9)';
+      ctx.lineWidth = 2.2 * unit;
       ctx.beginPath();
-      ctx.arc(s.x, s.y, 1.8, 0, Math.PI * 2);
-      ctx.fill();
-      if (s.y <= s.targetY || s.vy > -1) {
-        burst(s);
+      ctx.moveTo(sh.x - sh.vx * 3, sh.y - sh.vy * 3);
+      ctx.lineTo(sh.x, sh.y);
+      ctx.stroke();
+      if (sh.fuse % 2 === 0) {
+        addSpark({ x: sh.x, y: sh.y, vx: rand(-0.4, 0.4) * unit, vy: rand(0.5, 1.5) * unit, color: '#ffcf8a', width: 1.2 * unit, max: 18, trail: 0 });
+      }
+      if (sh.vy >= -0.5 * unit) {
+        burst(sh);
         return false;
       }
       return true;
     });
 
+    // Sparks
+    const born: Spark[] = [];
     sparks = sparks.filter((p) => {
+      p.vx *= p.drag;
+      p.vy = p.vy * p.drag + p.gravity;
       p.x += p.vx;
       p.y += p.vy;
-      p.vx *= 0.97;
-      p.vy = p.vy * 0.97 + 0.045;
       p.life -= 1;
-      const alpha = Math.max(0, p.life / p.max);
+      const fade = Math.max(0, p.life / p.max);
+      let alpha = Math.min(1, fade * 1.6);
+      if (p.twinkle && Math.random() < 0.35) alpha *= 0.25;
       ctx.globalAlpha = alpha;
-      ctx.fillStyle = p.color;
+      ctx.strokeStyle = p.color;
+      ctx.lineWidth = p.width * (0.5 + fade * 0.5);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size * (0.6 + alpha * 0.6), 0, Math.PI * 2);
-      ctx.fill();
+      ctx.moveTo(p.x - p.vx * p.trail, p.y - p.vy * p.trail);
+      ctx.lineTo(p.x + 0.01, p.y + 0.01);
+      ctx.stroke();
+      if (p.splits && p.life <= 0) {
+        // Crossette: each star splits into four with a crackle of light
+        for (let k = 0; k < 4; k++) {
+          const a = Math.atan2(p.vy, p.vx) + Math.PI / 4 + (k * Math.PI) / 2;
+          const v = 5.5 * unit;
+          born.push({ x: p.x, y: p.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 50, max: 50, color: pick(['#e2b04a', '#ffffff', '#f27bb0']), width: 2 * unit, gravity: 0.06 * unit, drag: 0.96, trail: 5, twinkle: true });
+        }
+      }
       return p.life > 0;
     });
+    sparks.push(...born);
     ctx.globalAlpha = 1;
 
-    if (now < launchUntil || shells.length || sparks.length) {
+    if (t < 9200 || shells.length || sparks.length || veil > 0.01) {
       frame = requestAnimationFrame(tick);
     } else {
       running = false;
       ctx.clearRect(0, 0, width, height);
+      canvas.hidden = true;
     }
   };
 
   const start = () => {
-    launchUntil = performance.now() + 5500;
-    nextLaunch = 0;
-    if (!running) {
-      running = true;
-      resize();
-      frame = requestAnimationFrame(tick);
-    }
+    const now = performance.now();
+    if (running || now - lastShow < 20_000) return;
+    lastShow = now;
+    resize();
+    shells = [];
+    sparks = [];
+    flashes = [];
+    schedule = buildSchedule();
+    showStart = now;
+    running = true;
+    canvas.hidden = false;
+    frame = requestAnimationFrame(tick);
   };
 
-  new ResizeObserver(resize).observe(canvas);
-  let shown = false;
+  window.addEventListener('resize', () => running && resize());
   new IntersectionObserver(
     ([entry]) => {
-      // Celebrate each time the bottom of the page comes back into view
-      if (entry.isIntersecting && !shown) start();
-      shown = entry.isIntersecting;
+      if (entry.isIntersecting) start();
     },
     { threshold: 0.6 },
   ).observe(trigger);
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) cancelAnimationFrame(frame), (running = false);
+    if (document.hidden && running) {
+      cancelAnimationFrame(frame);
+      running = false;
+      canvas.hidden = true;
+    }
   });
 }

@@ -8,7 +8,7 @@
  */
 
 export const intro =
-  'Each year, millions of eyes from all over the world are focused on the sparkling Times Square New Year’s Eve Ball. At 11:59 p.m., the Ball begins its descent as millions of voices unite to countdown the final seconds of the year, and celebrate the beginning of a new year.';
+  'Each year, millions of eyes from all over the world are focused on the sparkling Times Square New Year’s Eve Ball™. At 11:59 p.m., the Ball begins its descent as millions of voices unite to countdown the final seconds of the year, and celebrate the beginning of a new year.';
 
 export const ball = {
   name: 'Constellation Ball',
@@ -83,13 +83,6 @@ export const visitorExperiences = {
       image: viewingDeckPhoto,
       imageAlt: 'Guests on the rooftop deck of One Times Square beside the Ball, with Times Square towers behind',
     },
-    {
-      title: 'One Times Square Candy Experience',
-      eyebrow: 'For all ages',
-      text: 'A New York City–themed indoor candy adventure through sugar-spun versions of city landmarks, ending at The Candy Shop.',
-      url: 'https://onetimessquare.com/candy-experience',
-      ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/53193bd5-28b5-447a-a559-07ce1378583f/shop/select?fac=OTS&locale=en&skin=icandy',
-    },
   ] as {
     title: string;
     eyebrow: string;
@@ -100,6 +93,44 @@ export const visitorExperiences = {
     imageAlt?: string;
   }[],
 };
+
+/**
+ * Other things to do at One Times Square, shown under the Ball tickets on the
+ * homepage and in the footer. `ticketsUrl` is optional: experiences without
+ * one (weddings, events) show a single "Learn more" button.
+ */
+export const otherExperiences: {
+  title: string;
+  text: string;
+  url: string;
+  ticketsUrl?: string;
+  cta?: string;
+}[] = [
+  {
+    title: 'One Times Square Candy Experience',
+    text: 'A New York City–themed indoor candy adventure through sugar-spun versions of city landmarks, ending at The Candy Shop.',
+    url: 'https://onetimessquare.com/candy-experience',
+    ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/53193bd5-28b5-447a-a559-07ce1378583f/shop/select?fac=OTS&locale=en&skin=icandy',
+  },
+  {
+    title: 'Ever Weddings',
+    text: 'Proposals, vows, vow renewals and wedding ceremonies above Times Square.',
+    url: 'https://onetimessquare.com/weddings',
+    cta: 'Plan your celebration',
+  },
+  {
+    title: 'Special Events',
+    text: 'Host a private event at One Times Square.',
+    url: 'https://onetimessquare.com/events',
+    cta: 'Plan an event',
+  },
+  {
+    title: 'Group Bookings',
+    text: 'Tickets and visits for groups.',
+    url: 'https://onetimessquare.com/group-bookings',
+    cta: 'Book a group',
+  },
+];
 
 /** Crystal sizes on the Ball, smallest first. Counts must add up to `ball.crystals`. */
 export const crystals = [

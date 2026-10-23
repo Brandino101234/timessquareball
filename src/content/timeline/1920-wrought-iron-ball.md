@@ -1,4 +1,6 @@
 ---
+ball: 2
+illustration: "1920"
 year: 1920
 title: Wrought iron
 stats:

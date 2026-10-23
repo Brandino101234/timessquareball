@@ -1,4 +1,5 @@
 ---
+ball: 3
 year: 1955
 title: Aluminum
 image: ../../assets/ball-history/aluminum-ball.jpg

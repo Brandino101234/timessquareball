@@ -1,4 +1,8 @@
 ---
+/**
+ * Title band at the top of a page without a photo: black, full width, white
+ * text. (Pages that open with a photo use PageHero instead.)
+ */
 interface Props {
   title: string;
   intro?: string;
@@ -8,13 +12,17 @@ interface Props {
 const { title, intro, source } = Astro.props;
 ---
 
-<header class="mx-auto max-w-[90rem] px-4 pt-14 pb-12 sm:px-6 lg:px-10 lg:pt-24 lg:pb-16">
-  <h1 class="text-[clamp(3rem,9vw,6.3rem)] leading-[0.98] tracking-[-0.01em]">{title}</h1>
-  {
-    intro && (
-      <p class="mt-8 max-w-[38ch] font-display text-[clamp(1.375rem,2.6vw,2rem)] leading-[1.3] text-ink">{intro}</p>
-    )
-  }
-  {source && <p class="mt-6 text-base text-muted">{source}</p>}
-  <slot />
+<header class="theme-dark mb-12 bg-surface lg:mb-16">
+  <div class="mx-auto max-w-[90rem] px-4 pt-14 pb-12 sm:px-6 lg:px-10 lg:pt-24 lg:pb-16">
+    <h1 class="text-[clamp(3rem,9vw,6.3rem)] leading-[0.98] tracking-[-0.01em] text-ink" data-reveal="up">{title}</h1>
+    {
+      intro && (
+        <p class="mt-8 max-w-[38ch] font-display text-[clamp(1.375rem,2.6vw,2rem)] leading-[1.3] text-ink/90" data-reveal="up" style="--reveal-delay: 100ms">
+          {intro}
+        </p>
+      )
+    }
+    {source && <p class="mt-6 text-base text-muted">{source}</p>}
+    <slot />
+  </div>
 </header>

@@ -7,18 +7,21 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import LiveDot from './LiveDot.astro';
+import TM from './TM.astro';
 
 interface Props {
   photos: { src: ImageMetadata; alt: string }[];
   eyebrow: string;
   headline: string;
+  /** Add ™ after the headline (it is a claimed tagline). */
+  headlineTM?: boolean;
   text: string;
   cta: { label: string; href: string };
   /** Optional second button, in the outline style; `live` adds the red recording dot. */
   secondaryCta?: { label: string; href: string; live?: boolean };
   scrollTarget: string;
 }
-const { photos, eyebrow, headline, text, cta, secondaryCta, scrollTarget } = Astro.props;
+const { photos, eyebrow, headline, headlineTM = false, text, cta, secondaryCta, scrollTarget } = Astro.props;
 ---
 
 <section aria-labelledby="hero-heading" class="theme-dark relative isolate flex h-[100svh] min-h-[34rem] items-end overflow-hidden bg-deep" data-hero>
@@ -49,7 +52,7 @@ const { photos, eyebrow, headline, text, cta, secondaryCta, scrollTarget } = Ast
       id="hero-heading"
       class="mt-4 max-w-[14ch] text-[clamp(2.75rem,8vw,6.75rem)] leading-[0.95] font-bold tracking-[-0.03em] text-ink uppercase"
     >
-      {headline}
+      {headline}{headlineTM && <TM />}
     </h1>
     <p class="mt-6 max-w-[44ch] text-[clamp(1.0625rem,1.6vw,1.25rem)] text-ink/90">{text}</p>
     <div class="mt-8 flex flex-wrap gap-3">

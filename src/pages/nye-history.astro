@@ -2,20 +2,30 @@
 import { Image } from 'astro:assets';
 import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeader from '../components/PageHeader.astro';
+import PageHero from '../components/PageHero.astro';
 import NextPage from '../components/NextPage.astro';
 import nextPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_02.jpg';
+import heroPhoto from '../assets/press-photos/confetti-test/TS2026_Confetti-Test_02.jpg';
 
 const page = (await getEntry('pages', 'nye-history'))!;
 const { Content } = await render(page);
 const { title, description, intro, source, pullQuote, images } = page.data;
 ---
 
-<BaseLayout title={title} description={description} image={images[0]?.src}>
-  <PageHeader title={title} intro={intro} source={source} />
+<BaseLayout title={title} description={description} image={heroPhoto} overlayHeader>
+  <PageHero
+    title={title}
+    eyebrow="Since 1904"
+    intro={intro}
+    image={heroPhoto}
+    imageAlt="Confetti falls over a crowd in Times Square beneath the New Year’s Eve stage and billboards"
+    focus="center 40%"
+  >
+    {source && <p class="mt-5 text-base text-ink/80">{source}</p>}
+  </PageHero>
 
   <div
-    class="mx-auto grid max-w-[90rem] gap-12 px-4 pb-20 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-10 lg:pb-28"
+    class="mx-auto grid max-w-[90rem] gap-12 px-4 pt-14 pb-20 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-10 lg:pt-20 lg:pb-28"
   >
     <article class="prose lg:col-span-7">
       <Content />

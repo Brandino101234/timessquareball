@@ -47,18 +47,17 @@ const streamOrigin = new URL(cam.streamUrl).origin;
           Live
         </span>
       </div>
-      <nav aria-label="Switch cam">
-        <ul class="flex flex-wrap gap-1 border border-line bg-surface/70 p-1 backdrop-blur">
+      <nav aria-label="Switch Ball Cam" class="w-full sm:w-auto">
+        <ul class="grid grid-cols-2 gap-1 border border-line bg-surface/70 p-1 backdrop-blur sm:flex sm:flex-wrap">
           {
-            cams.map((c, i) => (
+            cams.map((c) => (
               <li>
                 <a
                   href={`/${c.slug}`}
                   aria-current={c.id === cam.id ? 'page' : undefined}
-                  aria-label={c.title}
-                  class="flex min-h-10 min-w-10 items-center justify-center px-3.5 text-[0.9375rem] font-medium text-ink no-underline hover:bg-raised aria-[current=page]:bg-gold aria-[current=page]:text-black sm:px-4"
+                  class="flex min-h-11 items-center justify-center px-3 text-[0.875rem] font-medium whitespace-nowrap text-ink no-underline hover:bg-raised aria-[current=page]:bg-gold aria-[current=page]:text-black sm:px-4 sm:text-[0.9375rem]"
                 >
-                  <span class="hidden sm:inline">Cam&nbsp;</span>{i + 1}
+                  {c.title}
                 </a>
               </li>
             ))
@@ -75,7 +74,7 @@ const streamOrigin = new URL(cam.streamUrl).origin;
     {
       camSponsor && (
         <p class="mt-4 text-center text-sm text-muted">
-          The official Ball cams are brought to you by{' '}
+          The official Ball Cams are brought to you by{' '}
           <a href={camSponsor.url} rel="sponsored noopener" class="link">
             {camSponsor.name}
           </a>
@@ -84,7 +83,7 @@ const streamOrigin = new URL(cam.streamUrl).origin;
     }
 
     <div class="mt-8 grid gap-6 lg:mt-12 lg:grid-cols-12 lg:gap-10">
-      <p class="text-muted lg:col-span-6">{cam.description} The cams run all year, so you can check on the Ball any time.</p>
+      <p class="text-muted lg:col-span-6">{cam.description} The Ball Cams run all year, so you can check on the Ball any time.</p>
       <p class="text-muted lg:col-span-5 lg:col-start-8">
         On December 31, the live webcast starts at {webcast.startsAt}.{' '}
         <a href="/webcast" class="link">Watch the NYE webcast</a>

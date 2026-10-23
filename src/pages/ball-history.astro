@@ -4,6 +4,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import NextPage from '../components/NextPage.astro';
+import BallIllustration from '../components/BallIllustration.astro';
 import heroPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_01.jpg';
 import nextPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_11.jpg';
 
@@ -39,7 +40,7 @@ const latest = milestones.at(-1);
                 class:list={[
                   'inline-flex min-h-11 items-center border px-4 font-display text-lg no-underline transition-colors',
                   m === latest
-                    ? 'border-ink bg-ink text-surface'
+                    ? 'border-gold bg-gold font-semibold text-black'
                     : 'border-line text-ink hover:border-ink',
                 ]}
               >
@@ -60,14 +61,23 @@ const latest = milestones.at(-1);
           return (
             <li
               id={m.id}
-              class="relative grid scroll-mt-28 gap-6 border-t border-line/70 py-12 pl-8 lg:grid-cols-12 lg:gap-10 lg:py-16 lg:pl-0"
+              class:list={[
+                'relative grid scroll-mt-28 gap-6 py-12 lg:grid-cols-12 lg:gap-10 lg:py-16',
+                // The current Ball stands out on a black band with gold titles.
+                isLatest
+                  ? 'theme-dark -mx-4 bg-surface pr-4 pl-12 sm:-mx-6 sm:pr-6 sm:pl-14 lg:-mx-10 lg:px-10'
+                  : 'border-t border-line/70 pl-8 lg:pl-0',
+              ]}
             >
               {/* Timeline rail and marker */}
-              <span class="absolute top-0 bottom-0 left-[5px] w-px bg-line lg:hidden" aria-hidden="true" />
+              <span
+                class:list={['absolute top-0 bottom-0 w-px bg-line lg:hidden', isLatest ? 'left-[21px] sm:left-[29px]' : 'left-[5px]']}
+                aria-hidden="true"
+              />
               <span
                 class:list={[
-                  'absolute top-[3.6rem] left-0 size-[11px] rounded-full lg:hidden',
-                  isLatest ? 'bg-gold' : 'bg-muted',
+                  'absolute top-[3.6rem] size-[11px] rounded-full lg:hidden',
+                  isLatest ? 'left-4 bg-gold sm:left-6' : 'left-0 bg-muted',
                 ]}
                 aria-hidden="true"
               />
@@ -78,7 +88,7 @@ const latest = milestones.at(-1);
                   class:list={[
                     'font-display leading-none tracking-[-0.01em]',
                     m.yearLabel ? 'text-[clamp(2.5rem,5vw,3.6rem)]' : 'text-[clamp(3rem,7vw,5.25rem)]',
-                    isLatest ? 'font-semibold text-ink' : 'text-ink',
+                    isLatest ? 'font-semibold text-gold' : 'text-ink',
                   ]}
                 >
                   {m.yearLabel ?? m.year}
@@ -86,8 +96,9 @@ const latest = milestones.at(-1);
                 </div>
               </div>
 
-              <div class:list={[m.image ? 'lg:col-span-5' : 'lg:col-span-6']}>
-                <h2 class="text-[clamp(1.75rem,3vw,2.25rem)]">{m.title}</h2>
+              <div class:list={[m.image || m.illustration ? 'lg:col-span-5' : 'lg:col-span-6']}>
+                {m.ball && <p class:list={['eyebrow', isLatest && 'text-gold']}>Ball {m.ball} of 9</p>}
+                <h2 class:list={['text-[clamp(1.75rem,3vw,2.25rem)]', m.ball && 'mt-2', isLatest && 'text-gold']}>{m.title}</h2>
                 <div class="prose mt-4">
                   <m.Content />
                 </div>
@@ -97,7 +108,7 @@ const latest = milestones.at(-1);
                       {m.stats.map((s) => (
                         <div>
                           <dt class="text-sm text-muted">{s.label}</dt>
-                          <dd class:list={['mt-1 font-display text-xl leading-tight', isLatest ? 'font-semibold text-ink' : 'text-ink']}>
+                          <dd class:list={['mt-1 font-display text-xl leading-tight', isLatest ? 'font-semibold text-gold' : 'text-ink']}>
                             {s.value}
                           </dd>
                         </div>
@@ -108,15 +119,19 @@ const latest = milestones.at(-1);
               </div>
 
               {
-                m.image && (
-                  <div class="lg:col-span-4">
-                    <Image
-                      src={m.image}
-                      alt={m.imageAlt ?? ''}
-                      widths={[320, 480, 640]}
-                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
-                      class="aspect-square w-full max-w-sm bg-deep object-cover lg:max-w-none"
-                    />
+                (m.image || m.illustration) && (
+                  <div class="lg:col-span-4" data-reveal="image">
+                    {m.image ? (
+                      <Image
+                        src={m.image}
+                        alt={m.imageAlt ?? ''}
+                        widths={[320, 480, 640]}
+                        sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
+                        class="aspect-square w-full max-w-sm bg-deep object-cover lg:max-w-none"
+                      />
+                    ) : (
+                      <BallIllustration variant={m.illustration!} class="aspect-square w-full max-w-sm lg:max-w-none" />
+                    )}
                   </div>
                 )
               }

@@ -1,12 +1,15 @@
 ---
 import { Image } from 'astro:assets';
-import { getEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroSlideshow from '../components/HeroSlideshow.astro';
 import LiveStrip from '../components/LiveStrip.astro';
 import ConstellationBall from '../components/ConstellationBall.astro';
+import TM from '../components/TM.astro';
+import BallIllustration from '../components/BallIllustration.astro';
 import SponsorStrip from '../components/SponsorStrip.astro';
 import TicketCards from '../components/TicketCards.astro';
+import OtherExperiences from '../components/OtherExperiences.astro';
 import { cams } from '../config/cams';
 import { webcast } from '../config/webcast';
 import { camSponsor } from '../data/sponsors';
@@ -27,13 +30,6 @@ import webcastPhoto from '../assets/press-photos/confetti-test/TS2026_Confetti-T
 import historyPhoto from '../assets/ball-history/crystal-ball-2000.jpg';
 // Full-width photo band
 import wishesPhoto from '../assets/press-photos/wishing-wall/TS2026_Wishing-Wall_14.jpg';
-// "Since 1907" gallery
-import crowdPhoto from '../assets/history/history-2.jpg';
-import aluminumBall from '../assets/ball-history/aluminum-ball.jpg';
-import crystalBall from '../assets/ball-history/crystal-ball-2000.jpg';
-import centennialBall from '../assets/ball-history/centennial-ball.jpg';
-import bigBall from '../assets/ball-history/big-ball.jpg';
-import constellationBall from '../assets/ball-history/constellation-ball.jpg';
 
 const state = countdownState(new Date());
 const nextYear = state.kind === 'counting' ? state.targetYear : state.year + 1;
@@ -69,14 +65,12 @@ const cards = [
   },
 ];
 
-const gallery = [
-  { src: crowdPhoto, caption: 'New Year’s Eve crowds', alt: 'Black-and-white photo of revelers in hats and coats packed into Times Square at night' },
-  { src: aluminumBall, caption: '1955', alt: 'The aluminum Ball, studded with white light bulbs' },
-  { src: crystalBall, caption: '2000', alt: 'The first crystal Ball, covered in glowing triangular panels' },
-  { src: centennialBall, caption: '2007', alt: 'The Centennial Ball lit in rainbow bands of LED light' },
-  { src: bigBall, caption: '2008', alt: 'The Big Ball glowing green and blue atop its mast' },
-  { src: constellationBall, caption: '2025', alt: 'The Constellation Ball seen from below, lit in swirling colors' },
-];
+// The nine Balls, from the Ball History timeline (photos where we have them,
+// labeled illustrations for the early Balls).
+const nineBalls = (await getCollection('timeline'))
+  .filter((e) => e.data.ball)
+  .sort((a, b) => a.data.ball! - b.data.ball!)
+  .map((e) => ({ year: e.data.yearLabel ?? String(e.data.year), title: e.data.title, image: e.data.image, imageAlt: e.data.imageAlt ?? '', illustration: e.data.illustration }));
 
 // Numbers count up from 0 as they scroll into view.
 const facts = [
@@ -116,8 +110,9 @@ const eventLd = {
     photos={heroPhotos}
     eyebrow="Times Square, New York"
     headline="Where the world counts down"
+    headlineTM
     text="The Times Square Ball has marked midnight from atop One Times Square since 1907. See it up close, or watch it live any day of the year."
-    cta={{ label: 'Buy tickets', href: '#tickets' }}
+    cta={{ label: 'Visit the Ball', href: '#tickets' }}
     secondaryCta={{ label: 'Watch live', href: `/${cams[0].slug}`, live: true }}
     scrollTarget="#live"
   />
@@ -132,6 +127,12 @@ const eventLd = {
           <p class="eyebrow">Tickets at One Times Square</p>
           <h2 id="tickets-heading" class="mt-3 text-[clamp(2.5rem,5vw,4rem)] leading-[1.02]">Visit the Ball</h2>
           <p class="mt-5 text-muted">{visitorExperiences.intro}</p>
+          <p class="mt-6 flex gap-3 border-l-2 border-gold pl-4 text-base text-ink">
+            <span>
+              <strong class="font-semibold">New Year’s Eve in Times Square is free.</strong> No tickets are needed to watch
+              the Ball Drop from the street. The tickets below are for visits to One Times Square, inside the building.
+            </span>
+          </p>
         </div>
         <a href={visitorExperiences.allTicketsUrl} target="_blank" rel="noopener" class="btn-quiet self-start lg:self-auto">
           All tickets<span class="sr-only"> on One Times Square’s site (opens in a new tab)</span>
@@ -140,6 +141,7 @@ const eventLd = {
       <div class="mt-12">
         <TicketCards />
       </div>
+      <OtherExperiences />
     </div>
   </section>
 
@@ -176,7 +178,7 @@ const eventLd = {
       {
         camSponsor && (
           <p class="mt-6 text-sm text-muted">
-            The official Ball cams are brought to you by{' '}
+            The official Ball Cams are brought to you by{' '}
             <a href={camSponsor.url} rel="sponsored noopener" class="link">
               {camSponsor.name}
             </a>
@@ -224,27 +226,33 @@ const eventLd = {
         </p>
         <a href="/ball-history" class="btn-quiet mt-8">Learn more</a>
       </div>
-      <ul class="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:col-span-7 lg:col-start-6" data-reveal-stagger="90">
+      <ol class="grid grid-cols-3 gap-2 sm:gap-3 lg:col-span-7 lg:col-start-6" data-reveal-stagger="70">
         {
-          gallery.map((g) => (
+          nineBalls.map((b, i) => (
             <li data-reveal="image">
-              <figure class="group relative overflow-hidden bg-deep">
-                <Image
-                  src={g.src}
-                  alt={g.alt}
-                  width={400}
-                  widths={[240, 400]}
-                  sizes="(min-width: 1024px) 18vw, (min-width: 640px) 31vw, 48vw"
-                  class="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <figcaption class="eyebrow absolute bottom-0 left-0 bg-black/75 px-2.5 py-1.5 text-[0.6875rem] text-white">
-                  {g.caption}
-                </figcaption>
-              </figure>
+              <a href={`/ball-history#y${b.year.slice(0, 4)}`} class="group relative block overflow-hidden bg-deep no-underline">
+                {b.image ? (
+                  <Image
+                    src={b.image}
+                    alt={b.imageAlt}
+                    width={400}
+                    widths={[240, 400]}
+                    sizes="(min-width: 1024px) 18vw, 31vw"
+                    class="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <BallIllustration variant={b.illustration!} class="aspect-square w-full" tag={false} />
+                )}
+                <span class="absolute inset-x-0 bottom-0 flex items-baseline justify-between bg-gradient-to-t from-black/85 to-transparent px-2.5 pt-6 pb-2 text-white">
+                  <span class="text-[0.8125rem] font-semibold">{b.year.slice(0, 4)}</span>
+                  <span class="hidden text-[0.6875rem] text-white/75 sm:inline">{i + 1} of 9{!b.image && ', illustration'}</span>
+                  {!b.image && <span class="text-[0.625rem] text-white/75 sm:hidden">Illus.</span>}
+                </span>
+              </a>
             </li>
           ))
         }
-      </ul>
+      </ol>
     </div>
   </section>
 
@@ -257,7 +265,7 @@ const eventLd = {
       <div class="lg:col-span-7">
         <div data-reveal="up">
           <p class="eyebrow">Ball Facts</p>
-          <h2 id="facts-heading" class="mt-3 text-[clamp(2.25rem,4.5vw,3.554rem)]">The {ball.name}</h2>
+          <h2 id="facts-heading" class="mt-3 text-[clamp(2.25rem,4.5vw,3.554rem)]">The {ball.name}<TM /></h2>
         </div>
         <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-10" data-reveal-stagger="120">
           {

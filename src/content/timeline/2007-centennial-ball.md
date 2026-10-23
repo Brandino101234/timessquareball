@@ -1,4 +1,5 @@
 ---
+ball: 7
 year: 2007
 title: The Centennial Ball
 image: ../../assets/ball-history/centennial-ball.jpg

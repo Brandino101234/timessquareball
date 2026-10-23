@@ -17,11 +17,11 @@ Atop One Times Square, the building at the intersection of 42nd Street, Seventh 
 
 ## Can I watch the Ball Drop online?
 
-Yes. The live, commercial-free [NYE webcast](/webcast) starts at 6:00 p.m. ET on December 31 with the lighting and raising of the Ball, and runs through midnight. You can also watch the Ball live any time of year on the five [Ball cams](/ball-cam-1).
+Yes. The live, commercial-free [NYE webcast](/webcast) starts at 6:00 p.m. ET on December 31 with the lighting and raising of the Ball, and runs through midnight. You can also watch the Ball live any time of year on the five Ball Cams, [Ball Cam 1](/ball-cam-1) through Ball Cam 5.
 
 ## How big is the Ball?
 
-The Constellation Ball is 12.5 feet in diameter, weighs 12,350 pounds, and is covered in 5,280 circular Waterford crystals, each lit by an LED light puck. See all the [Ball facts](/ball-facts).
+The Constellation Ball™ is 12.5 feet in diameter, weighs 12,350 pounds, and is covered in 5,280 circular Waterford crystals, each lit by an LED light puck. See all the [Ball facts](/ball-facts).
 
 ## How many different Balls have there been?
 
@@ -45,7 +45,7 @@ Each December, the Confetti Wishing Wall opens in Times Square, and wishes can a
 
 ## Can I visit the Ball up close?
 
-Yes. One Times Square offers ticketed experiences, including the New Year’s Eve Ball Experience, the Skywalk Viewing Deck and the One Times Square Candy Experience. The Ball facts page [links to all of them](/ball-facts).
+Yes. One Times Square offers ticketed experiences year-round, including the New Year’s Eve Ball Experience, the Skywalk Viewing Deck and the One Times Square Candy Experience. One Times Square also hosts weddings, special events and group visits. [See them all](/#tickets).
 
 ## Where can I find information about attending in person?
 

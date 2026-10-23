@@ -261,6 +261,16 @@
     box-shadow: inset 3px 0 0 var(--ink);
   }
 
+  /* Trademark symbol (src/components/TM.astro). */
+  .tm {
+    font-family: var(--font-sans);
+    font-size: 0.4em;
+    font-weight: 500;
+    letter-spacing: 0;
+    margin-left: 0.08em;
+    top: -1.1em;
+  }
+
   /* Small uppercase label above a heading or value. */
   .eyebrow {
     font-family: var(--font-sans);

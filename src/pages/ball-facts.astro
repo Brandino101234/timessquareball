@@ -1,12 +1,12 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeader from '../components/PageHeader.astro';
+import PageHero from '../components/PageHero.astro';
 import NextPage from '../components/NextPage.astro';
 import nextPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_10.jpg';
 import CrystalScale from '../components/CrystalScale.astro';
 import NumeralPucks from '../components/NumeralPucks.astro';
 import TicketCards from '../components/TicketCards.astro';
+import TM from '../components/TM.astro';
 import {
   intro,
   ball,
@@ -30,29 +30,25 @@ const atAGlance = [
   title="Ball Facts"
   description={`The ${ball.name} by the numbers: ${ball.diameterFeet} feet across, ${fmt(ball.weightPounds)} pounds and ${fmt(ball.crystals)} Waterford crystals, plus the gold ${numerals.year} numerals.`}
   image={ballPhoto}
+  overlayHeader
 >
-  <PageHeader title="Ball Facts" intro={intro}>
-    <a href={ball.factSheet} download class="btn-gold mt-10">
+  <PageHero
+    title="Ball Facts"
+    eyebrow="The Ball by the numbers"
+    intro={intro}
+    image={ballPhoto}
+    imageAlt="The Constellation Ball seen from directly below, its circular crystals glowing pink, violet, blue and orange around the mast"
+  >
+    <a href={ball.factSheet} download class="btn-gold mt-8">
       <span>Download the {ball.factSheetYear} fact sheet <span class="font-normal whitespace-nowrap">(PDF, {ball.factSheetSize})</span></span>
     </a>
-  </PageHeader>
+  </PageHero>
 
   <!-- The Ball at a glance -->
   <section aria-labelledby="glance-heading" class="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-10">
-    <div class="relative overflow-hidden">
-      <Image
-        src={ballPhoto}
-        alt="The Constellation Ball seen from directly below, its circular crystals glowing pink, violet, blue and orange around the mast"
-        width={1600}
-        widths={[600, 1000, 1600]}
-        sizes="(min-width: 1440px) 1360px, 100vw"
-        class="aspect-[4/5] w-full object-cover sm:aspect-[16/9] lg:aspect-[21/9]"
-        loading="eager"
-      />
-    </div>
     <div class="grid gap-10 py-14 lg:grid-cols-12 lg:gap-10 lg:py-20">
       <div class="lg:col-span-4">
-        <h2 id="glance-heading" class="text-[clamp(2.25rem,4.5vw,3.554rem)]">The {ball.name}</h2>
+        <h2 id="glance-heading" class="text-[clamp(2.25rem,4.5vw,3.554rem)]">The {ball.name}<TM /></h2>
         <p class="mt-6 text-muted">{ball.summary}</p>
       </div>
       <dl class="grid grid-cols-2 gap-x-6 gap-y-10 lg:col-span-7 lg:col-start-6">

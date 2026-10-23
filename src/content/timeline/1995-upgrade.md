@@ -1,4 +1,6 @@
 ---
+ball: 5
+illustration: "1995"
 year: 1995
 title: Rhinestones and strobes
 ---
