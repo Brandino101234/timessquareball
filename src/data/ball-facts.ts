@@ -49,7 +49,12 @@ export const features = [
 
 import type { ImageMetadata } from 'astro';
 import ballExperiencePhoto from '../assets/press-photos/crystal-installation/TS2026_Waterford-Crystals_12.jpg';
-import viewingDeckPhoto from '../assets/press-photos/crystal-installation/TS2026_Waterford-Crystals_10.jpg';
+// Photos published by One Times Square (see src/assets/one-times-square/SOURCE.md)
+import viewingDeckPhoto from '../assets/one-times-square/skywalk-deck-dusk.jpg';
+import candyPhoto from '../assets/one-times-square/candy-carousel.webp';
+import weddingPhoto from '../assets/one-times-square/ever-wedding-couple.jpg';
+import eventsPhoto from '../assets/one-times-square/celebration-confetti.webp';
+import groupsPhoto from '../assets/one-times-square/skywalk-deck-night.webp';
 
 /**
  * Ticketed experiences at One Times Square, shown with "Buy tickets" buttons on
@@ -77,11 +82,11 @@ export const visitorExperiences = {
     {
       title: 'Skywalk Viewing Deck',
       eyebrow: 'Above Times Square',
-      text: 'A 360-degree wraparound viewing deck overlooking Times Square.',
+      text: '360-degree views over Times Square, plus the Times Travel exhibits and five historic New Year’s Eve Balls up close.',
       url: 'https://onetimessquare.com/skywalk-viewing-deck',
       ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/6fceff3f-55b8-495e-92b3-e704acca869f/shop/multiple-event-search?fac=OTS&locale=en&skin=viewingdeck',
       image: viewingDeckPhoto,
-      imageAlt: 'Guests on the rooftop deck of One Times Square beside the Ball, with Times Square towers behind',
+      imageAlt: 'Visitors on the Skywalk Viewing Deck at dusk, looking out over the towers of Times Square',
     },
   ] as {
     title: string;
@@ -105,30 +110,40 @@ export const otherExperiences: {
   url: string;
   ticketsUrl?: string;
   cta?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
 }[] = [
   {
     title: 'One Times Square Candy Experience',
     text: 'A New York City–themed indoor candy adventure through sugar-spun versions of city landmarks, ending at The Candy Shop.',
     url: 'https://onetimessquare.com/candy-experience',
     ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/53193bd5-28b5-447a-a559-07ce1378583f/shop/select?fac=OTS&locale=en&skin=icandy',
+    image: candyPhoto,
+    imageAlt: 'Visitors riding a candy-colored carousel at the One Times Square Candy Experience',
   },
   {
     title: 'Ever Weddings',
     text: 'Proposals, vows, vow renewals and wedding ceremonies above Times Square.',
     url: 'https://onetimessquare.com/weddings',
     cta: 'Plan your celebration',
+    image: weddingPhoto,
+    imageAlt: 'A smiling couple holding hands on a terrace high above Times Square',
   },
   {
     title: 'Special Events',
     text: 'Host a private event at One Times Square.',
     url: 'https://onetimessquare.com/events',
     cta: 'Plan an event',
+    image: eventsPhoto,
+    imageAlt: 'Guests celebrating under a shower of confetti',
   },
   {
     title: 'Group Bookings',
     text: 'Tickets and visits for groups.',
     url: 'https://onetimessquare.com/group-bookings',
     cta: 'Book a group',
+    image: groupsPhoto,
+    imageAlt: 'Visitors on the Skywalk Viewing Deck at night above Times Square',
   },
 ];
 

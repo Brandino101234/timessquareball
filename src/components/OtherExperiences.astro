@@ -3,6 +3,7 @@
  * "More at One Times Square": the building's other experiences, as a row of
  * compact cards. Reads from src/data/ball-facts.ts (otherExperiences).
  */
+import { Image } from 'astro:assets';
 import { otherExperiences } from '../data/ball-facts';
 ---
 
@@ -11,7 +12,20 @@ import { otherExperiences } from '../data/ball-facts';
   <ul class="mt-6 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger="90">
     {
       otherExperiences.map((x) => (
-        <li class="group flex flex-col bg-surface p-6 transition-colors hover:bg-alt" data-reveal="up">
+        <li class="group flex flex-col bg-surface transition-colors hover:bg-alt" data-reveal="up">
+          {x.image && (
+            <div class="overflow-hidden bg-deep">
+              <Image
+                src={x.image}
+                alt={x.imageAlt ?? ''}
+                width={720}
+                widths={[360, 540, 720]}
+                sizes="(min-width: 1024px) 23vw, (min-width: 640px) 48vw, 100vw"
+                class="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            </div>
+          )}
+          <div class="flex flex-1 flex-col p-6">
           <p class="text-[1.25rem] leading-tight font-semibold text-ink">{x.title}</p>
           <p class="mt-2 flex-1 text-base text-muted">{x.text}</p>
           <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -24,6 +38,7 @@ import { otherExperiences } from '../data/ball-facts';
               {x.cta ?? 'Learn more'}
               <span class="sr-only"> about {x.title} on One Times Square’s site (opens in a new tab)</span>
             </a>
+          </div>
           </div>
         </li>
       ))
