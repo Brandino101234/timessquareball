@@ -26,9 +26,8 @@ These are open items. Each one is explained in more detail further down.
 - [ ] **2027 numerals.** Add the light-puck count for the “7” in `src/data/ball-facts.ts` when it’s published, and replace the 2026 fact sheet.
 - [ ] **Webcast.** Add this year’s embed URL to `src/config/webcast.ts` once the provider is confirmed.
 - [ ] **Getting to Times Square.** The homepage facts (entry streets, times, prohibited items) are from the 2025 official guidance. Check them each December in `src/data/getting-there.ts`.
-- [ ] **Instagram feed.** The home page has a “Follow along” section ready for the latest Instagram posts, using Behold (behold.so). Someone with the company’s Instagram login needs to create the feed. See [Instagram feed](#instagram-feed). Until then it shows only the follow buttons.
 - [ ] **Wishing Wall dates.** `src/config/wishing-wall.ts` has last year’s dates and hours. Update them once this year’s are announced and set `datesAnnounced` to `true`.
-- [ ] **Privacy Policy and Terms need a legal review.** The review should also cover the homepage weather (National Weather Service), map (OpenStreetMap) and Instagram feed (Behold, once turned on), which visitors’ browsers load from those services. They are copied word for word from the old site (effective December 13, 2010). They still describe retired mobile apps and a “Photo Display Service”, name the old domain, and mention cookies and ads this site doesn’t use.
+- [ ] **Privacy Policy and Terms need a legal review.** The review should also cover the homepage weather (National Weather Service) and map (OpenStreetMap), which visitors’ browsers load from those services. They are copied word for word from the old site (effective December 13, 2010). They still describe retired mobile apps and a “Photo Display Service”, name the old domain, and mention cookies and ads this site doesn’t use.
 - [ ] **FAQ is a draft.** It was written from facts already on the site. Please review `src/content/pages/faq.md`.
 - [ ] **Fact check on NYE History.** The text calls the Times publisher “Alfred Ochs”. He was Adolph S. Ochs. It is left as originally written until confirmed.
 - [ ] **Contact email.** The FAQ, Privacy and Terms use `support@timessquareball.net` and `remove@timessquareball.net`. Confirm these still work, or update them.
@@ -102,7 +101,6 @@ A paragraph is just text. Leave a blank line between paragraphs.
 | Ball cams (5): stream URLs, titles, still images  | `src/config/cams.ts`                                  |
 | Webcast embed, start time, “What you’ll see” list | `src/config/webcast.ts`                               |
 | Wishing Wall dates, hours, location, online link  | `src/config/wishing-wall.ts`                          |
-| Instagram feed on the home page                   | `src/config/social-feed.ts`                           |
 | One Times Square experiences and their links      | `src/data/ball-facts.ts` (`visitorExperiences`)       |
 | Footer copyright name                             | `src/data/site.ts` (`copyrightHolder`)                |
 | Footer “owned and operated by” credit (Jamestown) | `src/data/site.ts` (`buildingOwner`), logo in `src/components/JamestownLogo.astro` |
@@ -143,17 +141,6 @@ The countdown needs no yearly update. It always counts to the next midnight on J
 A sponsor only appears on the site when `authorized` is `true`. Add new sponsors with `authorized: false` and switch it to `true` once the company confirms they can be shown. Hidden sponsors keep their place in the order, so nothing else needs to change when they are cleared.
 
 A sponsor can be listed before its logo arrives: leave out `logo` and its name is shown instead (Wegovy and America250 are set up this way now). The sponsor credited under the Ball cams is chosen by `camSponsor` at the bottom of the file; the credit only shows once that sponsor is authorized. The webcast’s “Optum-ism” line also only appears once Optum is authorized.
-
-### Instagram feed
-
-The home page’s “Follow along” section shows the latest Instagram posts from [Behold](https://behold.so), which updates them automatically. Nothing loads from Behold until it is set up.
-
-1. Sign in to Behold with the company’s Instagram account (the free plan shows up to 6 posts).
-2. Create a feed and choose **JSON** as the type.
-3. In the feed’s settings, add the site’s domain to the allowed websites.
-4. Paste the feed URL into `feedUrl` in `src/config/social-feed.ts`.
-
-If the feed can’t be reached, the section quietly shows just the follow buttons.
 
 ### Ball cams
 
