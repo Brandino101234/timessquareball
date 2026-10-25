@@ -1,6 +1,6 @@
 ---
 /**
- * Full-screen homepage hero: night photos of the Ball, crossfading slowly,
+ * Full-screen homepage hero: night photos of the Ball, crossfading every few seconds,
  * with the headline and one button. Stays on the first photo for visitors who
  * prefer reduced motion.
  */
@@ -38,7 +38,7 @@ const { photos, eyebrow, headline, headlineTM = false, text, cta, secondaryCta, 
           fetchpriority={i === 0 ? 'high' : 'auto'}
           data-slide
           data-active={i === 0 ? '' : undefined}
-          class="absolute inset-0 size-full scale-105 object-cover opacity-0 transition-[opacity,transform] duration-[1600ms,8000ms] ease-out data-[active]:scale-100 data-[active]:opacity-100 motion-reduce:scale-100"
+          class="absolute inset-0 size-full scale-105 object-cover opacity-0 transition-[opacity,transform] duration-[1000ms,4500ms] ease-out data-[active]:scale-100 data-[active]:opacity-100 motion-reduce:scale-100"
         />
       ))
     }
@@ -85,19 +85,22 @@ const { photos, eyebrow, headline, headlineTM = false, text, cta, secondaryCta, 
 </style>
 
 <script>
-  // Crossfade to the next photo every 6 seconds (not for reduced motion,
-  // and paused while the tab is hidden).
-  const slides = [...document.querySelectorAll<HTMLElement>('[data-hero-slides] [data-slide]')];
+  // Crossfade to the next photo every 3.5 seconds (not for reduced motion,
+  // and paused while the tab is hidden). The photo after the current one is
+  // always loading in the background so it is ready when its turn comes.
+  const INTERVAL_MS = 3500;
+  const slides = [...document.querySelectorAll<HTMLImageElement>('[data-hero-slides] [data-slide]')];
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   let index = 0;
+  const preload = (i: number) => (slides[i % slides.length].loading = 'eager');
   if (slides.length > 1) {
+    preload(1);
     setInterval(() => {
       if (reduced.matches || document.hidden) return;
       slides[index].removeAttribute('data-active');
       index = (index + 1) % slides.length;
-      const next = slides[index] as HTMLImageElement;
-      next.loading = 'eager';
-      next.setAttribute('data-active', '');
-    }, 6000);
+      slides[index].setAttribute('data-active', '');
+      preload(index + 1);
+    }, INTERVAL_MS);
   }
 </script>
