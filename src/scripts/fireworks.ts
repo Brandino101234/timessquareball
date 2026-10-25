@@ -5,9 +5,10 @@
  * crackling crossettes and glitter, each with a flash of light; a rapid finale
  * closes the show and the lights come back up.
  *
- * Drawn on a fixed, full-screen canvas that never blocks clicks. Plays again
- * when the visitor returns to the bottom (at most every 20 seconds). Skipped
- * entirely for visitors who prefer reduced motion.
+ * The show lasts about four seconds and fades out straight away if the
+ * visitor scrolls back up. Drawn on a fixed, full-screen canvas that never
+ * blocks clicks. Plays again when the visitor returns to the bottom (at most
+ * every 20 seconds). Skipped entirely for visitors who prefer reduced motion.
  */
 const PALETTES = [
   ['#e2b04a', '#f0c86e', '#fff4d6'], // gold
@@ -54,6 +55,9 @@ interface Flash {
   color: string;
 }
 
+/** When the house lights come back up, in ms from the start of the show. */
+const SHOW_MS = 4200;
+
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const pick = <T,>(list: T[]) => list[(Math.random() * list.length) | 0];
 
@@ -75,6 +79,8 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
   let frame = 0;
   let running = false;
   let veil = 0; // 0..1, how dark the "house lights" are
+  let fadeOut = 1; // drops to 0 when the visitor scrolls away mid-show
+  let stopping = false;
 
   const resize = () => {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -89,19 +95,18 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
   const buildSchedule = () => {
     const kinds: BurstKind[] = ['peony', 'chrysanthemum', 'willow', 'ring', 'crossette', 'glitter'];
     const list: { at: number; kind: BurstKind }[] = [
-      { at: 300, kind: 'chrysanthemum' },
-      { at: 700, kind: 'peony' },
-      { at: 1100, kind: 'willow' },
+      { at: 200, kind: 'chrysanthemum' },
+      { at: 450, kind: 'peony' },
     ];
-    let t = 1600;
-    while (t < 6200) {
+    let t = 750;
+    while (t < 1900) {
       list.push({ at: t, kind: pick(kinds) });
-      if (Math.random() < 0.4) list.push({ at: t + 120, kind: pick(kinds) });
-      t += rand(380, 650);
+      if (Math.random() < 0.4) list.push({ at: t + 100, kind: pick(kinds) });
+      t += rand(260, 420);
     }
-    // Finale: a fast barrage, closing on a wide gold willow canopy.
-    for (let i = 0; i < 16; i++) list.push({ at: 6400 + i * 110, kind: pick(['peony', 'chrysanthemum', 'glitter', 'ring']) });
-    for (let i = 0; i < 4; i++) list.push({ at: 8300 + i * 90, kind: 'willow' });
+    // Finale: a fast barrage, closing on a gold willow canopy.
+    for (let i = 0; i < 10; i++) list.push({ at: 2000 + i * 90, kind: pick(['peony', 'chrysanthemum', 'glitter', 'ring']) });
+    for (let i = 0; i < 3; i++) list.push({ at: 2900 + i * 80, kind: 'willow' });
     return list.sort((a, b) => a.at - b.at);
   };
 
@@ -160,7 +165,7 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
           addSpark({
             x: sh.x, y: sh.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1 * unit,
             color: pick(['#e2b04a', '#f0c86e', '#ffd88a']), trail: 14, width: 1.5 * unit,
-            gravity: 0.05 * unit, drag: 0.972, max: rand(150, 200), twinkle: true,
+            gravity: 0.05 * unit, drag: 0.972, max: rand(90, 120), twinkle: true,
           });
         }
         break;
@@ -207,11 +212,12 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
     ctx.clearRect(0, 0, width, height);
 
     // House lights: dim in at the start, back up after the finale
-    const target = t < 9200 ? 0.62 : 0;
+    const target = t < SHOW_MS && !stopping ? 0.62 : 0;
     veil += (target - veil) * 0.05;
+    if (stopping) fadeOut = Math.max(0, fadeOut - 0.08);
     if (veil > 0.002) {
       ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = `rgba(0, 0, 0, ${veil})`;
+      ctx.fillStyle = `rgba(0, 0, 0, ${veil * fadeOut})`;
       ctx.fillRect(0, 0, width, height);
     }
 
@@ -223,7 +229,7 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
     // Flashes of light where shells burst
     flashes = flashes.filter((f) => {
       const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r);
-      g.addColorStop(0, `rgba(255, 240, 210, ${0.35 * f.life})`);
+      g.addColorStop(0, `rgba(255, 240, 210, ${0.35 * f.life * fadeOut})`);
       g.addColorStop(1, 'rgba(255, 240, 210, 0)');
       ctx.fillStyle = g;
       ctx.fillRect(f.x - f.r, f.y - f.r, f.r * 2, f.r * 2);
@@ -238,7 +244,7 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
       sh.y += sh.vy;
       sh.vy += g;
       sh.fuse++;
-      ctx.strokeStyle = 'rgba(255, 220, 160, 0.9)';
+      ctx.strokeStyle = `rgba(255, 220, 160, ${0.9 * fadeOut})`;
       ctx.lineWidth = 2.2 * unit;
       ctx.beginPath();
       ctx.moveTo(sh.x - sh.vx * 3, sh.y - sh.vy * 3);
@@ -265,7 +271,7 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
       const fade = Math.max(0, p.life / p.max);
       let alpha = Math.min(1, fade * 1.6);
       if (p.twinkle && Math.random() < 0.35) alpha *= 0.25;
-      ctx.globalAlpha = alpha;
+      ctx.globalAlpha = alpha * fadeOut;
       ctx.strokeStyle = p.color;
       ctx.lineWidth = p.width * (0.5 + fade * 0.5);
       ctx.beginPath();
@@ -285,13 +291,21 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
     sparks.push(...born);
     ctx.globalAlpha = 1;
 
-    if (t < 9200 || shells.length || sparks.length || veil > 0.01) {
+    const done = stopping ? fadeOut <= 0 : t >= SHOW_MS && !shells.length && !sparks.length && veil <= 0.01;
+    if (!done) {
       frame = requestAnimationFrame(tick);
     } else {
       running = false;
       ctx.clearRect(0, 0, width, height);
       canvas.hidden = true;
     }
+  };
+
+  // Scrolling back up mid-show: stop launching and fade everything out quickly.
+  const stop = () => {
+    if (!running || stopping) return;
+    stopping = true;
+    schedule = [];
   };
 
   const start = () => {
@@ -302,6 +316,8 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
     shells = [];
     sparks = [];
     flashes = [];
+    fadeOut = 1;
+    stopping = false;
     schedule = buildSchedule();
     showStart = now;
     running = true;
@@ -312,7 +328,8 @@ export function mountFireworks(canvas: HTMLCanvasElement, trigger: Element) {
   window.addEventListener('resize', () => running && resize());
   new IntersectionObserver(
     ([entry]) => {
-      if (entry.isIntersecting) start();
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.6) start();
+      else stop();
     },
     { threshold: 0.6 },
   ).observe(trigger);
