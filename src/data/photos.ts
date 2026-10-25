@@ -1,7 +1,7 @@
 /**
  * Hi-res press photos.
  *
- * Photos live in src/assets/press-photos/<category>/ — one folder per category
+ * Photos live in src/assets/press-photos/<category>/, one folder per category
  * below. To add photos, drop the full-size JPGs into the right folder; the
  * gallery picks them up, makes thumbnails, and offers the original for download.
  *

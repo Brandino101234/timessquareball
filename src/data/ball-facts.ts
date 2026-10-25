@@ -194,7 +194,7 @@ export const numerals = {
     },
     {
       title: 'New lighting',
-      text: 'Equipped with LED light pucks—the same technology used in The Constellation Ball—providing programmable lighting for a wide range of colors and patterns and dynamic displays that can be choreographed to align with The Ball’s design.',
+      text: 'Equipped with the same LED light pucks as The Constellation Ball, providing programmable lighting for a wide range of colors and patterns and dynamic displays that can be choreographed to align with The Ball’s design.',
     },
   ],
 } as const;
