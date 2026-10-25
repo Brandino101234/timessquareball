@@ -20,7 +20,7 @@ Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.c
 These are open items. Each one is explained in more detail further down.
 
 - [ ] **Domain.** Set the real domain in `src/data/site.ts` (`domain`). Links in search results and social previews use it.
-- [ ] **Ball cam streams.** Replace the placeholder URLs for all five cams in `src/config/cams.ts`, and the descriptions for cams 3–5. The streams the old site used are listed in a comment at the top of that file.
+- [ ] **Ball cam streams.** Replace the placeholder URLs for all five cams in `src/config/cams.ts`, and the descriptions for cams 3-5. The streams the old site used are listed in a comment at the top of that file.
 - [ ] **Opening hours.** One Times Square doesn’t publish its hours, so the live strip says “Hours vary” and links to its ticket page. Fill in `src/config/hours.ts` when the company confirms them.
 - [ ] **Sponsor sign-off.** Wegovy, Optum, America250 and Carnival are set up but hidden until the company clears them. To show one, set its `authorized` to `true` in `src/data/sponsors.ts`. Still needed: the Wegovy and America250 logos, and America250’s role.
 - [ ] **2027 numerals.** Add the light-puck count for the “7” in `src/data/ball-facts.ts` when it’s published, and replace the 2026 fact sheet.
@@ -200,11 +200,11 @@ Photos live in `src/assets/press-photos/`, one folder per category (for example 
   };
   ```
 
-The originals are large (up to 6000 pixels, 1–3 MB each). That is fine for Vercel, but keep an eye on the repository size over the years. If it grows past a few hundred MB, consider moving older years’ originals to the S3 bucket, like the videos.
+The originals are large (up to 6000 pixels, 1-3 MB each). That is fine for Vercel, but keep an eye on the repository size over the years. If it grows past a few hundred MB, consider moving older years’ originals to the S3 bucket, like the videos.
 
 ### B-roll and video segments
 
-Video files are too large for the website itself (130–470 MB each), so they stay on the company’s Amazon S3 bucket (`tsbmediaupload`). Upload the file to S3, then add an entry to `bRoll`, `bRollArchive` or `segments` in `src/data/videos.ts`:
+Video files are too large for the website itself (130-470 MB each), so they stay on the company’s Amazon S3 bucket (`tsbmediaupload`). Upload the file to S3, then add an entry to `bRoll`, `bRollArchive` or `segments` in `src/data/videos.ts`:
 
 ```ts
 { title: 'Confetti test in Times Square', url: `${S3}TS2027_Confetti%20Test_B-Roll.mov`, sizeMB: 142, date: '2026-12-29', photo: 'confetti-test' },
@@ -230,7 +230,7 @@ stats:
 The text for this entry.
 ```
 
-`yearLabel` (for example `2008–2024`), `image` and `stats` are optional. Put values containing commas in quotes, as above.
+`yearLabel` (for example `2008-2024`), `image` and `stats` are optional. Put values containing commas in quotes, as above.
 
 ### FAQ
 

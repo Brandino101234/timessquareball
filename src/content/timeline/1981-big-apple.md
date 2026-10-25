@@ -2,7 +2,7 @@
 ball: 4
 illustration: "1981"
 year: 1981
-yearLabel: 1981–1988
+yearLabel: 1981-1988
 title: The Big Apple
 ---
 

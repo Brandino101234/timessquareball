@@ -1,6 +1,6 @@
 ---
 year: 1942
-yearLabel: 1942–1943
+yearLabel: 1942-1943
 title: The wartime dimout
 ---
 

@@ -29,15 +29,15 @@ This clean, uninterrupted feed will be provided free of charge to media organiza
 
 ### North American times and coordinates
 
-1. **Via fiber in HD 1080i/59.94:** Wednesday, December 31, 2025; 4:00 p.m. to 12:15 a.m. EST. The New York Switch HD: NY Pool 1. Please note that from 4:00 p.m. – 5:55 p.m. color bars and tone with a Times Square identifier will be broadcast. Program will begin at 6:00 p.m.
+1. **Via fiber in HD 1080i/59.94:** Wednesday, December 31, 2025; 4:00 p.m. to 12:15 a.m. EST. The New York Switch HD: NY Pool 1. Please note that from 4:00 p.m. to 5:55 p.m. color bars and tone with a Times Square identifier will be broadcast. Program will begin at 6:00 p.m.
 2. **Via satellite in HD 1080i/59.94:** Wednesday, December 31, 2025; 10:00 p.m. to 12:15 a.m. EST.
    - C Band: G-36 24C Slot A; Downlink Frequency 4166.5 Horizontal; SYM 7.5; FEC 3/4; DVBS2 8PSK MPEG 4; Pilots Off, 20% Rolloff
    - KU Band: SES-2 / 01K / A9; 11733.5 Horizontal; SYM 7.5; FEC 3/4; DVBS2 8PSK MPEG 4; Pilots Off, 20% Rolloff
 
 ### International times and coordinates
 
-1. **Via fiber in HD 1080i/59.94:** Wednesday, December 31, 2025; 11:45 p.m. to 12:15 a.m. EST (Thursday, January 1, 2026; 0445–0515 GMT). SES 7 (BT Tower)
-2. **Via satellite in HD 1080i/50:** Wednesday, December 31, 2025; 11:45 p.m. to 12:15 a.m. EST (Thursday, January 1, 2026; 0445–0515 GMT)
+1. **Via fiber in HD 1080i/59.94:** Wednesday, December 31, 2025; 11:45 p.m. to 12:15 a.m. EST (Thursday, January 1, 2026; 0445-0515 GMT). SES 7 (BT Tower)
+2. **Via satellite in HD 1080i/50:** Wednesday, December 31, 2025; 11:45 p.m. to 12:15 a.m. EST (Thursday, January 1, 2026; 0445-0515 GMT)
    - Europe: IS-20/EF 34K MCPC CH.100; Downlink Frequency 12,682 Horizontal; SYM 30; FEC 3/4; DVBS2 QPSK; Pilots Off, 20% Rolloff
    - Latin America: IS-34 18C Slot C; Downlink Frequency 4099.5 Horizontal; SYM 7.5; FEC 3/4; DVBS2 8PSK MPEG 4; Pilots Off, 20% Rolloff
    - Asia: AS5 TXP C8H / AS5 C8H 3 CH 9B; Downlink Frequency 3906.5 Horizontal; SYM 7.5; FEC 3/4; DVBS2 8PSK MPEG 4; Pilots Off, 20% Rolloff
@@ -53,6 +53,6 @@ The Webcast will begin at 6:00 p.m. EST on December 31, 2025, and end at 12:15 a
 
 Event organizers invite digital media outlets, bloggers and webmasters to embed the live, commercial-free Times Square 2026 webcast to enhance New Year’s Eve content on their websites and social media channels. Additional information, including embedding details and an additional feed that is available with open captions and American Sign Language (ASL) interpretation, is available at tsq.org/webcast.
 
-Please note – the webcast will also be streamed via Facebook Live video at facebook.com/timessquarenyc. Digital media outlets, bloggers and webmasters are invited to share this video stream, crediting Times Square Alliance.
+Please note: the webcast will also be streamed via Facebook Live video at facebook.com/timessquarenyc. Digital media outlets, bloggers and webmasters are invited to share this video stream, crediting Times Square Alliance.
 
 The contact for satellite and fiber feeds is listed in the PDF. Media and press information on the event is available at tsq.org/nyepress.

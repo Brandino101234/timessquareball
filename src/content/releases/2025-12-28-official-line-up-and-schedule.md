@@ -1,5 +1,5 @@
 ---
-title: "New Year’s Eve in Times Square 2025–2026: Fact Sheet and Schedule"
+title: "New Year’s Eve in Times Square 2025-2026: Fact Sheet and Schedule"
 date: 2025-12-28
 kind: Schedule
 summary: The official minute-by-minute line-up for New Year’s Eve, from the lighting and raising of the Ball at 6:00 p.m. to the end of the show at 12:15 a.m.
@@ -215,7 +215,7 @@ Co-Host Jeremy Hassell talks with Times Square revelers
 
 ### 11:15 p.m. to 11:20 p.m.
 
-**America250 – America Gives**
+**America250: America Gives**
 
 ### 11:37 p.m. to 11:46 p.m.
 
@@ -237,7 +237,7 @@ The Mayor of New York City pushes the crystal button that signals the descent of
 
 **The Times Square New Year’s Eve Ball:** The lighted Ball descends 90 feet in sixty seconds. The Ball is 12.5 feet in diameter and weighs 12,350 pounds. The Ball is adorned with 5,280 circular Waterford crystals.
 
-### 12:00 a.m. – New Year's Day
+### 12:00 a.m.: New Year's Day
 
 **2026 Sign**
 

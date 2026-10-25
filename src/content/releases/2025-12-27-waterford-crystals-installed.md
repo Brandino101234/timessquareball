@@ -2,7 +2,7 @@
 title: New 2026 Waterford Crystals Installed on Times Square New Year’s Eve Ball
 date: 2025-12-27
 kind: Media advisory
-summary: New designs celebrating the “Infinite Edition – Life, Liberty, Happiness” are installed on the Constellation Ball atop One Times Square.
+summary: "New designs celebrating the “Infinite Edition: Life, Liberty, Happiness” are installed on the Constellation Ball atop One Times Square."
 pdf: /press/releases/FINAL-Crystal-Installation-Advisory-12_23-002.pdf
 pdfSize: 240 KB
 ---

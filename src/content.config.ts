@@ -37,10 +37,10 @@ const timeline = defineCollection({
     z.object({
       /** Year the milestone starts; used for sorting. */
       year: z.number().int(),
-      /** How the year is shown, if different, e.g. "1981–1988". */
+      /** How the year is shown, if different, e.g. "1981-1988". */
       yearLabel: z.string().optional(),
       title: z.string(),
-      /** Which of the nine Balls this is (1–9); leave out for events like the 1942 dimout. */
+      /** Which of the nine Balls this is (1-9); leave out for events like the 1942 dimout. */
       ball: z.number().int().min(1).optional(),
       /** For Balls without a photo: draw an illustration instead (see BallIllustration.astro). */
       illustration: z.enum(['1907', '1920', '1981', '1995']).optional(),

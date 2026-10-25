@@ -3,7 +3,7 @@
  *
  * One Times Square does not publish its hours on its website (October 2026: "Hours
  * of operation vary by attraction"), so fill these in when the company confirms
- * them. Write each day as it should appear, e.g. '10:00 a.m. – 10:00 p.m.', or
+ * them. Write each day as it should appear, e.g. '10:00 a.m. to 10:00 p.m.', or
  * 'Closed'. While a day is empty, the strip says "Hours vary" and links to
  * One Times Square's ticket page, where visitors can see the time slots.
  */

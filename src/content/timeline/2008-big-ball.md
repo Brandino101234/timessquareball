@@ -1,7 +1,7 @@
 ---
 ball: 8
 year: 2008
-yearLabel: 2008–2024
+yearLabel: 2008-2024
 title: The Big Ball
 image: ../../assets/ball-history/big-ball.jpg
 imageAlt: The Big Ball glowing green and blue atop its mast

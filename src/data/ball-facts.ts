@@ -115,7 +115,7 @@ export const otherExperiences: {
 }[] = [
   {
     title: 'One Times Square Candy Experience',
-    text: 'A New York City–themed indoor candy adventure through sugar-spun versions of city landmarks, ending at The Candy Shop.',
+    text: 'A New York City-themed indoor candy adventure through sugar-spun versions of city landmarks, ending at The Candy Shop.',
     url: 'https://onetimessquare.com/candy-experience',
     ticketsUrl: 'https://tickets.onetimessquare.com/ots/go/53193bd5-28b5-447a-a559-07ce1378583f/shop/select?fac=OTS&locale=en&skin=icandy',
     image: candyPhoto,

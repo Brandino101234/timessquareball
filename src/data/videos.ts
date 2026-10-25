@@ -1,7 +1,7 @@
 /**
  * Press video: B-roll and pre-packaged segments.
  *
- * The files are large (130–470 MB each), so they stay on the company's S3
+ * The files are large (130-470 MB each), so they stay on the company's S3
  * bucket and are linked from here instead of being stored in this site.
  *
  * To add a clip: upload it to S3, then add a line with its title, URL, size in
