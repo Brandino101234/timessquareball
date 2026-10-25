@@ -2,6 +2,7 @@
 import { siInstagram, siFacebook, siYoutube, siX } from 'simple-icons';
 import BallMark from './BallMark.astro';
 import TM from './TM.astro';
+import JamestownLogo from './JamestownLogo.astro';
 import { site } from '../data/site';
 import { social } from '../data/social';
 import { mainNav, footerLinks, pressLinks, isGroup } from '../data/navigation';
@@ -52,6 +53,16 @@ const legal = footerLinks.filter((l) => l.href !== '/faq');
         <p class="mt-5 max-w-xs text-base">
           Lowered from the top of One Times Square every New Year’s Eve since 1907.
         </p>
+        <p class="mt-8 text-sm">One Times Square is owned and operated by</p>
+        <a
+          href={site.buildingOwner.url}
+          target="_blank"
+          rel="noopener"
+          class="mt-3 inline-block text-ink transition-opacity hover:opacity-80"
+        >
+          <JamestownLogo class="h-12 w-auto" />
+          <span class="sr-only">{site.buildingOwner.name} (opens in a new tab)</span>
+        </a>
         <ul class="mt-8 flex gap-3" aria-label="Follow us">
           {
             social.map((s) => (

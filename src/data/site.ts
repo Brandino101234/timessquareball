@@ -13,6 +13,8 @@ export const site = {
   /** Time zone the countdown uses. Midnight here is the Ball Drop. */
   timeZone: 'America/New_York',
   contactEmail: 'support@timessquareball.net',
+  /** Owner and operator of One Times Square, credited in the footer. */
+  buildingOwner: { name: 'Jamestown', url: 'https://www.jamestownlp.com/' },
   credits: [
     { name: 'Live X', role: 'Produced by', url: 'https://livex.tv/' },
   ],

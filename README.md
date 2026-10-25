@@ -22,7 +22,7 @@ These are open items. Each one is explained in more detail further down.
 - [ ] **Domain.** Set the real domain in `src/data/site.ts` (`domain`). Links in search results and social previews use it.
 - [ ] **Ball cam streams.** Replace the placeholder URLs for all five cams in `src/config/cams.ts`, and the descriptions for cams 3–5. The streams the old site used are listed in a comment at the top of that file.
 - [ ] **Opening hours.** One Times Square doesn’t publish its hours, so the live strip says “Hours vary” and links to its ticket page. Fill in `src/config/hours.ts` when the company confirms them.
-- [ ] **Wegovy logo.** Add it to `src/assets/sponsors/` and `src/data/sponsors.ts`. Until then the sponsor band shows the name.
+- [ ] **Sponsor sign-off.** Wegovy, Optum, America250 and Carnival are set up but hidden until the company clears them. To show one, set its `authorized` to `true` in `src/data/sponsors.ts`. Still needed: the Wegovy and America250 logos, and America250’s role.
 - [ ] **2027 numerals.** Add the light-puck count for the “7” in `src/data/ball-facts.ts` when it’s published, and replace the 2026 fact sheet.
 - [ ] **Webcast.** Add this year’s embed URL to `src/config/webcast.ts` once the provider is confirmed.
 - [ ] **Getting to Times Square.** The homepage facts (entry streets, times, prohibited items) are from the 2025 official guidance. Check them each December in `src/data/getting-there.ts`.
@@ -101,6 +101,7 @@ A paragraph is just text. Leave a blank line between paragraphs.
 | Webcast embed, start time, “What you’ll see” list | `src/config/webcast.ts`                               |
 | One Times Square experiences and their links      | `src/data/ball-facts.ts` (`visitorExperiences`)       |
 | Footer copyright name                             | `src/data/site.ts` (`copyrightHolder`)                |
+| Footer “owned and operated by” credit (Jamestown) | `src/data/site.ts` (`buildingOwner`), logo in `src/components/JamestownLogo.astro` |
 | Ball facts, crystal counts, numeral puck counts   | `src/data/ball-facts.ts`                              |
 | NYE History text and photos                       | `src/content/pages/nye-history.md`                    |
 | Ball History intro and “About time-balls”         | `src/content/pages/ball-history.md`                   |
@@ -130,12 +131,14 @@ The countdown needs no yearly update. It always counts to the next midnight on J
    ```ts
    import newSponsor from '../assets/sponsors/new-sponsor.png';
    // …
-   { name: 'New Sponsor', logo: newSponsor, url: 'https://example.com', role: 'Official partner' },
+   { name: 'New Sponsor', logo: newSponsor, url: 'https://example.com', role: 'Official partner', authorized: true },
    ```
 
 3. Remove last year’s entries and update `sponsorYear` (the heading reads “Welcome to our 2027 sponsors”). The order in the file is the order on the page. `role` is optional.
 
-A sponsor can be listed before its logo arrives: leave out `logo` and its name is shown instead (Wegovy is set up this way now). The sponsor credited under the Ball cams is chosen by `camSponsor` at the bottom of the file.
+A sponsor only appears on the site when `authorized` is `true`. Add new sponsors with `authorized: false` and switch it to `true` once the company confirms they can be shown. Hidden sponsors keep their place in the order, so nothing else needs to change when they are cleared.
+
+A sponsor can be listed before its logo arrives: leave out `logo` and its name is shown instead (Wegovy and America250 are set up this way now). The sponsor credited under the Ball cams is chosen by `camSponsor` at the bottom of the file; the credit only shows once that sponsor is authorized. The webcast’s “Optum-ism” line also only appears once Optum is authorized.
 
 ### Ball cams
 
