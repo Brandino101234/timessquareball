@@ -24,6 +24,7 @@ const columns = [
     heading: 'Explore',
     links: [
       ...mainNav.filter((item) => !isGroup(item)).map(({ label, href }) => ({ label, href })),
+      { label: 'Wishing Wall', href: '/wishing-wall' },
       { label: 'FAQ', href: '/faq' },
     ],
   },

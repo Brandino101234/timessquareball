@@ -1,0 +1,147 @@
+---
+/**
+ * The Confetti Wishing Wall: how a wish written in Times Square (or online)
+ * ends up on the confetti at midnight. Dates, hours and links are in
+ * src/config/wishing-wall.ts.
+ */
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import NextPage from '../components/NextPage.astro';
+import { wishingWall as ww } from '../config/wishing-wall';
+import heroPhoto from '../assets/press-photos/wishing-wall/TS2026_Wishing-Wall_03.jpg';
+import writePhoto from '../assets/press-photos/wishing-wall/TS2026_Wishing-Wall_07.jpg';
+import pinPhoto from '../assets/press-photos/wishing-wall/TS2026_Wishing-Wall_09.jpg';
+import wishesPhoto from '../assets/press-photos/wishing-wall/TS2026_Wishing-Wall_06.jpg';
+import plazaPhoto from '../assets/press-photos/wishing-wall/TS2026_Wishing-Wall_11.jpg';
+import nextPhoto from '../assets/press-photos/ball-photos/TS2026_Constellation-Ball_10.jpg';
+
+const pounds = ww.confettiPounds.toLocaleString('en-US');
+
+const steps = [
+  {
+    title: 'Write your wish',
+    text: 'Pick up a colored card at the wall in Times Square and write down your hope for the year ahead.',
+    image: writePhoto,
+    alt: 'A visitor leaning over the counter at the Wishing Wall, writing on a colored card',
+  },
+  {
+    title: 'Pin it to the wall',
+    text: 'Add it to thousands of others from visitors around the world.',
+    image: pinPhoto,
+    alt: 'A visitor in a purple hat pinning a wish card to the wall',
+  },
+  {
+    title: 'Watch it fall at midnight',
+    text: `Wishes are printed on the confetti released over Times Square at midnight, part of about ${pounds} pounds of it.`,
+    image: wishesPhoto,
+    alt: 'Close-up of handwritten wishes on colored cards, including “Eine Reise nach New York”',
+  },
+];
+---
+
+<BaseLayout
+  title="Wishing Wall"
+  description={`Write a wish for the new year in Times Square or online. Every wish is printed on the confetti released at midnight on New Year’s Eve.`}
+  image={heroPhoto}
+  overlayHeader
+>
+  <PageHero
+    title="Wishing Wall"
+    eyebrow="A New Year’s Eve tradition"
+    intro="Write down a wish for the year ahead. At midnight it falls over Times Square as confetti."
+    image={heroPhoto}
+    imageAlt="The Wishing Wall covered in hundreds of colorful handwritten wish cards held up with pushpins"
+  />
+
+  <!-- How it works -->
+  <section aria-labelledby="how-heading">
+    <div class="mx-auto max-w-[90rem] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+      <div class="max-w-2xl" data-reveal="up">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-heading" class="mt-4 text-[clamp(2.25rem,4.5vw,3.554rem)]">From your hand to the sky</h2>
+      </div>
+      <ol class="mt-14 grid gap-12 md:grid-cols-3 md:gap-8" data-reveal-stagger>
+        {
+          steps.map((s, i) => (
+            <li data-reveal="up">
+              <div class="overflow-hidden" data-reveal="image">
+                <Image src={s.image} alt={s.alt} width={900} widths={[500, 900]} sizes="(min-width: 768px) 30vw, 100vw" class="aspect-[4/3] w-full object-cover" />
+              </div>
+              <p class="mt-6 font-display text-[clamp(1.375rem,2.4vw,1.75rem)] leading-tight text-ink">
+                <span class="text-muted">{i + 1}.</span> {s.title}
+              </p>
+              <p class="mt-3 text-muted">{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Two ways to wish -->
+  <section aria-labelledby="ways-heading" class="theme-dark bg-surface">
+    <div class="mx-auto grid max-w-[90rem] gap-12 px-4 py-20 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-10 lg:py-28">
+      <div class="lg:col-span-4" data-reveal="up">
+        <p class="eyebrow">Two ways to wish</p>
+        <h2 id="ways-heading" class="mt-4 text-[clamp(2.25rem,4.5vw,3.554rem)]">In Times Square or from anywhere</h2>
+        {
+          !ww.datesAnnounced && (
+            <p class="mt-6 text-muted">
+              This year’s dates will be announced soon. The details here are from last year as a guide.
+            </p>
+          )
+        }
+      </div>
+      <div class="grid gap-px bg-line sm:grid-cols-2 lg:col-span-8">
+        <div class="bg-surface p-8 lg:p-10" data-reveal="up">
+          <h3 class="eyebrow font-nav text-ink">In person</h3>
+          <dl class="mt-6 space-y-5">
+            <div>
+              <dt class="text-sm text-muted">Where</dt>
+              <dd class="mt-1 text-lg text-ink">{ww.location}</dd>
+            </div>
+            <div>
+              <dt class="text-sm text-muted">When</dt>
+              <dd class="mt-1 text-lg text-ink">{ww.dates}</dd>
+            </div>
+            <div>
+              <dt class="text-sm text-muted">Hours</dt>
+              <dd class="mt-1 text-lg text-ink">{ww.hours}<br /><span class="text-base text-muted">{ww.closed}</span></dd>
+            </div>
+          </dl>
+          <a href="/#getting-there" class="btn-quiet mt-8">Getting to Times Square</a>
+        </div>
+        <div class="flex flex-col bg-surface p-8 lg:p-10" data-reveal="up" style="--reveal-delay: 120ms">
+          <h3 class="eyebrow font-nav text-ink">Online</h3>
+          <p class="mt-6 text-lg text-ink">Can’t make it to New York? Send your wish online and it goes on the confetti too.</p>
+          <p class="mt-4 text-muted">
+            Wishes received by {ww.lastDay} are printed for this New Year’s Eve. Later ones are saved for the next.
+          </p>
+          <a href={ww.onlineUrl} target="_blank" rel="noopener" class="btn-gold mt-8 self-start">
+            Send a wish online<span class="sr-only"> on the Times Square Alliance site (opens in a new tab)</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photo band -->
+  <section aria-label="The Wishing Wall in Times Square" class="theme-dark relative isolate overflow-hidden bg-deep">
+    <Image
+      src={plazaPhoto}
+      alt="The Wishing Wall booth on a busy Times Square plaza, with a pink “Wish” banner overhead"
+      width={2400}
+      widths={[900, 1600, 2400]}
+      sizes="100vw"
+      class="h-[60svh] min-h-[22rem] w-full object-cover"
+    />
+  </section>
+
+  <NextPage
+    href="/webcast"
+    title="NYE Webcast"
+    description="Watch the confetti fall live at midnight, commercial-free."
+    image={nextPhoto}
+  />
+</BaseLayout>

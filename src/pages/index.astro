@@ -8,6 +8,7 @@ import ConstellationBall from '../components/ConstellationBall.astro';
 import TM from '../components/TM.astro';
 import BallIllustration from '../components/BallIllustration.astro';
 import SponsorStrip from '../components/SponsorStrip.astro';
+import SocialFeed from '../components/SocialFeed.astro';
 import TicketCards from '../components/TicketCards.astro';
 import OtherExperiences from '../components/OtherExperiences.astro';
 import { cams } from '../config/cams';
@@ -208,6 +209,7 @@ const eventLd = {
         3,000 pounds of confetti, carrying wishes from around the world
       </h2>
       <div class="mt-10 flex flex-wrap justify-center gap-3" data-reveal="up" style="--reveal-delay: 240ms">
+        <a href="/wishing-wall" class="btn-gold">Make a wish</a>
         <a href="/webcast" class="btn-quiet">Watch the webcast</a>
       </div>
     </div>
@@ -373,6 +375,8 @@ const eventLd = {
       </div>
     </div>
   </section>
+
+  <SocialFeed />
 
   <SponsorStrip />
 </BaseLayout>
