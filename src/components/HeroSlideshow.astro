@@ -1,8 +1,8 @@
 ---
 /**
  * Full-screen homepage hero: night photos of the Ball, crossfading every few seconds,
- * with the headline and one button. Stays on the first photo for visitors who
- * prefer reduced motion.
+ * with the headline and one button. For visitors who prefer reduced motion the
+ * photos still crossfade, but without the slow zoom.
  */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -82,21 +82,28 @@ const { photos, eyebrow, headline, headlineTM = false, text, cta, secondaryCta, 
     0% { transform: translateY(-100%); }
     100% { transform: translateY(200%); }
   }
+  /* The global reduced-motion rule cuts all transitions to zero; a gentle
+     crossfade (with no zoom) is kept for the hero photos. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-hero-slides] [data-slide] {
+      transition-property: opacity !important;
+      transition-duration: 1000ms !important;
+    }
+  }
 </style>
 
 <script>
-  // Crossfade to the next photo every 3.5 seconds (not for reduced motion,
-  // and paused while the tab is hidden). The photo after the current one is
+  // Crossfade to the next photo every 3.5 seconds (paused while the tab is
+  // hidden). The photo after the current one is
   // always loading in the background so it is ready when its turn comes.
   const INTERVAL_MS = 3500;
   const slides = [...document.querySelectorAll<HTMLImageElement>('[data-hero-slides] [data-slide]')];
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   let index = 0;
   const preload = (i: number) => (slides[i % slides.length].loading = 'eager');
   if (slides.length > 1) {
     preload(1);
     setInterval(() => {
-      if (reduced.matches || document.hidden) return;
+      if (document.hidden) return;
       slides[index].removeAttribute('data-active');
       index = (index + 1) % slides.length;
       slides[index].setAttribute('data-active', '');
